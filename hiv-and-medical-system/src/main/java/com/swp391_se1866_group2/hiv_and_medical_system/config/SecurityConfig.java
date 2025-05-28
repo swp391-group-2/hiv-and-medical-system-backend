@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String [] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect"};
+    private final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect"};
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build()
                 ;
-    };
+    }
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -61,4 +61,4 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
+}
