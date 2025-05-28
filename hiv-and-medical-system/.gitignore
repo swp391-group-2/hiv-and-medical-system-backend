@@ -1,33 +1,39 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+### Build ###
+/target/
+/build/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+### IDE ###
+# IntelliJ
+/.idea/
+/*.iml
+/out/
+# Eclipse
+/.classpath
+/.project
+/.settings/
+/.metadata
+# VS Code
+/.vscode/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+### OS ###
+.DS_Store
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+### Logs ###
+/logs/
+/*.log
 
-### VS Code ###
-.vscode/
+### Secrets & Config ###
+# Không commit file config có dữ liệu thật
+/application-*.properties
+/application-*.yml
+.env
+*.jks
+
+### Frontend ###
+/node_modules/
+/npm-debug.log
+
+### Temp ###
+*.tmp
+*~
+*.swp
