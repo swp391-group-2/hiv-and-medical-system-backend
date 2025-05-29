@@ -1,17 +1,14 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.config;
+package com.swp391_se1866_group2.hiv_and_medical_system.security.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
-
-@Configuration
-@Slf4j
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ApplicationInitConfig {
-
-
+@Slf4j
+public class RoleService {
 }

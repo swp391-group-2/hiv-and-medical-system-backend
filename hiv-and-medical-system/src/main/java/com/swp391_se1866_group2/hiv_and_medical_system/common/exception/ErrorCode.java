@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized Exception", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized Exception", HttpStatus.BAD_REQUEST),
-    USER_EXISTED(1002, "User already existed", HttpStatus.BAD_REQUEST),
-    USERNAME_INVALID(1003, "Username is invalid, Username must be at least 3 characters " , HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_EXISTED(1002, "Phone number already existed", HttpStatus.BAD_REQUEST),
+    NAME_INVALID(1003, "Username is invalid, Username must be at least 3 characters " , HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "Password is invalid, Password must be at least 8 characters " , HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
