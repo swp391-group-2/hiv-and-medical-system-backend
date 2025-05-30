@@ -39,7 +39,7 @@ public class UserService {
         roleRepository.findById("USER").ifPresent(roles::add);
 
         if(roles.isEmpty()){
-            Role role = new Role("USER", "This is a role", null);
+            Role role = new Role("USER", null);
             roleRepository.save(role);
             roles.add(role);
 
@@ -48,6 +48,7 @@ public class UserService {
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
 
 
 }
