@@ -11,7 +11,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,21 +33,19 @@ import java.util.StringJoiner;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthenticationService {
-    UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
+    PasswordEncoder passwordEncoder;
+    UserService userService;
+    RoleService roleService;
 
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
-
-    public UserResponse signup (UserCreationRequest request){
-        userService.createUser(request, new Role(Role));
+    public UserResponse createPatientAccount (UserCreationRequest request){
+        return userService.createUser(request, "PATIENT");
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        var user = userRepository.findByPhoneNumber(request.getPhoneNumber())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user = userService.findUserByPhoneNumber(request.getPhoneNumber());
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) {
@@ -61,7 +58,6 @@ public class AuthenticationService {
                 .authenticated(true)
                 .build();
     }
-
 
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -89,7 +85,7 @@ public class AuthenticationService {
 
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        Role role = user.getRoles();
+        Role role = user.getRole();
         if(role != null && StringUtils.hasText(role.getName())) {
             stringJoiner.add("ROLE_" + role.getName());
             if(!CollectionUtils.isEmpty(role.getPermissions())) {
