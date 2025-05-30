@@ -15,6 +15,5 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleRequest {
     String name;
-    String description;
     Set<String> permissions;
 }
