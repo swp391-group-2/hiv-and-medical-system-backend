@@ -14,7 +14,7 @@ public class ApiResponse <T> {
     @Builder.Default
     int code = 1000;
     @Builder.Default
-    boolean success = true;
+    boolean success = false;
     String message;
     T result;
 }
