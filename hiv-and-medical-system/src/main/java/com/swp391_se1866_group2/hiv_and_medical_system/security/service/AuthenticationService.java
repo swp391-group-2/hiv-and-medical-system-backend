@@ -8,8 +8,11 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.Role;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,10 +36,15 @@ import java.util.StringJoiner;
 public class AuthenticationService {
     UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
+
+    public UserResponse signup (UserCreationRequest request){
+        userService.createUser(request, new Role(Role));
+    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository.findByPhoneNumber(request.getPhoneNumber())
