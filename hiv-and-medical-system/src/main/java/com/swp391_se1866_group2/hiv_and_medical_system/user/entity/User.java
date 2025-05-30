@@ -24,6 +24,6 @@ public class User {
     @Column(columnDefinition = "NVARCHAR(100)")
     String name;
     String password;
-    @ManyToMany
-    Set<Role> roles;
+    @ManyToOne
+    Role roles;
 }
