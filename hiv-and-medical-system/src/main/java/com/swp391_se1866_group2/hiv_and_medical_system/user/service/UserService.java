@@ -28,24 +28,12 @@ public class UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
-    public UserResponse createUser (UserCreationRequest request){
+    public UserResponse createUser (UserCreationRequest request, String role){
         if(userRepository.existsByPhoneNumber(request.getPhoneNumber())){
             throw new AppException(ErrorCode.PHONE_NUMBER_EXISTED);
         }
-
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        HashSet<Role>roles = new HashSet<>();
-        roleRepository.findById("USER").ifPresent(roles::add);
-
-        if(roles.isEmpty()){
-            Role role = new Role("USER", null);
-            roleRepository.save(role);
-            roles.add(role);
-
-        };
-        user.setRoles(roles);
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
