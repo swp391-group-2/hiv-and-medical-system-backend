@@ -25,5 +25,5 @@ public class User {
     String name;
     String password;
     @ManyToOne
-    Role roles;
+    Role role;
 }
