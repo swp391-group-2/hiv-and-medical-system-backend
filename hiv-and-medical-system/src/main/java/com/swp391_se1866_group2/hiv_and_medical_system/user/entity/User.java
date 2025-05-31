@@ -26,6 +26,7 @@ public class User {
     String phoneNumber;
     String password;
     @CreationTimestamp
+    @Column(updatable = false)
     LocalDateTime createdAt;
     @UpdateTimestamp
     LocalDateTime updatedAt;
