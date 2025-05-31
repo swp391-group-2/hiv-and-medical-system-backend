@@ -4,8 +4,11 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Set;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "user")
@@ -21,9 +24,11 @@ public class User {
     String id;
     @Column(unique = true, nullable = false)
     String phoneNumber;
-    @Column(columnDefinition = "NVARCHAR(100)")
-    String name;
     String password;
+    @CreationTimestamp
+    LocalDateTime createdAt;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
     @ManyToOne
     Role role;
 }
