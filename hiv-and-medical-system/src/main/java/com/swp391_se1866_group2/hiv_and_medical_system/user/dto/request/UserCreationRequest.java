@@ -13,8 +13,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
     String phoneNumber;
-    @Size(min = 2 , message = "NAME_INVALID")
-    String name;
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
     RoleRequest role;
