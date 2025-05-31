@@ -35,7 +35,6 @@ import java.util.StringJoiner;
 public class AuthenticationService {
     PasswordEncoder passwordEncoder;
     UserService userService;
-    RoleService roleService;
 
     @NonFinal
     @Value("${jwt.signerKey}")

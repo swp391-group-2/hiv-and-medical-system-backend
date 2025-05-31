@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -15,6 +16,7 @@ import java.util.Set;
 public class UserResponse {
     String id;
     String phoneNumber;
-    String name;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
     RoleResponse role;
 }
