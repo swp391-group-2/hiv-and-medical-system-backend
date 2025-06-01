@@ -34,7 +34,7 @@ public class UserService {
         if(userRepository.existsByPhoneNumber(request.getPhoneNumber())){
             throw new AppException(ErrorCode.PHONE_NUMBER_EXISTED);
         }
-        User user = userMapper.toUser(request);
+        User user =  userMapper.toUser(request);
         user.setRole(roleService.getOrCreateRole(role));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));
