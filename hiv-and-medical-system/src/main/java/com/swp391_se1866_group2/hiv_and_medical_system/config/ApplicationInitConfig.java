@@ -1,6 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.config;
 
-import com.swp391_se1866_group2.hiv_and_medical_system.security.service.RoleService;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
@@ -20,18 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationInitConfig {
 
-    RoleService roleService;
     UserRepository userRepository;
 
     @Bean
-    ApplicationRunner applicationRunner(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+    ApplicationRunner applicationRunner(UserService userService, PasswordEncoder passwordEncoder) {
         return  args -> {
-            if(userRepository.findByPhoneNumber("admin").isEmpty()){
+            if(userRepository.findByEmail("admin@gmail.com").isEmpty()){
                 User user = User
                         .builder()
-                        .phoneNumber("admin")
+                        .email("admin@gmail.com")
                         .password(passwordEncoder.encode("admin"))
-                        .role(roleService.getOrCreateRole("ADMIN"))
+                        .role(Role.ADMIN.name())
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it");
