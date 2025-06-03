@@ -9,12 +9,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(("api/patients"))
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PatientController {
     PatientService patientService;
+
+    @GetMapping
+    public ApiResponse<List<PatientResponse>> getAllPatients() {
+        return ApiResponse.<List<PatientResponse>>builder()
+                .result(patientService.getAllPatients())
+                .success(true)
+                .build();
+    }
+
+    @GetMapping("/{patientid}")
+    public ApiResponse<PatientResponse> getPatient(@PathVariable String patientid) {
+        return ApiResponse.<PatientResponse>builder()
+                .result(patientService.getPatient(patientid))
+                .success(true)
+                .build();
+    }
 
     @PutMapping("/{patientid}")
     public ApiResponse<PatientResponse> updatePatientProfile (@PathVariable String patientid, @RequestBody PatientUpdateRequest request){

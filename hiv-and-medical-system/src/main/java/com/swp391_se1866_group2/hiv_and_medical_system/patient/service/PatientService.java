@@ -15,9 +15,13 @@ import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,6 +33,18 @@ public class PatientService {
     PatientMapper patientMapper;
     UserService userService;
     UserMapper userMapper;
+
+    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')" )
+    public PatientResponse getPatient(String patientId){
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientMapper.toPatientResponse(patient);
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')")
+    public List<PatientResponse> getAllPatients(){
+        return patientRepository.findAll().stream()
+                .map(patientMapper::toPatientResponse)
+                .collect(Collectors.toList());
+    }
 
     public PatientResponse createPatient(UserCreationRequest request, String role) {
         Patient patient = new Patient();
@@ -42,11 +58,14 @@ public class PatientService {
         patient.setUser(user);
         return patientMapper.toPatientResponse(patientRepository.save(patient));
     }
-
+    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN')")
     public PatientResponse updatePatientProfile(String patientId , PatientUpdateRequest request) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
         patientMapper.updatePatientAndUser(request, patient);
         return patientMapper.toPatientResponse(patientRepository.save(patient));
     }
+
+
+
 
 }
