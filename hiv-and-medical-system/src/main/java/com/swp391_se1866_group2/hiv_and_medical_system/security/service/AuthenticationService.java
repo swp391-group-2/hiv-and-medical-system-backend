@@ -6,6 +6,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
@@ -20,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -28,15 +33,16 @@ import java.util.Date;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@Transactional
 public class AuthenticationService {
     PasswordEncoder passwordEncoder;
+    PatientService patientService;
     UserService userService;
-
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
-    public UserResponse createPatientAccount (UserCreationRequest request){
-        return userService.createUser(request, Role.PATIENT.name());
+    public PatientResponse createPatientAccount (UserCreationRequest request, String role){
+        return patientService.createPatient(request, role);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -60,6 +66,7 @@ public class AuthenticationService {
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet
                 .Builder()
                 .subject(user.getEmail())
+                .claim("id", user.getId())
                 .issuer("medcarehiv.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
