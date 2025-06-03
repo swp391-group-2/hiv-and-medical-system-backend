@@ -1,6 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.security.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.service.AuthenticationService;
@@ -23,10 +25,10 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ApiResponse<UserResponse> signup(@RequestBody @Valid UserCreationRequest request){
-        return ApiResponse.<UserResponse>builder()
+    public ApiResponse<PatientResponse> signup(@RequestBody @Valid UserCreationRequest request){
+        return ApiResponse.<PatientResponse>builder()
                 .success(true)
-                .result(authenticationService.createPatientAccount(request))
+                .result(authenticationService.createPatientAccount(request, Role.PATIENT.name()))
                 .build();
     }
 
