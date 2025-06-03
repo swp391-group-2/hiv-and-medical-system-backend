@@ -6,4 +6,5 @@ public enum Role {
     DOCTOR,
     STAFF,
     MANAGER,
+    LAB_TECHNICIAN
 }
