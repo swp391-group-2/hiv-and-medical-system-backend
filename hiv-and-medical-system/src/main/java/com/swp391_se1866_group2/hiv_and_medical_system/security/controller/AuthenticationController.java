@@ -7,7 +7,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.Auth
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.service.AuthenticationService;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
+
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
