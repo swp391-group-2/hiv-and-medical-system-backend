@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 
-public class ManagerRequest {
+public class ManagerCreationRequest {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email is invalid")
