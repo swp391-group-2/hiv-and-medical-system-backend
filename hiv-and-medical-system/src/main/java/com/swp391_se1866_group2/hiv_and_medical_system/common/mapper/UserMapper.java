@@ -5,8 +5,11 @@ import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserRes
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
