@@ -14,7 +14,7 @@ public class DoctorResponse {
     String userId;
     String email;
     String fullName;
-    String status;
+    String userStatus;
     String doctorCode;
     String specialization;
     String licenseNumber;
