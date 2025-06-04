@@ -15,7 +15,6 @@ public class PatientResponse {
     String userId;
     String email;
     String fullName;
-    String createdAt;
     String userStatus;
     String patientCode;
     LocalDate dob;
@@ -25,5 +24,4 @@ public class PatientResponse {
     String identificationCard;
     String healthInsurance;
     String occupation;
-    LocalDateTime updatedAt;
 }
