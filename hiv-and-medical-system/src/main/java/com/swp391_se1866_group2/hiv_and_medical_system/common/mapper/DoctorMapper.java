@@ -14,7 +14,7 @@ public interface DoctorMapper {
     @Mapping(source = "user.id" , target = "userId")
     @Mapping(source = "user.email", target = "email")
     @Mapping(source = "user.fullName", target = "fullName")
-    @Mapping(source = "user.status", target = "status")
+    @Mapping(source = "user.status", target = "userStatus")
     @Mapping(source = "user.code", target = "doctorCode")
     DoctorResponse toDoctorResponse(Doctor doctor);
 
