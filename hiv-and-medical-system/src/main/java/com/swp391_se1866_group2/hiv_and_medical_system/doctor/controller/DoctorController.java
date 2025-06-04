@@ -24,7 +24,7 @@ public class DoctorController {
     @PostMapping
     public ApiResponse<DoctorResponse> createDoctor(@RequestBody @Valid DoctorCreationRequest request){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.createDoctorAccount(request, Role.DOCTOR.name()))
+                .result(doctorService.createDoctorAccount(request))
                 .success(true)
                 .build();
     }
