@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class UserResponse {
     String id;
     String email;
-    String password;
     String fullName;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

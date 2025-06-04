@@ -14,20 +14,22 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@Transactional
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
     public UserResponse createUser (UserCreationRequest request, String role){
-        if(userRepository.existsByEmail(request.getEmail())){
-            throw new AppException(ErrorCode.PHONE_NUMBER_EXISTED);
+        if(isEmailExisted(request.getEmail())){
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
         User user =  userMapper.toUser(request);
         user.setRole(role);
@@ -41,6 +43,7 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
-
-
+    public boolean isEmailExisted(String email){
+        return userRepository.existsByEmail(email);
+    }
 }
