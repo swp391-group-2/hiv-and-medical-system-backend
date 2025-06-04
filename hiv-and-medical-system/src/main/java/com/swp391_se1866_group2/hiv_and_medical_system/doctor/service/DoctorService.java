@@ -1,13 +1,14 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.doctor.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.UserStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository.DoctorRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
@@ -30,14 +31,14 @@ public class DoctorService {
     PasswordEncoder passwordEncoder;
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public DoctorResponse createDoctorAccount (DoctorCreationRequest request, String role){
+    public DoctorResponse createDoctorAccount (DoctorCreationRequest request){
         if(userService.isEmailExisted(request.getEmail())){
-            throw new RuntimeException(ErrorCode.EMAIL_EXISTED.getMessage());
+            throw new AppException(ErrorCode.EMAIL_EXISTED) ;
         }
         System.out.println(request);
         Doctor doctor = doctorMapper.toDoctor(request) ;
         User user = new User();
-        user.setRole(role);
+        user.setRole(Role.DOCTOR.name());
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -46,6 +47,8 @@ public class DoctorService {
         System.out.println(doctor);
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
+
+
 
 
 }
