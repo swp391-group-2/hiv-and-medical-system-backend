@@ -40,7 +40,7 @@ public class ManagerService {
     @PreAuthorize("hasRole('ADMIN')")
     public ManagerResponse getManager(String managerId) {
         User user = userRepository.findById(managerId)
-                .orElseThrow(() -> new RuntimeException(ErrorCode.USER_NOT_EXISTED.getMessage()));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if (!Role.MANAGER.name().equals(user.getRole())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
