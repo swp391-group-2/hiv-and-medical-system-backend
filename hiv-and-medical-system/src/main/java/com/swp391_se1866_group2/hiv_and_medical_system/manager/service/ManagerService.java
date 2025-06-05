@@ -57,5 +57,10 @@ public class ManagerService {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteManager(String managerId) {
+        userRepository.deleteById(managerId);
+    }
+
 
 }

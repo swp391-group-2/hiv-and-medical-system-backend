@@ -55,4 +55,9 @@ public class StaffService {
         UserResponse userResponse = userMapper.toUserResponse(user);
         return staffMapper.toStaffResponse(userResponse);
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public void deleteStaff(String staffId) {
+        userRepository.deleteById(staffId);
+    }
 }

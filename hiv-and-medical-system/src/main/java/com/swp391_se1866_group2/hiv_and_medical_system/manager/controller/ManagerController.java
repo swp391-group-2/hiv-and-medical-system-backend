@@ -44,5 +44,13 @@ public class ManagerController {
                 .build();
     }
 
+    @DeleteMapping("/{managerId}")
+    public ApiResponse<Void> deleteManager(@PathVariable String managerId) {
+        managerService.deleteManager(managerId);
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .build();
+    }
+
 
 }

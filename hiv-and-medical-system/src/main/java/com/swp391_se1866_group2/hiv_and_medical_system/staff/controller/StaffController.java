@@ -42,4 +42,12 @@ public class StaffController {
                 .success(true)
                 .build();
     }
+
+    @DeleteMapping("/{staffId}")
+    public ApiResponse<Void> deleteStaff(@PathVariable String staffId) {
+        staffService.deleteStaff(staffId);
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .build();
+    }
 }
