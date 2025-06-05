@@ -15,15 +15,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 
 public class ManagerCreationRequest {
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
     String email;
-
-    @NotBlank(message = "Password is required")
     String password;
-
-    @NotBlank(message = "Full name is required")
     String fullName;
 
 }

@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.manager.dto.response.Mana
 import com.swp391_se1866_group2.hiv_and_medical_system.manager.service.ManagerService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ManagerController {
     ManagerService managerService;
 
     @PostMapping
-    public ApiResponse<ManagerResponse> createManager(@RequestBody UserCreationRequest request) {
+    public ApiResponse<ManagerResponse> createManager(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<ManagerResponse>builder()
                 .success(true)
                 .result(managerService.createManager(request))
@@ -36,7 +37,7 @@ public class ManagerController {
     }
 
     @GetMapping("/{managerId}")
-    public ApiResponse<ManagerResponse> getPatient(@PathVariable String managerId) {
+    public ApiResponse<ManagerResponse> getManager(@PathVariable String managerId) {
         return ApiResponse.<ManagerResponse>builder()
                 .result(managerService.getManager(managerId))
                 .success(true)
