@@ -1,5 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patient.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,5 +33,6 @@ public class Patient {
     boolean isUpdatedProfile = false;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id" , nullable = false, unique = true)
+    @JsonBackReference("user-patient")
     User user;
 }
