@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,5 +25,6 @@ public class Doctor {
     LocalDateTime updatedAt;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JsonBackReference("user-doctor")
     User user;
 }
