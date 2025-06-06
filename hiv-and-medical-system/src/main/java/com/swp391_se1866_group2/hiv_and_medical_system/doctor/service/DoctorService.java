@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,16 @@ public class DoctorService {
         return doctorRepository.findAll().stream().map(doctor -> doctorMapper.toDoctorResponse(doctor)).collect(Collectors.toList());
     }
 
-    public 
+    public DoctorResponse getDoctorById(String id){
+        return doctorMapper.toDoctorResponse(doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+    }
+
+    public DoctorResponse getDoctorProfileByToken(){
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        return doctorRepository.findDoctorByToken(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+
+    }
 
 
 
