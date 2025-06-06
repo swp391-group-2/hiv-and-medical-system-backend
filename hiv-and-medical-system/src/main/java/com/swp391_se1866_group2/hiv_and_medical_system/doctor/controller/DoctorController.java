@@ -36,6 +36,22 @@ public class DoctorController {
                 .build();
     }
 
+    @GetMapping("/{doctorid}")
+    public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorid){
+        return ApiResponse.<DoctorResponse>builder()
+                .result(doctorService.getDoctorById(doctorid))
+                .success(true)
+                .build();
+    }
+
+    @GetMapping("myInfo")
+    public ApiResponse<DoctorResponse> getDoctorInfo(){
+        return ApiResponse.<DoctorResponse>builder()
+                .success(true)
+                .result(doctorService.getDoctorProfileByToken())
+                .build();
+    }
+
 
 
 }
