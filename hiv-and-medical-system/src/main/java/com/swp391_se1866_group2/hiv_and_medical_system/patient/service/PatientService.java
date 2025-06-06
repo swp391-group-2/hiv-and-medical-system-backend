@@ -62,10 +62,14 @@ public class PatientService {
     public PatientResponse updatePatientProfile(String patientId , PatientUpdateRequest request) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
         patientMapper.updatePatientAndUser(request, patient);
+        patient.setUpdatedProfile(isUpdateProfile(patient));
         return patientMapper.toPatientResponse(patientRepository.save(patient));
     }
 
-
+    private boolean isUpdateProfile(Patient patient) {
+        return patient.getDob() != null && patient.getGender() != null && patient.getAddress() != null && patient.getPhoneNumber() != null && patient.getIdentificationCard() != null && patient.getHealthInsurance() != null && patient.getOccupation() != null &&
+                !(patient.getGender().isEmpty() || patient.getAddress().isEmpty() || patient.getPhoneNumber().isEmpty() || patient.getIdentificationCard().isEmpty() || patient.getHealthInsurance().isEmpty() || patient.getOccupation().isEmpty());
+    }
 
 
 }
