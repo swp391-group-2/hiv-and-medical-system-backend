@@ -26,6 +26,15 @@ public class PatientController {
                 .build();
     }
 
+    @GetMapping("/myInfo")
+    public ApiResponse<PatientResponse> getMyInfo() {
+        return ApiResponse.<PatientResponse>builder()
+                .success(true)
+                .result(patientService.getPatientProfileByToken())
+                .build();
+    }
+
+
     @GetMapping("/{patientid}")
     public ApiResponse<PatientResponse> getPatient(@PathVariable String patientid) {
         return ApiResponse.<PatientResponse>builder()
