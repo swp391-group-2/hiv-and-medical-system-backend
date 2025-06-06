@@ -1,5 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,4 +37,7 @@ public class User {
     String status;
     String code;
     String role;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("user-patient")
+    Patient patient;
 }
