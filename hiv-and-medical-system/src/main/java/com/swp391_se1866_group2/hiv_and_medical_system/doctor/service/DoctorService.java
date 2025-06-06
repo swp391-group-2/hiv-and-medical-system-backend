@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -46,6 +49,12 @@ public class DoctorService {
         System.out.println(doctor);
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
+
+    public List<DoctorResponse> getAllDoctor (){
+        return doctorRepository.findAll().stream().map(doctor -> doctorMapper.toDoctorResponse(doctor)).collect(Collectors.toList());
+    }
+
+    public 
 
 
 }
