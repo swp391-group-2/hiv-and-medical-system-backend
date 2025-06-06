@@ -28,6 +28,7 @@ public class Patient {
     String occupation;
     @UpdateTimestamp
     LocalDateTime updatedAt;
+    boolean isUpdatedProfile = false;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id" , nullable = false, unique = true)
     User user;
