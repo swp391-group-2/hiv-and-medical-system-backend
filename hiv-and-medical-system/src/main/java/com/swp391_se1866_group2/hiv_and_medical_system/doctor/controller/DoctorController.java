@@ -44,6 +44,14 @@ public class DoctorController {
                 .build();
     }
 
+    @GetMapping("myInfo")
+    public ApiResponse<DoctorResponse> getDoctorInfo(){
+        return ApiResponse.<DoctorResponse>builder()
+                .success(true)
+                .result(doctorService.getDoctorProfileByToken())
+                .build();
+    }
+
 
 
 }
