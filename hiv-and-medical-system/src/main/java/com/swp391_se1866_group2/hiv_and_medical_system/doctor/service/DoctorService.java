@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.doctor.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.UserStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
@@ -54,7 +55,9 @@ public class DoctorService {
         return doctorRepository.findAll().stream().map(doctor -> doctorMapper.toDoctorResponse(doctor)).collect(Collectors.toList());
     }
 
-    public 
+    public DoctorResponse getDoctorById(String id){
+        return doctorMapper.toDoctorResponse(doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+    }
 
 
 }
