@@ -17,6 +17,8 @@ public enum ErrorCode {
     MEDICATION_NOT_EXISTED(1010, "Medication not existed", HttpStatus.NOT_FOUND),
     SLOT_EXISTED(1011, "Slot already existed", HttpStatus.CONFLICT),
     SLOT_NOT_EXISTED(1012, "Slot not existed", HttpStatus.NOT_FOUND),
+    MEDICATION_NOT_EXISTED(1013, "Medication not existed", HttpStatus.NOT_FOUND)
+    , MEDICATION_EXISTED(1014, "Medication already existed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
