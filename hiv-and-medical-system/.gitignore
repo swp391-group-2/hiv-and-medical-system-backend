@@ -1,12 +1,12 @@
 ### Build ###
-/target/
-/build/
+target/
+build/
 
 ### IDE ###
 # IntelliJ
 .idea/
-/*.iml
-/out/
+*.iml
+out/
 # Eclipse
 /.classpath
 /.project
@@ -19,8 +19,8 @@
 .DS_Store
 
 ### Logs ###
-/logs/
-/*.log
+logs/
+*.log
 
 ### Secrets & Config ###
 # Không commit file config có dữ liệu thật
