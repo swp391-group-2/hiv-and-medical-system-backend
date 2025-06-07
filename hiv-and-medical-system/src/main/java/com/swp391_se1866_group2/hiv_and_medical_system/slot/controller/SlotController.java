@@ -33,4 +33,13 @@ public class SlotController {
                 .build();
     }
 
+    @GetMapping("/{slotid}")
+    public ApiResponse<SlotResponse> getSlot (@PathVariable int slotid){
+        return ApiResponse.<SlotResponse>builder()
+                .success(true)
+                .result(slotService.getSlot(slotid))
+                .build();
+    }
+
+
 }
