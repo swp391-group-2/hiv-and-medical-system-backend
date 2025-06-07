@@ -8,11 +8,11 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.Me
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.MedicationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.repository.MedicationRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
