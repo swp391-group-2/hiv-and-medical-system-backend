@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/slots")
 @RequiredArgsConstructor
@@ -20,6 +22,14 @@ public class SlotController {
         return ApiResponse.<SlotResponse>builder()
                 .success(true)
                 .result(slotService.createSlot(request))
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<SlotResponse>> getAllSlots(){
+        return ApiResponse.<List<SlotResponse>>builder()
+                .result(slotService.getAllSlots())
+                .success(true)
                 .build();
     }
 
