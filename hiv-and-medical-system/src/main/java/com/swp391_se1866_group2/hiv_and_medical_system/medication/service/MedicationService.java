@@ -27,6 +27,10 @@ public class MedicationService {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public MedicationResponse createMedication(MedicationRequest request) {
+        if(medicationRepository.existsByNameAndStrength(request.getName(), request.getStrength())){
+            throw new AppException(ErrorCode.MEDICATION_EXISTED);
+        }
+
         Medication medication = medicationMapper.toMedication(request);
         return medicationMapper.toMedicationResponse((medicationRepository.save(medication)));
     }
@@ -49,6 +53,10 @@ public class MedicationService {
     public MedicationResponse updateMedication(String medicationId, MedicationUpdateRequest request) {
         Medication medication = medicationRepository.findById(medicationId)
                 .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
+        if (medicationRepository.existsByNameAndStrengthAndIdNot(request.getName(), request.getStrength(), medicationId)){
+            throw new AppException(ErrorCode.MEDICATION_EXISTED);
+        }
+
         medicationMapper.updateMedication(medication, request);
         return medicationMapper.toMedicationResponse(medicationRepository.save(medication));
     }
