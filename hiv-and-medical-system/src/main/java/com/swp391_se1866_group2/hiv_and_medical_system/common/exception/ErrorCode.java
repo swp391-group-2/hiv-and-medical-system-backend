@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized Exception", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized Exception", HttpStatus.BAD_REQUEST),
-    EMAIL_EXISTED(1002, "Email already existed", HttpStatus.BAD_REQUEST),
+    EMAIL_EXISTED(1002, "Email already existed", HttpStatus.CONFLICT),
     PATIENT_NOT_EXISTED(1003, "Patient not existed", HttpStatus.NOT_FOUND),
     PASSWORD_INVALID(1004, "Password is invalid, Password must be at least 8 characters " , HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
@@ -18,6 +18,8 @@ public enum ErrorCode {
     , MEDICATION_EXISTED(1011, "Medication already existed", HttpStatus.BAD_REQUEST)
     , PRESCRIPTION_NOT_EXISTED(1012, "Prescription not existed", HttpStatus.NOT_FOUND)
     , PRESCRIPTION_EXISTED(1013, "Prescription already existed", HttpStatus.BAD_REQUEST)
+    ,SLOT_EXISTED(1014, "Slot already existed", HttpStatus.CONFLICT),
+    SLOT_NOT_EXISTED(1015, "Slot not existed", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
