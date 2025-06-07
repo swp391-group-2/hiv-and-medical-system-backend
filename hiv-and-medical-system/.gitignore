@@ -44,7 +44,7 @@
 
 ### IDE ###
 # IntelliJ
-/.idea/
+.idea/
 /*.iml
 /out/
 # Eclipse
