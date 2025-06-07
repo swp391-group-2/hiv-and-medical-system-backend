@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.SlotMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.dto.request.SlotCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.dto.response.SlotResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.slot.entity.Slot;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.repository.SlotRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,10 @@ public class SlotService {
         return slotRepository.findAll().stream()
                 .map(slot -> slotMapper.toSlotResponse(slot))
                 .collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public SlotResponse getSlot (int id){
+        return slotMapper.toSlotResponse(slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED)));
     }
 
 
