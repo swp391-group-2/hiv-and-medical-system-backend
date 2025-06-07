@@ -13,7 +13,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class MedicationRequest {
     String name;
-    String description;
-    String dosageForm;
     String strength;
 }
