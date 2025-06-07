@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.MedicationMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.MedicationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.MedicationUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.MedicationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.repository.MedicationRepository;
@@ -42,5 +43,20 @@ public class MedicationService {
         return medicationRepository.findAll().stream()
                 .map(medicationMapper::toMedicationResponse)
                 .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public MedicationResponse updateMedication(String medicationId, MedicationUpdateRequest request) {
+        Medication medication = medicationRepository.findById(medicationId)
+                .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
+        medicationMapper.updateMedication(medication, request);
+        return medicationMapper.toMedicationResponse(medicationRepository.save(medication));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public void deleteMedication(String medicationId) {
+        Medication medication = medicationRepository.findById(medicationId)
+                .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
+        medicationRepository.delete(medication);
     }
 }
