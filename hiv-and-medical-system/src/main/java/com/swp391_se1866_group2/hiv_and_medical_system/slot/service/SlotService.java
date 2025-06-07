@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,7 +31,14 @@ public class SlotService {
         }
         return slotMapper.toSlotResponse(slotRepository.save(slotMapper.toSlot(request)));
     }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<SlotResponse> getAllSlots(){
+        return slotRepository.findAll().stream()
+                .map(slot -> slotMapper.toSlotResponse(slot))
+                .collect(Collectors.toList());
+    }
 
-    
+
+
 
 }
