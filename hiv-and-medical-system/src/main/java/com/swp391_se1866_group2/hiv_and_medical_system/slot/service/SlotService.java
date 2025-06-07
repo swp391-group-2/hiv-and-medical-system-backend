@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.SlotMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.dto.request.SlotCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.slot.dto.request.SlotUpDateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.dto.response.SlotResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.entity.Slot;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.repository.SlotRepository;
@@ -41,6 +42,12 @@ public class SlotService {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public SlotResponse getSlot (int id){
         return slotMapper.toSlotResponse(slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED)));
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public SlotResponse updateSlot (int id, SlotUpDateRequest request){
+        Slot slot = slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED));
+        slotMapper.updateSlot(request, slot);
+        return slotMapper.toSlotResponse(slotRepository.save(slot));
     }
 
 
