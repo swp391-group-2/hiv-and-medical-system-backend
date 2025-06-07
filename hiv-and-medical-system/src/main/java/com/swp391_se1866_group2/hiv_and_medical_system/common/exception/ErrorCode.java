@@ -14,7 +14,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     DOCTOR_NOT_EXISTED(1009, "Doctor not existed", HttpStatus.NOT_FOUND),
-    MEDICATION_NOT_EXISTED(1010, "Medication not existed", HttpStatus.NOT_FOUND),
+    MEDICATION_NOT_EXISTED(1010, "Medication not existed", HttpStatus.NOT_FOUND)
+    , MEDICATION_EXISTED(1011, "Medication already existed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
