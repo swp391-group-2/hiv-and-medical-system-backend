@@ -4,46 +4,6 @@
 
 ### IDE ###
 # IntelliJ
-/.idea/
-/*.iml
-/out/
-# Eclipse
-/.classpath
-/.project
-/.settings/
-/.metadata
-# VS Code
-/.vscode/
-
-### OS ###
-.DS_Store
-
-### Logs ###
-/logs/
-/*.log
-
-### Secrets & Config ###
-# Không commit file config có dữ liệu thật
-/application-*.properties
-/application-*.yml
-.env
-*.jks
-
-### Frontend ###
-/node_modules/
-/npm-debug.log
-
-### Temp ###
-*.tmp
-*~
-*.swp
-
-### Build ###
-/target/
-/build/
-
-### IDE ###
-# IntelliJ
 .idea/
 /*.iml
 /out/
@@ -77,3 +37,4 @@
 *.tmp
 *~
 *.swp
+
