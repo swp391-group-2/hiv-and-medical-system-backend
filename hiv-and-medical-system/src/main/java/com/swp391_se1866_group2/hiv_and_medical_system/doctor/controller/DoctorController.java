@@ -39,7 +39,7 @@ public class DoctorController {
     @GetMapping("/{doctorid}")
     public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorid){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.getDoctorById(doctorid))
+                .result(doctorService.getDoctorResponseById(doctorid))
                 .success(true)
                 .build();
     }
