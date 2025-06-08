@@ -28,7 +28,7 @@ public class PrescriptionService {
     @PreAuthorize("hasRole('DOCTOR')")
     public PrescriptionResponse createPrescription(PrescriptionRequest request){
         if (prescriptionRepository.existsByName(request.getName())) {
-            throw new AppException(ErrorCode.MEDICATION_EXISTED);
+            throw new AppException(ErrorCode.PRESCRIPTION_EXISTED);
         }
 
         Prescription prescription = prescriptionMapper.toPrescription(request);
