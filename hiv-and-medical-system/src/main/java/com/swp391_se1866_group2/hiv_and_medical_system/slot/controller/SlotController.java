@@ -38,7 +38,7 @@ public class SlotController {
     public ApiResponse<SlotResponse> getSlot (@PathVariable int slotid){
         return ApiResponse.<SlotResponse>builder()
                 .success(true)
-                .result(slotService.getSlot(slotid))
+                .result(slotService.getSlotResponseBy(slotid))
                 .build();
     }
 

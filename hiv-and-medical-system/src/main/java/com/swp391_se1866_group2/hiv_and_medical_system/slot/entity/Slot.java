@@ -1,5 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.slot.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.ScheduleSlot;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Data
