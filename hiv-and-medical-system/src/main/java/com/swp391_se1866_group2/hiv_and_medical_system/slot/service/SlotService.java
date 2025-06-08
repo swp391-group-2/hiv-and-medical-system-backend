@@ -40,7 +40,7 @@ public class SlotService {
                 .collect(Collectors.toList());
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public SlotResponse getSlot (int id){
+    public SlotResponse getSlotResponseBy (int id){
         return slotMapper.toSlotResponse(slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED)));
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
@@ -48,6 +48,10 @@ public class SlotService {
         Slot slot = slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED));
         slotMapper.updateSlot(request, slot);
         return slotMapper.toSlotResponse(slotRepository.save(slot));
+    }
+
+    public Slot getSlotById (int id){
+        return slotRepository.findById(id).orElseThrow(() ->  new AppException(ErrorCode.SLOT_NOT_EXISTED));
     }
 
 
