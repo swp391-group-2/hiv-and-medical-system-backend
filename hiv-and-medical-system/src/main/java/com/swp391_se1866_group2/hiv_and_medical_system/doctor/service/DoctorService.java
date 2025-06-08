@@ -56,7 +56,7 @@ public class DoctorService {
         return doctorRepository.findAll().stream().map(doctor -> doctorMapper.toDoctorResponse(doctor)).collect(Collectors.toList());
     }
 
-    public DoctorResponse getDoctorById(String id){
+    public DoctorResponse getDoctorResponseById(String id){
         return doctorMapper.toDoctorResponse(doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
@@ -64,7 +64,10 @@ public class DoctorService {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
         return doctorRepository.findDoctorByToken(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    }
 
+    public Doctor getDoctorById(String id){
+        return doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
 
