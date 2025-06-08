@@ -8,7 +8,10 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctors")
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class DoctorWorkScheduleController {
     DoctorWorkScheduleService scheduleService;
 
-    @PostMapping("/{doctorId}/schedule")
+    @PostMapping("/{doctorId}/schedules")
     public ApiResponse<DoctorWorkScheduleResponse> createSchedule(@PathVariable("doctorId") String doctorId
             , @RequestBody @Valid ScheduleCreationRequest request){
        return ApiResponse.<DoctorWorkScheduleResponse>builder()
@@ -25,5 +28,17 @@ public class DoctorWorkScheduleController {
                .result(scheduleService.createDoctorSchedule(doctorId, request))
                .build();
     }
+
+    @GetMapping("/{doctorId}/schedules")
+    public ApiResponse<List<DoctorWorkScheduleResponse>> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
+                .result(scheduleService.getDoctorWorkScheduleByDate(doctorId, date))
+                .success(true)
+                .build();
+    }
+
+
+
+
 
 }
