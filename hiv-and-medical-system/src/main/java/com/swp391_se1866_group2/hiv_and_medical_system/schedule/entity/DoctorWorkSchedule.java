@@ -24,6 +24,7 @@ public class DoctorWorkSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @Column(nullable = false, unique = true)
     LocalDate workDate;
     String status = "available";
     @CreationTimestamp
@@ -37,5 +38,4 @@ public class DoctorWorkSchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonManagedReference("doctor-schedules")
     Doctor doctor;
-
 }
