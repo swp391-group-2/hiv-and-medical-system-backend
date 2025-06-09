@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,9 +56,27 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
     }
 
+    public List<DoctorWorkScheduleResponse> createDoctorScheduleBulk (String doctorId, ScheduleCreationRequest request) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        LocalDate start = request.getWorkDate();
+        LocalDate end = request.getWorkDate().plusDays(7);
+        List<DoctorWorkScheduleResponse> doctorWorkSchedules = new ArrayList<>();
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            request.setWorkDate(date);
+            doctorWorkSchedules.add(createDoctorSchedule(doctorId, request));
+        }
+        return doctorWorkSchedules;
+    }
+
     public List<DoctorWorkScheduleResponse> getDoctorWorkScheduleByDate (String doctorId, LocalDate workDate) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         List<DoctorWorkSchedule> doctorWorkSchedules = doctorWorkScheduleRepository.findAllByWorkDateAndDoctorId(workDate, doctorId);
+        return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
+    }
+
+    public List<DoctorWorkScheduleResponse> getDoctorWorkScheduleByDoctorId (String doctorId) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        List<DoctorWorkSchedule> doctorWorkSchedules = doctorWorkScheduleRepository.findAllByDoctorId(doctorId);
         return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
     }
 
