@@ -3,7 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.controller;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.DoctorWorkScheduleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -40,18 +40,27 @@ public class DoctorWorkScheduleController {
     }
 
     @GetMapping("/{doctorId}/schedules/date")
-    public ApiResponse<List<DoctorWorkScheduleResponse>> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
+    public ApiResponse<List<ScheduleResponse>> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ApiResponse.<List<ScheduleResponse>>builder()
                 .result(scheduleService.getDoctorWorkScheduleByDate(doctorId, date))
                 .success(true)
                 .build();
     }
 
     @GetMapping("/{doctorId}/schedules")
-    public ApiResponse<List<DoctorWorkScheduleResponse>> getAllSchedules(@PathVariable("doctorId") String doctorId){
-        return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
+    public ApiResponse<List<ScheduleResponse>> getAllSchedules(@PathVariable("doctorId") String doctorId){
+        return ApiResponse.<List<ScheduleResponse>>builder()
                 .result(scheduleService.getDoctorWorkScheduleByDoctorId(doctorId))
                 .success(true)
                 .build();
     }
+
+    @GetMapping("/me/schedules")
+    public ApiResponse<List<ScheduleResponse>> getMySchedules(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+        return ApiResponse.<List<ScheduleResponse>>builder()
+                .success(true)
+                .result(scheduleService.getDWScheduleByTokenAndBetweenDate(startDate, endDate))
+                .build();
+    }
+
 }

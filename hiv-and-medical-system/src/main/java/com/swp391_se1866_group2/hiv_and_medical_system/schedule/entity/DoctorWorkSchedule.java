@@ -36,6 +36,7 @@ public class DoctorWorkSchedule {
     @JsonManagedReference("scheduleSlot-schedules")
     Set<ScheduleSlot> scheduleSlots = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
     @JsonManagedReference("doctor-schedules")
     Doctor doctor;
 }
