@@ -24,7 +24,11 @@ public enum ErrorCode {
     DATE_INPUT_INVALID(1017, "Date input is invalid", HttpStatus.BAD_REQUEST),
     WORK_DATE_NOT_EXISTED(1018, "Work date is existed", HttpStatus.NOT_FOUND),
     SCHEDULE_NOT_EXISTED(1019, "Schedule not existed", HttpStatus.NOT_FOUND),
+    LAB_SAMPLE_NOT_EXISTED(1020, "Lab sample not existed", HttpStatus.NOT_FOUND),
+    LAB_SAMPLE_EXISTED(1021, "Lab sample already existed", HttpStatus.BAD_REQUEST),
+    LAB_SAMPLE_CODE_EXISTED(1022, "Lab sample code already existed", HttpStatus.BAD_REQUEST),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
+
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
