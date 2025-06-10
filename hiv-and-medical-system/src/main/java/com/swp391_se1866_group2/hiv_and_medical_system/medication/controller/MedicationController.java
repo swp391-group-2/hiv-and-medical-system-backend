@@ -1,20 +1,15 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.medication.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.MedicationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.MedicationUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.MedicationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.service.MedicationService;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
+
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +38,7 @@ public class MedicationController {
     }
 
     @GetMapping("/{medicationId}")
-    public ApiResponse<MedicationResponse> getMedication(@PathVariable String medicationId) {
+    public ApiResponse<MedicationResponse> getMedication(@PathVariable int medicationId) {
         return ApiResponse.<MedicationResponse>builder()
                 .result(medicationService.getMedication(medicationId))
                 .success(true)
@@ -51,18 +46,12 @@ public class MedicationController {
     }
 
     @PutMapping("/{medicationId}")
-    public ApiResponse<MedicationResponse> updateMedication (@PathVariable String medicationId, @RequestBody MedicationUpdateRequest request){
+    public ApiResponse<MedicationResponse> updateMedication (@PathVariable int medicationId, @RequestBody MedicationUpdateRequest request){
         return ApiResponse.<MedicationResponse>builder()
                 .result(medicationService.updateMedication(medicationId, request))
                 .success(true)
                 .build();
     }
 
-    @DeleteMapping("/{medicationId}")
-    public ApiResponse<Void> deleteMedication(@PathVariable String medicationId) {
-        medicationService.deleteMedication(medicationId);
-        return ApiResponse.<Void>builder()
-                .success(true)
-                .build();
-    }
+
 }

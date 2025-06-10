@@ -1,14 +1,14 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.prescription.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionItemResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.service.PrescriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +22,10 @@ public class PrescriptionController {
     PrescriptionService prescriptionService;
 
     @PostMapping
-    public ApiResponse<PrescriptionResponse>createPrescription(@RequestBody @Valid PrescriptionRequest request) {
+    public ApiResponse<PrescriptionResponse> createPrescription(@RequestBody @Valid PrescriptionCreationRequest request) {
         return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
                 .result(prescriptionService.createPrescription(request))
-                .build();
-    }
-
-    @GetMapping("{prescriptionId}")
-    public ApiResponse<PrescriptionResponse> getPrescription(@PathVariable String prescriptionId) {
-        return ApiResponse.<PrescriptionResponse>builder()
-                .success(true)
-                .result(prescriptionService.getPrescription(prescriptionId))
                 .build();
     }
 
@@ -45,20 +37,22 @@ public class PrescriptionController {
                 .build();
     }
 
-    @PutMapping("{prescriptionId}")
-    public ApiResponse<PrescriptionResponse> updatePrescription(@PathVariable String prescriptionId, @RequestBody @Valid PrescriptionUpdateRequest request) {
-        return ApiResponse.<PrescriptionResponse>builder()
+    @GetMapping("{prescriptionName}")
+    public ApiResponse<List<PrescriptionResponse>> getPrescriptionByName(@PathVariable String prescriptionName) {
+        return ApiResponse.<List<PrescriptionResponse>>builder()
                 .success(true)
-                .result(prescriptionService.updatePrescription(prescriptionId, request))
+                .result(prescriptionService.getPrescriptionByName(prescriptionName))
                 .build();
     }
 
-    @DeleteMapping("{prescriptionId}")
-    public ApiResponse<Void> deletePrescription(@PathVariable String prescriptionId) {
-        prescriptionService.deletePrescription(prescriptionId);
-        return ApiResponse.<Void>builder()
+
+    @PutMapping("/{prescriptionId}/{prescriptionItemId}")
+    public ApiResponse<PrescriptionItemResponse> updatePrescription(@PathVariable int prescriptionId, @PathVariable int prescriptionItemId, @RequestBody @Valid PrescriptionItemUpdateRequest request) {
+        return ApiResponse.<PrescriptionItemResponse>builder()
                 .success(true)
-                .result(null)
+                .result(prescriptionService.updatePrescription(prescriptionId, prescriptionItemId, request))
                 .build();
     }
+
+
 }
