@@ -5,7 +5,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabT
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestParameterResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

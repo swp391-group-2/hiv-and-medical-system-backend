@@ -5,7 +5,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestParameterResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestResponse;
@@ -13,17 +12,12 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionItemResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
-import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.PrescriptionItem;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +30,7 @@ public class LabTestService {
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
         LabTest labTest = labTestMapper.toLabTest(request);
 
@@ -53,6 +48,7 @@ public class LabTestService {
 
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getAllLabTests(){
         return labTestRepository.findAll().stream()
                 .map(labTestMapper::toLabTestResponse)
@@ -60,6 +56,7 @@ public class LabTestService {
 
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getLabTestByName(String labTestName) {
         List<LabTest> labTests = labTestRepository.findAllByNameContainingIgnoreCase(labTestName);
         if (labTests.isEmpty()) {
@@ -71,6 +68,7 @@ public class LabTestService {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestParameterResponse updateLabTestParameter(int labTestId, int labTestParameterId, LabTestParameterUpdateRequest request) {
         LabTest labTest = labTestRepository.findById(labTestId)
                 .orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_NOT_EXISTED));
