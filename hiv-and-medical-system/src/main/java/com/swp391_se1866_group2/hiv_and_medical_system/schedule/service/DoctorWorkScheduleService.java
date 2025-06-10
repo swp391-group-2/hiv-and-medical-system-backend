@@ -3,14 +3,16 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.service;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ScheduleMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.repository.DoctorWorkScheduleRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.service.SlotService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,23 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public DoctorWorkScheduleResponse updateDoctorSchedule (String doctorId, ScheduleUpdateRequest request, LocalDate date) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        DoctorWorkSchedule schedule = doctorWorkScheduleRepository.findByWorkDate(date)
+                .orElseThrow(() -> new AppException(ErrorCode.WORK_DATE_NOT_EXISTED));
+        Set<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
+                .map(slotId -> {
+                    ScheduleSlot scheduleSlot = new ScheduleSlot();
+                    scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                    return scheduleSlot;
+                })
+                .collect(Collectors.toSet());
+        schedule.setScheduleSlots(scheduleSlots);
+        return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<DoctorWorkScheduleResponse> createDoctorScheduleBulk (String doctorId, ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         LocalDate start = request.getWorkDate();
@@ -68,17 +87,28 @@ public class DoctorWorkScheduleService {
         return doctorWorkSchedules;
     }
 
-    public List<DoctorWorkScheduleResponse> getDoctorWorkScheduleByDate (String doctorId, LocalDate workDate) {
+    public List<ScheduleResponse> getDoctorWorkScheduleByDate (String doctorId, LocalDate workDate) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         List<DoctorWorkSchedule> doctorWorkSchedules = doctorWorkScheduleRepository.findAllByWorkDateAndDoctorId(workDate, doctorId);
-        return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
+        return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
     }
 
-    public List<DoctorWorkScheduleResponse> getDoctorWorkScheduleByDoctorId (String doctorId) {
+    public List<ScheduleResponse> getDoctorWorkScheduleByDoctorId (String doctorId) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         List<DoctorWorkSchedule> doctorWorkSchedules = doctorWorkScheduleRepository.findAllByDoctorId(doctorId);
-        return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
+        return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
     }
+
+    @PreAuthorize("hasRole('DOCTOR')")
+    public List<ScheduleResponse> getDWScheduleByTokenAndBetweenDate (LocalDate startTime, LocalDate endTime) {
+        DoctorResponse doctor = doctorService.getDoctorProfileByToken();
+        if(startTime == null && endTime == null) {
+            throw new AppException(ErrorCode.DATE_INPUT_INVALID);
+        }
+        List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
+        return listDWSchedule.stream().map(schedule -> scheduleMapper.toScheduleResponse(schedule)).collect(Collectors.toList());
+    }
+
 
 
 }
