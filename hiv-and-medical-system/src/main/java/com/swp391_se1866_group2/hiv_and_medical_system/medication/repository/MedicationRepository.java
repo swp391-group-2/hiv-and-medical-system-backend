@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface MedicationRepository extends JpaRepository<Medication, String> {
+public interface MedicationRepository extends JpaRepository<Medication, Integer> {
     boolean existsByNameAndStrength(String name, String strength);
 
-    boolean existsByNameAndStrengthAndIdNot(String name, String strength, String id);
+    boolean existsByNameAndStrengthAndIdNot(String name, String strength, int id);
+
+//    Medication findByNameAndStrength(String name, String strength);
 }

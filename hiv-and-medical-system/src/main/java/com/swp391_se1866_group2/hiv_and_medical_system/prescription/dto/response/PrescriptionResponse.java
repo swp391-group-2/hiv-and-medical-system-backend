@@ -6,18 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class PrescriptionResponse {
-    String prescriptionId;
+    int prescriptionId;
     String name;
-    String dosage;
     String contraindication;
     String sideEffect;
     String instructions;
-    String date;
+    LocalDate prescriptionDate;
+    List<PrescriptionItemResponse> prescriptionItems;
 
 }
