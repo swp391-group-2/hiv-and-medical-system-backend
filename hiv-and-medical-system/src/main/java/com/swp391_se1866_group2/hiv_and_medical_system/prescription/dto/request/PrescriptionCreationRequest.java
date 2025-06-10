@@ -7,17 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class PrescriptionRequest {
+public class PrescriptionCreationRequest {
     String name;
-    String dosage;
     String contraindication;
     String sideEffect;
     String instructions;
-    LocalDate date;
+    LocalDate prescriptionDate;
+    List<PrescriptionItemCreationRequest> prescriptionItems;
 }

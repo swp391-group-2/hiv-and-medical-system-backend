@@ -32,11 +32,11 @@ public class MedicationService {
         }
 
         Medication medication = medicationMapper.toMedication(request);
-        return medicationMapper.toMedicationResponse((medicationRepository.save(medication)));
+        return medicationMapper.toMedicationResponse((medicationRepository.saveAndFlush(medication)));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('PATIENT') or hasRole('LAB_TECHNICIAN')")
-    public MedicationResponse getMedication(String medicationId) {
+    public MedicationResponse getMedication(int medicationId) {
         Medication medication = medicationRepository.findById(medicationId)
                 .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
         return medicationMapper.toMedicationResponse(medication);
@@ -50,7 +50,7 @@ public class MedicationService {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public MedicationResponse updateMedication(String medicationId, MedicationUpdateRequest request) {
+    public MedicationResponse updateMedication(int medicationId, MedicationUpdateRequest request) {
         Medication medication = medicationRepository.findById(medicationId)
                 .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
         if (medicationRepository.existsByNameAndStrengthAndIdNot(request.getName(), request.getStrength(), medicationId)){
@@ -61,10 +61,5 @@ public class MedicationService {
         return medicationMapper.toMedicationResponse(medicationRepository.save(medication));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public void deleteMedication(String medicationId) {
-        Medication medication = medicationRepository.findById(medicationId)
-                .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
-        medicationRepository.delete(medication);
-    }
+
 }
