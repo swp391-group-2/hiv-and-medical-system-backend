@@ -22,6 +22,7 @@ public enum ErrorCode {
     SLOT_NOT_EXISTED(1015, "Slot not existed", HttpStatus.NOT_FOUND),
     WORK_DATE_EXISTED(1016, "Work date is existed", HttpStatus.CONFLICT),
     DATE_INPUT_INVALID(1017, "Date input is invalid", HttpStatus.BAD_REQUEST),
+    WORK_DATE_NOT_EXISTED(1016, "Work date is existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {

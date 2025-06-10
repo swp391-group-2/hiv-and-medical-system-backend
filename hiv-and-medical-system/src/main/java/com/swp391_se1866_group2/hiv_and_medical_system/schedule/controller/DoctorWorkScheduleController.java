@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.DoctorWorkScheduleService;
@@ -60,6 +61,14 @@ public class DoctorWorkScheduleController {
         return ApiResponse.<List<ScheduleResponse>>builder()
                 .success(true)
                 .result(scheduleService.getDWScheduleByTokenAndBetweenDate(startDate, endDate))
+                .build();
+    }
+
+    @PutMapping("/{doctorId}/schedules/date")
+    public ApiResponse<DoctorWorkScheduleResponse> updateSchedules(@PathVariable("doctorId") String doctorId, @RequestBody @Valid ScheduleUpdateRequest request, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ApiResponse.<DoctorWorkScheduleResponse>builder()
+                .success(true)
+                .result(scheduleService.updateDoctorSchedule(doctorId, request, date))
                 .build();
     }
 
