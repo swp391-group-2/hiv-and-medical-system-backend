@@ -25,6 +25,9 @@ public enum ErrorCode {
     WORK_DATE_NOT_EXISTED(1018, "Work date is existed", HttpStatus.NOT_FOUND),
     SCHEDULE_NOT_EXISTED(1019, "Schedule not existed", HttpStatus.NOT_FOUND),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
+    LAB_TEST_NOT_EXISTED(1031, "Lab test not existed", HttpStatus.NOT_FOUND),
+    TEST_TYPE_NOT_EXISTED(1032, "Test type not existed", HttpStatus.NOT_FOUND),
+    LAB_TEST_PARAMETER_NOT_EXISTED(1033, "Lab test parameter not existed", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
