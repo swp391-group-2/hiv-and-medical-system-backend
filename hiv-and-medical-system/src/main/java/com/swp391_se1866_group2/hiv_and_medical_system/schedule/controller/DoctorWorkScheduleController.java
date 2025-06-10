@@ -5,12 +5,15 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.Sche
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleSlotResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.DoctorWorkScheduleService;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.ScheduleSlotService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DoctorWorkScheduleController {
     DoctorWorkScheduleService scheduleService;
+    ScheduleSlotService scheduleSlotService;
 
     @PostMapping("/{doctorId}/schedules")
     public ApiResponse<DoctorWorkScheduleResponse> createSchedule(@PathVariable("doctorId") String doctorId
@@ -69,6 +73,15 @@ public class DoctorWorkScheduleController {
         return ApiResponse.<DoctorWorkScheduleResponse>builder()
                 .success(true)
                 .result(scheduleService.updateDoctorSchedule(doctorId, request, date))
+                .build();
+    }
+
+    @PutMapping("/schedules/{scheduleSlotId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ApiResponse<ScheduleSlotResponse> updateScheduleSlot (@PathVariable("scheduleSlotId") int scheduleSlotId){
+        return ApiResponse.<ScheduleSlotResponse>builder()
+                .success(true)
+                .result(scheduleSlotService.updateScheduleSlotStatus(scheduleSlotId))
                 .build();
     }
 
