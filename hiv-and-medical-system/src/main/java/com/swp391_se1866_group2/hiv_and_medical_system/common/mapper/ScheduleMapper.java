@@ -19,5 +19,4 @@ public interface ScheduleMapper {
     ScheduleSlotResponse toScheduleSlotResponse (ScheduleSlot scheduleSlots);
 
     ScheduleResponse toScheduleResponse (DoctorWorkSchedule schedule);
-
 }
