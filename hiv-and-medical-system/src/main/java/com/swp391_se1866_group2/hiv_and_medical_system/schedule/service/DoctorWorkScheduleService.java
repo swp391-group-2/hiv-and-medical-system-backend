@@ -7,6 +7,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.Docto
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
@@ -54,6 +55,22 @@ public class DoctorWorkScheduleService {
         schedule.setDoctor(doctor);
         schedule.setScheduleSlots(scheduleSlots);
         schedule.setWorkDate(request.getWorkDate());
+        return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public DoctorWorkScheduleResponse updateDoctorSchedule (String doctorId, ScheduleUpdateRequest request, LocalDate date) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        DoctorWorkSchedule schedule = doctorWorkScheduleRepository.findByWorkDate(date)
+                .orElseThrow(() -> new AppException(ErrorCode.WORK_DATE_NOT_EXISTED));
+        Set<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
+                .map(slotId -> {
+                    ScheduleSlot scheduleSlot = new ScheduleSlot();
+                    scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                    return scheduleSlot;
+                })
+                .collect(Collectors.toSet());
+        schedule.setScheduleSlots(scheduleSlots);
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
     }
 
