@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleSlotResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.ScheduleSlot;
@@ -16,4 +17,6 @@ public interface ScheduleMapper {
 
     @Mapping(target = "slot", source = "slot", qualifiedByName = "toSlotResponse")
     ScheduleSlotResponse toScheduleSlotResponse (ScheduleSlot scheduleSlots);
+
+    ScheduleResponse toScheduleResponse (DoctorWorkSchedule schedule);
 }
