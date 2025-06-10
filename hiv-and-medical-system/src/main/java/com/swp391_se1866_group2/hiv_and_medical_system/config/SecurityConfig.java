@@ -28,7 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {"/api/users", "/api/auth/signup", "/api/auth/login"};
-    private final String[] PUBLIC_ENDPOINTS_GET = {"/api/doctors", "/api/doctors/{*}", "/api/doctors/{*}/**"};
+    private final String[] PUBLIC_ENDPOINTS_GET = {"/api/doctors", "/api/doctors/{doctorId}/schedules/**"};
     private final String[] PUBLIC_ENDPOINTS_SWAGGER = {"/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",

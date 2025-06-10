@@ -30,7 +30,7 @@ public class Doctor {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     @JsonBackReference("user-doctor")
     User user;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
     @JsonBackReference("doctor-schedules")
     Set<DoctorWorkSchedule> doctorWorkSchedules;
 }
