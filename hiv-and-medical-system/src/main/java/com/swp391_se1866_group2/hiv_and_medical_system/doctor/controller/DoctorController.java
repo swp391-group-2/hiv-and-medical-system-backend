@@ -36,10 +36,10 @@ public class DoctorController {
                 .build();
     }
 
-    @GetMapping("/{doctorid}")
-    public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorid){
+    @GetMapping("/{doctorId}")
+    public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorId){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.getDoctorById(doctorid))
+                .result(doctorService.getDoctorResponseById(doctorId))
                 .success(true)
                 .build();
     }

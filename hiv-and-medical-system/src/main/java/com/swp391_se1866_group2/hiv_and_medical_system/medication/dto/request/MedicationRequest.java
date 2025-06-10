@@ -14,4 +14,6 @@ import lombok.experimental.FieldDefaults;
 public class MedicationRequest {
     String name;
     String strength;
+    String dosageForm;
+    String description;
 }

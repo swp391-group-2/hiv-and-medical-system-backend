@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class MedicationResponse {
-    String medicationId;
+    int medicationId;
     String name;
     String description;
     String dosageForm;
