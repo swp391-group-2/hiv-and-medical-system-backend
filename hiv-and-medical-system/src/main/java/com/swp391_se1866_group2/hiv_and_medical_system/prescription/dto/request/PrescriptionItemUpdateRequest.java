@@ -11,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class PrescriptionUpdateRequest {
+public class PrescriptionItemUpdateRequest {
     String dosage;
-    String contraindication;
-    String sideEffect;
-    String instructions;
+    String frequency;
+    String duration;
+
 }
