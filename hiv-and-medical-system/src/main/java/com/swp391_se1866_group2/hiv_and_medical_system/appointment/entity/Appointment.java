@@ -1,8 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppoimentStatus;
-import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.entity.LabSample;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
@@ -36,7 +35,8 @@ public class Appointment {
     Prescription prescription;
     @ManyToOne(fetch = FetchType.LAZY)
     ScheduleSlot scheduleSlot;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JoinColumn(name = "lab_sample_id")
     LabSample labSample;
     @Enumerated(EnumType.STRING)
     AppoimentStatus status;

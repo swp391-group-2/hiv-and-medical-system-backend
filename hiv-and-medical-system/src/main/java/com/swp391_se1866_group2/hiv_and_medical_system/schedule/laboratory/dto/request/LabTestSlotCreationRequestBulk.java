@@ -3,7 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.dto.
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -11,5 +11,5 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LabTestSlotCreationRequestBulk {
-    Set<Integer> slots;
+    List<Integer> slots;
 }

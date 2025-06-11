@@ -25,17 +25,12 @@ public class LabResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
-
-    Double resultNumeric;
-
+    Double resultNumericCD4;
+    Double resultNumericViralLoad;
     String resultText;
-
+    @CreationTimestamp
     @Column(nullable = false)
     LocalDate resultDate;
-
-    @Column(nullable = false)
-    LocalDate testDate;
 
     @Column(nullable = false)
     String conclusion;

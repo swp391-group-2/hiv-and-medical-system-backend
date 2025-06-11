@@ -1,16 +1,29 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppoimentStatus;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabTestStatus;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AppointmentMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.service.LabSampleService;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabResult;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabResultRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
@@ -36,11 +49,17 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppointmentService {
     AppointmentRepository appointmentRepository;
+    LabSampleRepository labSampleRepository;
+    LabResultRepository labResultRepository;
+    LabTestRepository labTestRepository;
+    LabTestParameterRepository labTestParameterRepository;
     LabTestSlotService labTestSlotService;
+    LabSampleService labSampleService;
     ScheduleSlotService scheduleSlotService;
     PatientService patientService;
     ServiceService serviceService;
 
+    LabTestMapper labTestMapper;
     AppointmentMapper appointmentMapper;
 
     @PreAuthorize("hasRole('PATIENT')")
@@ -75,27 +94,94 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponse(appointmentSaved);
     }
 
-    @PreAuthorize("hasRole('PATIENT')or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
-    public AppointmentResponse getAppointmentById(int id) {
-        Appointment appointment = appointmentRepository.findById(id);
-        if (appointment == null) {
-            throw new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED);
+    @PreAuthorize("hasRole('PATIENT') or hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+    public AppointmentLabSampleResponse getAppointmentById(int id) {
+        AppointmentLabSampleResponse appointmentLabSampleResponse = appointmentMapper.toAppointmentLabResponse(appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED)));
+        if(appointmentLabSampleResponse.getLabSampleId() != null){
+            LabResult labResult = labResultRepository.findByLabSampleId(appointmentLabSampleResponse.getLabSampleId());
+            appointmentLabSampleResponse.setLabResult(labTestMapper.toLabResultResponse(labResult));
         }
-        return appointmentMapper.toAppointmentResponse(appointment);
+        return appointmentLabSampleResponse;
     }
 
-    @PreAuthorize("hasRole('PATIENT')or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
-    public List<AppointmentResponse> getAllAppointments() {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+    public List<AppointmentLabSampleResponse> getAllAppointments() {
         return appointmentRepository.findAll().stream()
-                .map(appointment -> appointmentMapper.toAppointmentResponse(appointment))
+                .map(appointment -> {
+                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
+                    if (response.getLabSampleId() != null) {
+                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
+                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+                    }
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
-    public List<AppointmentResponse> getAllAppointmentsByStatus(AppoimentStatus status) {
+    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+    public List<AppointmentLabSampleResponse> getAllAppointmentsByStatus(AppoimentStatus status) {
         return appointmentRepository.findByStatus(status).stream()
-                .map(appointment -> appointmentMapper.toAppointmentResponse(appointment))
+                .map(appointment -> {
+                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
+                    if(response.getLabSampleId() != null){
+                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
+                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+                    }
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+    public AppointmentLabSampleResponse checkinAppointment(int appointmentId, LabSampleCreationRequest request) {
+        Appointment appointment = getAppointmentByAppointmentId(appointmentId);
+        if (appointment.getLabSample() != null) {
+            throw new AppException(ErrorCode.ALREADY_CHECKED_IN);
+        }
+        LabSample sample = new LabSample();
+        sample.setSampleCode(request.getSampleCode());
+        sample.setSampleType(request.getSampleType());
+        sample.setStatus(LabSampleStatus.COLLECTED);
+        LabTestParameter labTestParameter;
+        LabTest labTest = labTestRepository.findByServiceServiceType(appointment.getService().getServiceType());
+        labTestParameter = labTestParameterRepository.findByLabTestId(labTest.getId());
+
+        LabResult labResult = new LabResult();
+
+        if(labTestParameter.getParameterType() == ParameterType.NUMERIC){
+            labResult.setResultNumericCD4(labResult.getResultNumericCD4());
+            labResult.setResultNumericViralLoad(labResult.getResultNumericViralLoad());
+            labResult.setResultText(null);
+        }
+        else {
+            labResult.setResultNumericCD4(null);
+            labResult.setResultNumericViralLoad(null);
+            labResult.setResultText(labResult.getResultText());
+        }
+        labResult.setLabSample(sample);
+        labResult.setLabTestParameter(labTestParameter);
+        labResult.setConclusion("");
+        labResult.setNote("");
+        labTestParameter.setLabResult(labResult);
+        labResult.setLabSample(sample);
+        sample.setLabResults(labResult);
+        sample.setAppointment(appointment);
+        appointment.setStatus(AppoimentStatus.CHECKED_IN);
+        appointment.setLabSample(sample);
+        labSampleRepository.save(sample);
+        return appointmentMapper.toAppointmentLabResponse(appointmentRepository.save(appointment));
+    }
+
+    public LabResultResponse updateLabResultAppointment(int sampleId, LabResultUpdateRequest request) {
+        LabResult labResult =  labResultRepository.findByLabSampleId(sampleId);
+        labTestMapper.updateLabResult(request, labResult);
+        Appointment appointment = getAppointmentByAppointmentId(labResult.getLabSample().getAppointment().getId());
+        appointment.setStatus(AppoimentStatus.LAB_COMPLETED);
+        appointmentRepository.save(appointment);
+        return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
+    }
+
+    public Appointment getAppointmentByAppointmentId(int id) {
+        return appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+    }
 
 }
