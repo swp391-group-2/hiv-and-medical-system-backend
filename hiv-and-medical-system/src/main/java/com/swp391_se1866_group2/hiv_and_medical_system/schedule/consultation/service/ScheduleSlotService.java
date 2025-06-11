@@ -1,11 +1,11 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.service;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ScheduleMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleSlotResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.ScheduleSlot;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.repository.ScheduleSlotRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
