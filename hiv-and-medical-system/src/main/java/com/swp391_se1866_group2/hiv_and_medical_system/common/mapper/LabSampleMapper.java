@@ -1,8 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request.LabSampleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.response.LabSampleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.entity.LabSample;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
