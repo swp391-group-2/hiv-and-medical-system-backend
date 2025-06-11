@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ServiceMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.request.ServiceCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.request.ServiceUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.response.ServiceResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.repository.ServiceRepository;
@@ -30,5 +31,14 @@ public class ServiceService {
         ServiceEntity service = serviceMapper.toServiceEntity(request);
         return serviceMapper.toServiceResponse(serviceRepository.save(service));
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ServiceResponse updateService(int serviceId, ServiceUpdateRequest request) {
+        ServiceEntity service = serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));
+        serviceMapper.updateServiceEntity(request, service);
+        return serviceMapper.toServiceResponse(serviceRepository.save(service));
+    }
+    
 
 }
