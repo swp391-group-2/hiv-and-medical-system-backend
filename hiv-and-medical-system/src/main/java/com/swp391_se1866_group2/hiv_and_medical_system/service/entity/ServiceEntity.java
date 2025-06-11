@@ -1,9 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,11 +11,15 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Service {
+public class ServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @Column(nullable = false)
     String name;
-    String price;
-    String type;
+    @Column(nullable = false)
+    double price;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    ServiceType serviceType;
 }
