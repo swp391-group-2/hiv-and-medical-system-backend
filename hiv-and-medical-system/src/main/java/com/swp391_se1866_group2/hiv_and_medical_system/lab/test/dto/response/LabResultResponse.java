@@ -20,12 +20,10 @@ public class LabResultResponse {
     int labResultId;
     String resultText;
     Double resultNumeric;
+    Double resultNumericCD4;
+    Double resultNumericViralLoad;
     String conclusion;
     String note;
     LocalDate resultDate;
-    LocalDate testDate;
     LabSampleResponse labSample;
-
-
-
 }

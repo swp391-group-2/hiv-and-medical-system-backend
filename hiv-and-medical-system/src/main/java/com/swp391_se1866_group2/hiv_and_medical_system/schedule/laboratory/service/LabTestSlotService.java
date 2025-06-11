@@ -35,9 +35,9 @@ public class LabTestSlotService {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestSlotResponse> createLabTestSlotBulk (LabTestSlotCreationRequest request) {
-        Set<Slot> slots = request.getSlots().stream()
+        List<Slot> slots = request.getSlots().stream()
                 .map(slotId -> slotService.getSlotById(slotId) )
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         List<LabTestSlotResponse> labTestSlotResponses = new ArrayList<>();
         slots.forEach(slot -> {
             labTestSlotResponses.add(createLabTestSlot(slot, request.getDate()));

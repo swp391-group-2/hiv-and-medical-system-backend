@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,17 +45,17 @@ public class DoctorWorkScheduleService {
         if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
             throw new AppException(ErrorCode.WORK_DATE_EXISTED);
         }
-        final DoctorWorkSchedule schedule = new DoctorWorkSchedule();
+        DoctorWorkSchedule schedule = new DoctorWorkSchedule();
         schedule.setDoctor(doctor);
         schedule.setWorkDate(request.getWorkDate());
-        Set<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
+        List<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
                 .map(slotId -> {
                     ScheduleSlot scheduleSlot = new ScheduleSlot();
                     scheduleSlot.setSlot(slotService.getSlotById(slotId));
                     scheduleSlot.setSchedule(schedule);
                     return scheduleSlot;
                 })
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         schedule.setScheduleSlots(scheduleSlots);
         DoctorWorkSchedule doctorWorkSchedule = doctorWorkScheduleRepository.save(schedule);
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
@@ -65,14 +66,14 @@ public class DoctorWorkScheduleService {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         DoctorWorkSchedule schedule = doctorWorkScheduleRepository.findByWorkDate(date)
                 .orElseThrow(() -> new AppException(ErrorCode.WORK_DATE_NOT_EXISTED));
-        Set<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
+        List<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
                 .map(slotId -> {
                     ScheduleSlot scheduleSlot = new ScheduleSlot();
                     scheduleSlot.setSlot(slotService.getSlotById(slotId));
                     scheduleSlot.setSchedule(schedule);
                     return scheduleSlot;
                 })
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         schedule.setScheduleSlots(scheduleSlots);
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
     }

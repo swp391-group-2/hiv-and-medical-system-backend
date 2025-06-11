@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 public class LabTestParameterCreationRequest {
     String parameterName;
     String unit;
-    String normalRange;
+    String normalRangeCD4;
+    String normalRangeStringViralLoad;
     String description;
     ParameterType parameterType;
-    LabResultCreationRequest labResult;
 }

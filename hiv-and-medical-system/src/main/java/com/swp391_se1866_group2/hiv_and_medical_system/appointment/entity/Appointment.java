@@ -36,7 +36,8 @@ public class Appointment {
     Prescription prescription;
     @ManyToOne(fetch = FetchType.LAZY)
     ScheduleSlot scheduleSlot;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JoinColumn(name = "lab_sample_id")
     LabSample labSample;
     @Enumerated(EnumType.STRING)
     AppoimentStatus status;

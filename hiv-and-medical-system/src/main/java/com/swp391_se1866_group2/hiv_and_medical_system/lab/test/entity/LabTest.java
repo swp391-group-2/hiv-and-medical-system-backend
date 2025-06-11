@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TestType;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,5 +48,10 @@ public class LabTest {
     @OneToOne(mappedBy = "labTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     LabTestParameter labTestParameter;
+
+    @OneToOne
+    @JoinColumn(name = "service_id", nullable = false)
+    @JsonManagedReference
+    private ServiceEntity service;
 
 }
