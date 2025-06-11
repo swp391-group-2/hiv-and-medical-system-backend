@@ -3,6 +3,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 
@@ -13,5 +14,5 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleCreationRequest {
     LocalDate workDate;
-    Set<Integer> slotId;
+    List<Integer> slotId;
 }

@@ -89,7 +89,7 @@ public class AuthenticationService {
                 .claim("id", user.getId())
                 .issuer("medcarehiv.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
                 .claim("scope", "ROLE_" + user.getRole())
                 .build();
         Payload payload =  new Payload(jwtClaimsSet.toJSONObject());
