@@ -33,7 +33,9 @@ public class LabTestParameter {
 
     String unit;
 
-    String normalRange;
+    String normalRangeCD4;
+
+    String normalRangeStringViralLoad;
 
     String description;
 
@@ -48,6 +50,6 @@ public class LabTestParameter {
     @JsonBackReference
     LabTest labTest;
 
-    @OneToOne(mappedBy = "labTestParameter", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "labTestParameter")
     LabResult labResult;
 }

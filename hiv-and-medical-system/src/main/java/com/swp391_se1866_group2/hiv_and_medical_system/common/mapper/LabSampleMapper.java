@@ -11,4 +11,5 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface LabSampleMapper {
     LabSample toLabSample(LabSampleCreationRequest request);
     LabSampleResponse toLabSampleResponse(LabSample labSample);
+
 }

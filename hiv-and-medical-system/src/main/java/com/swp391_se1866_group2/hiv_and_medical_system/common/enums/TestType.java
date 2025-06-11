@@ -6,17 +6,14 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 public enum TestType {
     SCREENING,
     CONFIRMATORY,
-    CD4,
-    VIRAL_LOAD;
+    CD4_VIRAL_LOAD;
 
     public ParameterType getParameterType() {
         switch (this) {
             case SCREENING:
             case CONFIRMATORY:
                 return ParameterType.TEXT;
-
-            case VIRAL_LOAD:
-            case CD4:
+            case CD4_VIRAL_LOAD:
                 return ParameterType.NUMERIC;
 
             default:

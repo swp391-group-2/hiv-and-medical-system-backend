@@ -62,4 +62,13 @@ public class LabSampleService {
         return labSampleMapper.toLabSampleResponse(labSampleRepository.save(labSample));
     }
 
+    public LabSample createLabSampleRequest(LabSampleCreationRequest request) {
+        if(labSampleRepository.existsBySampleCode(request.getSampleCode())){
+            throw new AppException(ErrorCode.LAB_SAMPLE_EXISTED);
+        }
+        LabSample labSample = labSampleMapper.toLabSample(request);
+        labSample.setStatus(LabSampleStatus.COLLECTED);
+        return labSampleRepository.save(labSample);
+    }
+
 }

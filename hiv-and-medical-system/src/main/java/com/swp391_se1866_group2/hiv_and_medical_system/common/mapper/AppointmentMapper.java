@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import org.hibernate.LazyInitializationException;
@@ -10,12 +11,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Mapper(componentModel = "spring",
+        uses = {PatientMapper.class, LabSampleMapper.class, LabTestMapper.class},
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapper {
-
     @Mapping(target = "appointmentId", source = "id")
-    @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "patient", source = "patient")
     @Mapping(target = "serviceId", source = "service.id")
     @Mapping(target = "serviceName", source = "service.name")
     @Mapping(target = "serviceType", source = "service.serviceType")
@@ -31,6 +32,24 @@ public interface AppointmentMapper {
     @Mapping(target = "slotDescription", expression = "java(getSlotDescription(appointment))")
     @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
     AppointmentResponse toAppointmentResponse(Appointment appointment);
+
+    @Mapping(target = "appointmentId", source = "id")
+    @Mapping(target = "patient", source = "patient")
+    @Mapping(target = "serviceId", source = "service.id")
+    @Mapping(target = "serviceName", source = "service.name")
+    @Mapping(target = "serviceType", source = "service.serviceType")
+    @Mapping(target = "price", source = "service.price")
+    @Mapping(target = "labTestSlotId", source = "labTestSlot.id")
+    @Mapping(target = "scheduleSlotId", source = "scheduleSlot.id")
+    @Mapping(target = "prescriptionId", source = "prescription.id")
+    @Mapping(target = "labSampleId", source = "labSample.id")
+    @Mapping(target = "doctorName", expression = "java(getDoctorName(appointment))")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "startTime", expression = "java(getStartTime(appointment))")
+    @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
+    @Mapping(target = "slotDescription", expression = "java(getSlotDescription(appointment))")
+    @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
+    AppointmentLabSampleResponse toAppointmentLabResponse(Appointment appointment);
 
     default String getDoctorName(Appointment appointment) {
         try {

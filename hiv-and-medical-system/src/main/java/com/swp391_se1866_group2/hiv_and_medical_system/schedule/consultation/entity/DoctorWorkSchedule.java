@@ -10,7 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,7 +36,7 @@ public class DoctorWorkSchedule {
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @OneToMany(mappedBy = "schedule",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ScheduleSlot> scheduleSlots = new HashSet<>();
+    List<ScheduleSlot> scheduleSlots = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     @JsonManagedReference("doctor-schedules")
