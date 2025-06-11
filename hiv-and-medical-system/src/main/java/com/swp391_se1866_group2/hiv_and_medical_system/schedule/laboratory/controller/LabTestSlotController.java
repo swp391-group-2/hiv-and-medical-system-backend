@@ -58,7 +58,7 @@ public class LabTestSlotController {
     @GetMapping("/{labTestSlotId}")
     public ApiResponse<LabTestSlotResponse> getLabTestSlotById (@PathVariable int labTestSlotId) {
         return ApiResponse.<LabTestSlotResponse>builder()
-                .result(labTestSlotService.getLabTestSlotById(labTestSlotId))
+                .result(labTestSlotService.getLabTestResponseSlotById(labTestSlotId))
                 .success(true)
                 .build();
     }

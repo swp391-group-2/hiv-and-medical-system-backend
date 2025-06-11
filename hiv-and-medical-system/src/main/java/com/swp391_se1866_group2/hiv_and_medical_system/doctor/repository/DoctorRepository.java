@@ -19,4 +19,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
         FROM Doctor d JOIN d.user u WHERE u.email = :email""")
     Optional<DoctorResponse> findDoctorByToken(@Param("email") String email);
 
+    @Query(""" 
+            SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse (d.id, u.id, u.email, u.fullName, u.status, u.code, d.licenseNumber, d.specialization) FROM Doctor d JOIN d.user u WHERE u.email = :email""")
+    Optional<DoctorResponse> findDoctorByUserEmail(@Param("email") String email);
+
+
 }

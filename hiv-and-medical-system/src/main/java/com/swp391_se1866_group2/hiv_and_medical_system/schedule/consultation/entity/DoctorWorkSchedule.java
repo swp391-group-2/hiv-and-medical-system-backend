@@ -19,9 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DoctorWorkSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     int id;
     @Column(nullable = false, unique = true)
     LocalDate workDate;
@@ -31,8 +33,7 @@ public class DoctorWorkSchedule {
     LocalDateTime createdAt;
     @UpdateTimestamp
     LocalDateTime updatedAt;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference("scheduleSlot-schedules")
+    @OneToMany(mappedBy = "schedule",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ScheduleSlot> scheduleSlots = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")

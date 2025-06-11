@@ -14,4 +14,6 @@ public interface LabTestSlotRepository extends JpaRepository<LabTestSlot, Intege
 
     List<LabTestSlot> findAllByDate(LocalDate date);
 
+    LabTestSlot findBySlotId(Integer slotId);
+
 }

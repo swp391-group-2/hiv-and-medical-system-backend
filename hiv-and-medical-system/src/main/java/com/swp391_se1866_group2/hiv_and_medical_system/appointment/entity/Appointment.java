@@ -31,14 +31,12 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     LabTestSlot labTestSlot;
     @ManyToOne(fetch = FetchType.LAZY)
-    Doctor doctor;
-    @ManyToOne(fetch = FetchType.LAZY)
     ServiceEntity service;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Prescription prescription;
     @ManyToOne(fetch = FetchType.LAZY)
     ScheduleSlot scheduleSlot;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     LabSample labSample;
     @Enumerated(EnumType.STRING)
     AppoimentStatus status;
