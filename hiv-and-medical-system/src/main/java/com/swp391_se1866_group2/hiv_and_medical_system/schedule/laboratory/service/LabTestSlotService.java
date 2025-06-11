@@ -68,7 +68,7 @@ public class LabTestSlotService {
                 .collect(Collectors.toList());
     }
 
-    public LabTestSlotResponse getLabTestSlotById(int id){
+    public LabTestSlotResponse getLabTestResponseSlotById(int id){
         return scheduleMapper.toLabTestSlotResponse(labTestSlotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_SLOT_NOT_EXISTED)));
     }
 
@@ -82,6 +82,15 @@ public class LabTestSlotService {
         labTestSlot.setStatus(LabTestStatus.AVAILABLE);
         return scheduleMapper.toLabTestSlotResponse(labTestSlotRepository.save(labTestSlot));
     }
+
+    public LabTestSlot getLabTestSlotById(int id){
+        return labTestSlotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_SLOT_NOT_EXISTED));
+    }
+
+    public LabTestSlot getLabTestSlotBySlotId(int id){
+        return labTestSlotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_SLOT_NOT_EXISTED));
+    }
+
 
 
 }

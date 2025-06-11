@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleSlotResponse {
     int id;
+    private Integer scheduleId;
     SlotResponse slot;
     String status;
 }
