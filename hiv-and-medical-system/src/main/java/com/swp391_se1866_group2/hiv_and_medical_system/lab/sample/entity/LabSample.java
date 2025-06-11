@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.labsample.entity;
+package com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabSampleStatus;
 import jakarta.persistence.*;
