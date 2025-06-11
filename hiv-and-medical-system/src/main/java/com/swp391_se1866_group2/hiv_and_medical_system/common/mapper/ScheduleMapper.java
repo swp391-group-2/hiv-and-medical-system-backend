@@ -15,9 +15,11 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 public interface ScheduleMapper {
     @Mapping(target = "doctor", source = "doctor", qualifiedByName = "toDoctorResponse")
+    @Mapping(target = "scheduleSlots", source = "scheduleSlots")
     DoctorWorkScheduleResponse toDoctorWorkScheduleResponse (DoctorWorkSchedule schedule);
 
     @Mapping(target = "slot", source = "slot", qualifiedByName = "toSlotResponse")
+    @Mapping(target = "scheduleId", source = "schedule.id")
     ScheduleSlotResponse toScheduleSlotResponse (ScheduleSlot scheduleSlots);
 
     ScheduleResponse toScheduleResponse (DoctorWorkSchedule schedule);

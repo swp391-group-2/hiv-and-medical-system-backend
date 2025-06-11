@@ -31,5 +31,9 @@ public class ScheduleSlotService {
         return scheduleMapper.toScheduleSlotResponse(scheduleSlotRepository.save(scheduleSlot)) ;
     }
 
+    public ScheduleSlot getScheduleSlotById (int scheduleSlotId) {
+        return scheduleSlotRepository.findById(scheduleSlotId).orElseThrow(() -> new RuntimeException(ErrorCode.SCHEDULE_SLOT_NOT_EXISTED.getMessage()));
+    }
+
 
 }

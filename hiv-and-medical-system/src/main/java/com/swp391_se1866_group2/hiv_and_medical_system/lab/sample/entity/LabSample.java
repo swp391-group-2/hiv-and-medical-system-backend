@@ -25,7 +25,8 @@ public class LabSample {
     String sampleType;
     @CreationTimestamp
     LocalDateTime collectedAt;
-    String status;
+    @Enumerated(EnumType.STRING)
+    LabSampleStatus status = LabSampleStatus.PENDING;
     @CreationTimestamp
     @Column(updatable = false)
     LocalDateTime createdAt;

@@ -70,6 +70,10 @@ public class DoctorService {
         return doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
+    public DoctorResponse getDoctorByEmail(String email){
+        return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    }
+
 
 
 

@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage("Internal Server Error");
         log.error("RuntimeException: {}", exception.getMessage());
+        log.error("Stack trace: ", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
 
     }
