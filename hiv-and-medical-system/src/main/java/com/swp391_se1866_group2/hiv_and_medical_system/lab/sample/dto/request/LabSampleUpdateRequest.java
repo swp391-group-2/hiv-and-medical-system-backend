@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request;
+package com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

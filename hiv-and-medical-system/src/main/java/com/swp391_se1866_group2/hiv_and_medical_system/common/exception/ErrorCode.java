@@ -35,6 +35,9 @@ public enum ErrorCode {
     LAB_TEST_SLOT_EXISTED(1028, "Lab test slot already existed", HttpStatus.BAD_REQUEST),
     LAB_TEST_SLOT_NOT_EXISTED(1029, "Lab test slot not existed", HttpStatus.NOT_FOUND),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
+    LAB_TEST_NOT_EXISTED(1031, "Lab test not existed", HttpStatus.NOT_FOUND),
+    TEST_TYPE_NOT_EXISTED(1032, "Test type not existed", HttpStatus.NOT_FOUND),
+    LAB_TEST_PARAMETER_NOT_EXISTED(1033, "Lab test parameter not existed", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {

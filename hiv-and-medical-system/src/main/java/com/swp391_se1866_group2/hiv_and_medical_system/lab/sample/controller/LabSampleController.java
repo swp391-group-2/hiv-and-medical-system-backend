@@ -1,10 +1,10 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.labsample.controller;
+package com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request.LabSampleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request.LabSampleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.response.LabSampleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.service.LabSampleService;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.service.LabSampleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
