@@ -1,8 +1,7 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
-import com.swp391_se1866_group2.hiv_and_medical_system.slot.entity.Slot;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

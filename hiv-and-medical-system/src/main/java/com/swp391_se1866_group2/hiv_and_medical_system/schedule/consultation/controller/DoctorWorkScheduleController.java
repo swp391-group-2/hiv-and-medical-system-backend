@@ -1,13 +1,13 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.controller;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleSlotResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.DoctorWorkScheduleService;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.service.ScheduleSlotService;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.DoctorWorkScheduleService;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.ScheduleSlotService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
