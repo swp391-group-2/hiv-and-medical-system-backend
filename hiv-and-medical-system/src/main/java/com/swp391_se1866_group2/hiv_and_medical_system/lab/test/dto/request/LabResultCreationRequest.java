@@ -17,12 +17,11 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class LabResultCreationRequest {
     String resultText;
-    Double resultNumeric;
+    Double resultNumericCD4;
+    Double resultNumericViralLoad;
     String conclusion;
     String note;
     LocalDate resultDate;
-    LocalDate testDate;
     int labTestParameterId;
     int sampleId;
-
 }

@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TestType;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,5 @@ public class LabTestResponse {
     TestType testType;
     String method;
     LabTestParameterResponse labTestParameter;
-    LabSampleResponse labSample;
+    ServiceEntity service;
 }

@@ -14,6 +14,7 @@ public class LabSampleResponse {
     int id;
     String sampleCode;
     String sampleType;
+    LabSampleResponse results;
     LocalDateTime collectedAt;
     String status;
 }

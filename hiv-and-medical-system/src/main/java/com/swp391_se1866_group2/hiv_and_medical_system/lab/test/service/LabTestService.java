@@ -18,6 +18,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @Transactional
 public class LabTestService {
+    ServiceService serviceService;
+
     LabTestMapper labTestMapper;
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
@@ -48,40 +52,22 @@ public class LabTestService {
         ParameterType parameterType = labTest.getTestType().getParameterType();
         labTestParameter.setParameterType(parameterType);
 
+        ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
         if(parameterType == ParameterType.NUMERIC){
             labTestParameter.setUnit(parameterRequest.getUnit());
-            labTestParameter.setNormalRange(parameterRequest.getNormalRange());
+            labTestParameter.setNormalRangeCD4(parameterRequest.getNormalRangeCD4());
+            labTestParameter.setNormalRangeStringViralLoad(parameterRequest.getNormalRangeStringViralLoad());
         }
         else {
             labTestParameter.setUnit(null);
-            labTestParameter.setNormalRange(null);
+            labTestParameter.setNormalRangeCD4(null);
+            labTestParameter.setNormalRangeStringViralLoad(null);
         }
-
         labTest.setLabTestParameter(labTestParameter);
         labTestParameter.setLabTest(labTest);
 
-        LabResultCreationRequest resultRequest = parameterRequest.getLabResult();
-        LabSample labSample = labSampleRepository.findById(resultRequest.getSampleId())
-                .orElseThrow(() -> new AppException(ErrorCode.LAB_SAMPLE_NOT_EXISTED));
-        LabResult labResult = new LabResult();
-        labResult.setConclusion(resultRequest.getConclusion());
-        labResult.setNote(resultRequest.getNote());
-        labResult.setTestDate(resultRequest.getTestDate());
-        labResult.setResultDate(resultRequest.getResultDate());
-
-        if(parameterType == ParameterType.NUMERIC){
-            labResult.setResultNumeric(resultRequest.getResultNumeric());
-            labResult.setResultText(null);
-        }
-        else {
-            labResult.setResultNumeric(null);
-            labResult.setResultText(resultRequest.getResultText());
-        }
-
-        labResult.setLabSample(labSample);
-        labResult.setLabTestParameter(labTestParameter);
-        labTestParameter.setLabResult(labResult);
-
+        labTest.setService(service);
+        service.setLabTest(labTest);
         return labTestMapper.toLabTestResponse(labTestRepository.save(labTest));
 
     }
@@ -117,12 +103,12 @@ public class LabTestService {
         }
 
         labTestParameter.setUnit(request.getUnit());
-        labTestParameter.setNormalRange(request.getNormalRange());
+        labTestParameter.setNormalRangeCD4(request.getNormalRangeCD4());
+        labTestParameter.setNormalRangeStringViralLoad(request.getNormalRangeStringViralLoad());
         labTestParameter.setDescription(request.getDescription());
 
         labTestParameterRepository.save(labTestParameter);
         return labTestMapper.toLabTestParameterResponse(labTestParameter);
-
     }
 
 
