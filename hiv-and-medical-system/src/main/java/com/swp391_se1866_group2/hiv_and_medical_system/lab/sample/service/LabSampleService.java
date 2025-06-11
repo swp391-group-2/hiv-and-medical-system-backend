@@ -34,6 +34,7 @@ public class LabSampleService {
         }
         LabSample labSample = labSampleMapper.toLabSample(request);
         labSample.setStatus(LabSampleStatus.PENDING);
+
         return labSampleMapper.toLabSampleResponse(labSampleRepository.save(labSample));
     }
 
