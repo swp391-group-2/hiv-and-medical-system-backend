@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.response;
+package com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabSampleStatus;
 import lombok.*;

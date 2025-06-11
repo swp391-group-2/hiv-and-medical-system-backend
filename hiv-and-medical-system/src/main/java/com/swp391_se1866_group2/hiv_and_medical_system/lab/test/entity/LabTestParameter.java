@@ -47,4 +47,7 @@ public class LabTestParameter {
     @JoinColumn(name = "lab_test_id", nullable = false)
     @JsonBackReference
     LabTest labTest;
+
+    @OneToOne(mappedBy = "labTestParameter", cascade = CascadeType.ALL)
+    LabResult labResult;
 }
