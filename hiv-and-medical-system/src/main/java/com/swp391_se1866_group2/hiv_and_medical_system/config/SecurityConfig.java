@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +28,8 @@ import javax.crypto.spec.SecretKeySpec;
 @RequiredArgsConstructor
 
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS_POST = {"/api/users", "/api/auth/signup", "/api/auth/login"};
-    private final String[] PUBLIC_ENDPOINTS_GET = {"/api/doctors", "/api/doctors/{doctorId}/schedules/**"};
+    private final String[] PUBLIC_ENDPOINTS_POST = {"/api/users", "/api/auth/signup", "/api/auth/login", "/api/auth/logout", "/api/auth/introspect", "api/auth/refresh"};
+    private final String[] PUBLIC_ENDPOINTS_GET = {"/api/doctors", "/api/doctors/schedules" , "/api/doctors/{doctorId}/schedules/**", "/api/test/schedules/**"};
     private final String[] PUBLIC_ENDPOINTS_SWAGGER = {"/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -38,8 +39,11 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/webjars/**"};
 
-    @Value("${jwt.signerKey}")
-    private String signerKey;
+//    @Value("${jwt.signerKey}")
+//    private String signerKey;
+
+
+    private CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -51,7 +55,7 @@ public class SecurityConfig {
         );
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
@@ -62,14 +66,14 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build()
-                ;
-    }
+//    @Bean
+//    JwtDecoder jwtDecoder() {
+//        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
+//        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
+//                .macAlgorithm(MacAlgorithm.HS512)
+//                .build()
+//                ;
+//    }
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {

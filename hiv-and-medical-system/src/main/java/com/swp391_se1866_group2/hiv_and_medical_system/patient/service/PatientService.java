@@ -80,5 +80,12 @@ public class PatientService {
         return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
     }
 
+    public PatientResponse getPatientByEmail(String email){
+        return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+    }
+
+    public Patient getPatientById (String patientId){
+        return patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+    }
 
 }
