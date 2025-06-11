@@ -30,6 +30,7 @@ public enum ErrorCode {
     SERVICE_TYPE_NOT_EXISTED(1023, "Service type not existed", HttpStatus.NOT_FOUND),
     SERVICE_TYPE_EXISTED(1024, "Service type already existed", HttpStatus.BAD_REQUEST),
     SERVICE_EXISTED(1025, "Service already existed", HttpStatus.BAD_REQUEST),
+    SERVICE_NOT_EXISTED(1026, "Service not existed", HttpStatus.NOT_FOUND),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
     ;
 
