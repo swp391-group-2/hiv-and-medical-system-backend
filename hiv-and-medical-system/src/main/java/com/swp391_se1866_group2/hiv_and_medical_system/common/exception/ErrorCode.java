@@ -43,7 +43,6 @@ public enum ErrorCode {
     DOCTOR_AND_SCHEDULE_SLOT_CONFLICT(1052, "Doctor and schedule slot conflict", HttpStatus.BAD_REQUEST),
     LAB_TEST_SLOT_FULL(1053, "Lab test slot full", HttpStatus.BAD_REQUEST),
     APPOINTMENT_NOT_EXISTED(1054, "Appointment not existed", HttpStatus.NOT_FOUND),
-    LAB_TEST_PARAMETER_NOT_EXISTED(1033, "Lab test parameter not existed", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
