@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.service;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
@@ -6,13 +6,13 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ScheduleMap
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request.ScheduleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.DoctorWorkScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.response.ScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.DoctorWorkSchedule;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity.ScheduleSlot;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.repository.DoctorWorkScheduleRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.service.SlotService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

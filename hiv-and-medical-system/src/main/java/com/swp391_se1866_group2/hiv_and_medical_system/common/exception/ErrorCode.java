@@ -31,6 +31,9 @@ public enum ErrorCode {
     SERVICE_TYPE_EXISTED(1024, "Service type already existed", HttpStatus.BAD_REQUEST),
     SERVICE_EXISTED(1025, "Service already existed", HttpStatus.BAD_REQUEST),
     SERVICE_NOT_EXISTED(1026, "Service not existed", HttpStatus.NOT_FOUND),
+    STATUS_NOT_EXISTED(1027, "Status not existed", HttpStatus.NOT_FOUND),
+    LAB_TEST_SLOT_EXISTED(1028, "Lab test slot already existed", HttpStatus.BAD_REQUEST),
+    LAB_TEST_SLOT_NOT_EXISTED(1029, "Lab test slot not existed", HttpStatus.NOT_FOUND),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
     ;
 
