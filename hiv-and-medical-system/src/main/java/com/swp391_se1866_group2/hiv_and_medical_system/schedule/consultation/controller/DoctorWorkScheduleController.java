@@ -26,6 +26,14 @@ public class DoctorWorkScheduleController {
     DoctorWorkScheduleService scheduleService;
     ScheduleSlotService scheduleSlotService;
 
+    @GetMapping("/schedules")
+    public ApiResponse<List<DoctorWorkScheduleResponse>> getAllDoctorWorkSchedule(){
+        return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
+                .success(true)
+                .result(scheduleService.getAllDoctorWorkSchedule())
+                .build();
+    }
+
     @PostMapping("/{doctorId}/schedules")
     public ApiResponse<DoctorWorkScheduleResponse> createSchedule(@PathVariable("doctorId") String doctorId
             , @RequestBody @Valid ScheduleCreationRequest request){
@@ -84,5 +92,7 @@ public class DoctorWorkScheduleController {
                 .result(scheduleSlotService.updateScheduleSlotStatus(scheduleSlotId))
                 .build();
     }
+
+
 
 }

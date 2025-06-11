@@ -54,4 +54,9 @@ public class ServiceService {
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED)));
     }
 
+    public ServiceEntity getServiceEntityById(int serviceId) {
+        return serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));
+    }
+
 }

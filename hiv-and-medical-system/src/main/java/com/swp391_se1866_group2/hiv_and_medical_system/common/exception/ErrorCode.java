@@ -37,7 +37,12 @@ public enum ErrorCode {
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
     LAB_TEST_NOT_EXISTED(1031, "Lab test not existed", HttpStatus.NOT_FOUND),
     TEST_TYPE_NOT_EXISTED(1032, "Test type not existed", HttpStatus.NOT_FOUND),
-    LAB_TEST_PARAMETER_NOT_EXISTED(1033, "Lab test parameter not existed", HttpStatus.NOT_FOUND)
+    LAB_TEST_PARAMETER_NOT_EXISTED(1033, "Lab test parameter not existed", HttpStatus.NOT_FOUND),
+    SCHEDULE_SLOT_NOT_EXISTED(1050, "Schedule slot not existed", HttpStatus.NOT_FOUND),
+    SCHEDULE_SLOT_NOT_AVAILABLE(1051, "Schedule slot not available", HttpStatus.CONFLICT),
+    DOCTOR_AND_SCHEDULE_SLOT_CONFLICT(1052, "Doctor and schedule slot conflict", HttpStatus.BAD_REQUEST),
+    LAB_TEST_SLOT_FULL(1053, "Lab test slot full", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_NOT_EXISTED(1054, "Appointment not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {

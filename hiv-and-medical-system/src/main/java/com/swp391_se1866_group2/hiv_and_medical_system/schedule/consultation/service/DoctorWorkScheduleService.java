@@ -44,18 +44,20 @@ public class DoctorWorkScheduleService {
         if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
             throw new AppException(ErrorCode.WORK_DATE_EXISTED);
         }
+        final DoctorWorkSchedule schedule = new DoctorWorkSchedule();
+        schedule.setDoctor(doctor);
+        schedule.setWorkDate(request.getWorkDate());
         Set<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
                 .map(slotId -> {
                     ScheduleSlot scheduleSlot = new ScheduleSlot();
                     scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                    scheduleSlot.setSchedule(schedule);
                     return scheduleSlot;
                 })
                 .collect(Collectors.toSet());
-        DoctorWorkSchedule schedule = new DoctorWorkSchedule();
-        schedule.setDoctor(doctor);
         schedule.setScheduleSlots(scheduleSlots);
-        schedule.setWorkDate(request.getWorkDate());
-        return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
+        DoctorWorkSchedule doctorWorkSchedule = doctorWorkScheduleRepository.save(schedule);
+        return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
@@ -67,6 +69,7 @@ public class DoctorWorkScheduleService {
                 .map(slotId -> {
                     ScheduleSlot scheduleSlot = new ScheduleSlot();
                     scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                    scheduleSlot.setSchedule(schedule);
                     return scheduleSlot;
                 })
                 .collect(Collectors.toSet());
@@ -107,6 +110,10 @@ public class DoctorWorkScheduleService {
         }
         List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
         return listDWSchedule.stream().map(schedule -> scheduleMapper.toScheduleResponse(schedule)).collect(Collectors.toList());
+    }
+
+    public List<DoctorWorkScheduleResponse> getAllDoctorWorkSchedule () {
+        return doctorWorkScheduleRepository.findAll().stream().map(scheduleMapper::toDoctorWorkScheduleResponse).collect(Collectors.toList());
     }
 
 

@@ -6,6 +6,12 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.UserMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
@@ -36,8 +42,12 @@ import java.util.Date;
 @Transactional
 public class AuthenticationService {
     PasswordEncoder passwordEncoder;
+    DoctorService doctorService;
     PatientService patientService;
     UserService userService;
+
+    DoctorMapper doctorMapper;
+    UserMapper userMapper;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
@@ -48,16 +58,26 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userService.findUserByEmail(request.getEmail());
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         var token = generateToken(user);
-        return AuthenticationResponse
+        AuthenticationResponse authen = AuthenticationResponse
                 .builder()
                 .token(token)
                 .authenticated(true)
                 .build();
+        if(user.getRole().equals(Role.PATIENT.name())){
+            PatientResponse patient = patientService.getPatientByEmail(user.getEmail());
+            authen.setUser(patient);
+        }else if(user.getRole().equals(Role.DOCTOR.name())){
+            DoctorResponse doctor = doctorService.getDoctorByEmail(user.getEmail());
+            authen.setUser(doctor);
+        }
+        else{
+            authen.setUser(userMapper.toUserResponse(user));
+        }
+        return authen;
     }
 
     private String generateToken(User user) {
