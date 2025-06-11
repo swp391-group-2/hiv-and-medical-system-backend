@@ -33,7 +33,8 @@ public class LabSampleService {
             throw new AppException(ErrorCode.LAB_SAMPLE_EXISTED);
         }
         LabSample labSample = labSampleMapper.toLabSample(request);
-        labSample.setStatus(LabSampleStatus.COLLECTED.name());
+        labSample.setStatus(LabSampleStatus.PENDING);
+
         return labSampleMapper.toLabSampleResponse(labSampleRepository.save(labSample));
     }
 
@@ -57,6 +58,7 @@ public class LabSampleService {
         }
         labSample.setSampleCode(request.getSampleCode());
         labSample.setSampleType(request.getSampleType());
+        labSample.setStatus(LabSampleStatus.COMPLETED);
         return labSampleMapper.toLabSampleResponse(labSampleRepository.save(labSample));
     }
 
