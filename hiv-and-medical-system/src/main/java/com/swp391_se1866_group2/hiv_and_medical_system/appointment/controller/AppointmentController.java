@@ -1,10 +1,13 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppoimentStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/appointments")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppointmentController {
@@ -27,27 +30,40 @@ public class AppointmentController {
                 .build();
     }
 
-    @GetMapping("/{appointmentId}")
-    public ApiResponse<AppointmentResponse> getAppointmentById(@PathVariable("appointmentId") int appointmentId) {
-        return ApiResponse.<AppointmentResponse>builder()
+    @GetMapping("/appointments/{appointmentId}")
+    public ApiResponse<AppointmentLabSampleResponse> getAppointmentById(@PathVariable("appointmentId") int appointmentId) {
+        return ApiResponse.<AppointmentLabSampleResponse>builder()
                 .result(appointmentService.getAppointmentById(appointmentId))
                 .success(true)
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse<List<AppointmentResponse>> getAllAppointments() {
-        return ApiResponse.<List<AppointmentResponse>>builder()
+    @GetMapping("/appointments")
+    public ApiResponse<List<AppointmentLabSampleResponse>> getAllAppointments() {
+        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
                 .result(appointmentService.getAllAppointments())
                 .success(true)
                 .build();
     }
 
-    @GetMapping("/check-in")
-    public ApiResponse<List<AppointmentResponse>> getAllAppointmentsCheckin() {
-        return ApiResponse.<List<AppointmentResponse>>builder()
-                .result(appointmentService.getAllAppointmentsByStatus(AppoimentStatus.SCHEDULED))
+    @PostMapping("/appointments/{appointmentId}/check-in")
+    public ApiResponse<AppointmentLabSampleResponse> checkinAppointment(@PathVariable("appointmentId") int appointmentId, @RequestBody LabSampleCreationRequest request) {
+        return ApiResponse.<AppointmentLabSampleResponse>builder()
+                .result(appointmentService.checkinAppointment(appointmentId,request ))
                 .success(true)
                 .build();
     }
+
+    @PutMapping("/lab-samples/{sampleId}/results")
+    public ApiResponse<LabResultResponse> updateLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
+        return ApiResponse.<LabResultResponse>builder()
+                .success(true)
+                .result(appointmentService.updateLabResultAppointment(sampleId, request))
+                .build();
+    }
+
+
+
+
+
 }
