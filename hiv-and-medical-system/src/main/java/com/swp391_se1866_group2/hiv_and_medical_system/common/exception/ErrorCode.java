@@ -27,8 +27,11 @@ public enum ErrorCode {
     LAB_SAMPLE_NOT_EXISTED(1020, "Lab sample not existed", HttpStatus.NOT_FOUND),
     LAB_SAMPLE_EXISTED(1021, "Lab sample already existed", HttpStatus.BAD_REQUEST),
     LAB_SAMPLE_CODE_EXISTED(1022, "Lab sample code already existed", HttpStatus.BAD_REQUEST),
+    SERVICE_TYPE_NOT_EXISTED(1023, "Service type not existed", HttpStatus.NOT_FOUND),
+    SERVICE_TYPE_EXISTED(1024, "Service type already existed", HttpStatus.BAD_REQUEST),
+    SERVICE_EXISTED(1025, "Service already existed", HttpStatus.BAD_REQUEST),
+    SERVICE_NOT_EXISTED(1026, "Service not existed", HttpStatus.NOT_FOUND),
     PRESCRIPTION_ITEM_NOT_EXISTED(1030, "Prescription item not existed", HttpStatus.NOT_FOUND),
-
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
