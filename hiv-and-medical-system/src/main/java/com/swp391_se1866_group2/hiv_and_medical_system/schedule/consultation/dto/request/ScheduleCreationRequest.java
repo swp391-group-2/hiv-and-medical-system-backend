@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.dto.request;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

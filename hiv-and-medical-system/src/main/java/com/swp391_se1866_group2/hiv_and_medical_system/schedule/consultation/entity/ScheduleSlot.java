@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.schedule.entity;
+package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
