@@ -15,6 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -39,6 +42,16 @@ public class ServiceService {
         serviceMapper.updateServiceEntity(request, service);
         return serviceMapper.toServiceResponse(serviceRepository.save(service));
     }
-    
+
+    public List<ServiceResponse> getAllServices() {
+        return serviceRepository.findAll().stream()
+                .map(serviceEntity -> serviceMapper.toServiceResponse(serviceEntity))
+                .collect(Collectors.toList());
+    }
+
+    public ServiceResponse getService(int serviceId) {
+        return serviceMapper.toServiceResponse(serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED)));
+    }
 
 }

@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/services")
@@ -31,6 +32,21 @@ public class ServiceController {
         return ApiResponse.<ServiceResponse>builder()
                 .result(serviceService.updateService(serviceId, request))
                 .success(true)
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<ServiceResponse>> getAllServices (){
+        return ApiResponse.<List<ServiceResponse>>builder()
+                .result(serviceService.getAllServices())
+                .success(true)
+                .build();
+    }
+
+    @GetMapping("/{serviceId}")
+    public ApiResponse<ServiceResponse> getService(@PathVariable("serviceId") int serviceId){
+        return ApiResponse.<ServiceResponse>builder()
+                .result(serviceService.getService(serviceId))
                 .build();
     }
 
