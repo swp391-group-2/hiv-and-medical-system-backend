@@ -1,14 +1,14 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.labsample.service;
+package com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabSampleStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabSampleMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request.LabSampleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.request.LabSampleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.dto.response.LabSampleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.entity.LabSample;
-import com.swp391_se1866_group2.hiv_and_medical_system.labsample.repository.LabSampleRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

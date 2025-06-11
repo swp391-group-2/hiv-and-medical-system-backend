@@ -19,4 +19,5 @@ public class LabTestParameterResponse {
     String unit;
     String normalRange;
     String description;
+    LabResultResponse labResult;
 }

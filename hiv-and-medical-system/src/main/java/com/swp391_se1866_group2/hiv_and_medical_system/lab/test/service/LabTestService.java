@@ -1,13 +1,19 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service;
 
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ParameterType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestParameterResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabResult;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
@@ -29,22 +35,54 @@ public class LabTestService {
     LabTestMapper labTestMapper;
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
+    LabSampleRepository labSampleRepository;
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
-        LabTest labTest = labTestMapper.toLabTest(request);
+       LabTest labTest = labTestMapper.toLabTest(request);
+       LabTestParameterCreationRequest parameterRequest = request.getLabTestParameter();
+       LabTestParameter labTestParameter = new LabTestParameter();
+       labTestParameter.setParameterName(parameterRequest.getParameterName());
+       labTestParameter.setDescription(parameterRequest.getDescription());
 
-        LabTestParameter parameter = new LabTestParameter();
-        parameter.setParameterName(request.getLabTestParameter().getParameterName());
-        parameter.setUnit(request.getLabTestParameter().getUnit());
-        parameter.setNormalRange(request.getLabTestParameter().getNormalRange());
-        parameter.setDescription(request.getLabTestParameter().getDescription());
-        parameter.setParameterType(labTest.getTestType().getParameterType());
+        ParameterType parameterType = labTest.getTestType().getParameterType();
+        labTestParameter.setParameterType(parameterType);
 
-        labTest.setLabTestParameter(parameter);
-        parameter.setLabTest(labTest);
-        LabTest savedLabTest = labTestRepository.save(labTest);
-        return labTestMapper.toLabTestResponse(savedLabTest);
+        if(parameterType == ParameterType.NUMERIC){
+            labTestParameter.setUnit(parameterRequest.getUnit());
+            labTestParameter.setNormalRange(parameterRequest.getNormalRange());
+        }
+        else {
+            labTestParameter.setUnit(null);
+            labTestParameter.setNormalRange(null);
+        }
+
+        labTest.setLabTestParameter(labTestParameter);
+        labTestParameter.setLabTest(labTest);
+
+        LabResultCreationRequest resultRequest = parameterRequest.getLabResult();
+        LabSample labSample = labSampleRepository.findById(resultRequest.getSampleId())
+                .orElseThrow(() -> new AppException(ErrorCode.LAB_SAMPLE_NOT_EXISTED));
+        LabResult labResult = new LabResult();
+        labResult.setConclusion(resultRequest.getConclusion());
+        labResult.setNote(resultRequest.getNote());
+        labResult.setTestDate(resultRequest.getTestDate());
+        labResult.setResultDate(resultRequest.getResultDate());
+
+        if(parameterType == ParameterType.NUMERIC){
+            labResult.setResultNumeric(resultRequest.getResultNumeric());
+            labResult.setResultText(null);
+        }
+        else {
+            labResult.setResultNumeric(null);
+            labResult.setResultText(resultRequest.getResultText());
+        }
+
+        labResult.setLabSample(labSample);
+        labResult.setLabTestParameter(labTestParameter);
+        labTestParameter.setLabResult(labResult);
+
+        return labTestMapper.toLabTestResponse(labTestRepository.save(labTest));
 
     }
 
