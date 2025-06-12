@@ -5,6 +5,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.dto.r
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.dto.request.LabTestSlotCreationRequestBulk;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.dto.response.LabTestSlotResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.service.LabTestSlotService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,10 +20,12 @@ import java.util.List;
 @RequestMapping("/api/test/schedules")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "LabTestSlot API", description = "Quản lý slot xét nghiệm")
 public class LabTestSlotController {
     LabTestSlotService labTestSlotService;
 
     @PostMapping
+    @Operation(summary = "Tạo danh sách slot xét nghiệm", description = "Tạo nhiều slot xét nghiệm trong 1 ngày")
     public ApiResponse<List<LabTestSlotResponse>> createLabTestSlotBulk (@RequestBody LabTestSlotCreationRequest request) {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
                 .result(labTestSlotService.createLabTestSlotBulk(request))
@@ -30,6 +34,7 @@ public class LabTestSlotController {
     }
 
     @PostMapping("/date")
+    @Operation(summary = "Tạo slot xét nghiệm theo khoảng thời gian chỉ định", description = "Tạo danh sách slot xét nghiệm trong nhiều ngày liên tiếp")
     public ApiResponse<List<List<LabTestSlotResponse>>> createLabTestSlotBulkBetween (@RequestBody LabTestSlotCreationRequestBulk request,
              @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
              @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -40,6 +45,7 @@ public class LabTestSlotController {
     }
 
     @GetMapping
+    @Operation(summary = "Lấy danh sách tất cả slot xét nghiệm")
     public ApiResponse<List<LabTestSlotResponse>> getLabTestSlots () {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
                 .result(labTestSlotService.getAllLabTestSlots())
@@ -48,6 +54,7 @@ public class LabTestSlotController {
     }
 
     @GetMapping("/date")
+    @Operation(summary = "Lấy danh sách slot xét nghiệm theo ngày")
     public ApiResponse<List<LabTestSlotResponse>> getLabTestSlotsByDate (@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
                 .result(labTestSlotService.getAllLabTestSlotByDate(date))
@@ -56,6 +63,7 @@ public class LabTestSlotController {
     }
 
     @GetMapping("/{labTestSlotId}")
+    @Operation(summary = "Lấy slot xét nghiệm theo ID")
     public ApiResponse<LabTestSlotResponse> getLabTestSlotById (@PathVariable int labTestSlotId) {
         return ApiResponse.<LabTestSlotResponse>builder()
                 .result(labTestSlotService.getLabTestResponseSlotById(labTestSlotId))

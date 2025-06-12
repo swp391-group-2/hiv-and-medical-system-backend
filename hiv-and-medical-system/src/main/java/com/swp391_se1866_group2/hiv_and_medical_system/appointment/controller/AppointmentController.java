@@ -9,6 +9,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.La
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,9 +22,11 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Appointment API", description = "Quản lý lịch hẹn: check-in, cập nhật kết quả và chọn phác đồ")
 public class AppointmentController {
     AppointmentService appointmentService;
 
+    @Operation(summary = "Đặt lịch hẹn")
     @PostMapping("/appointments")
     public ApiResponse<AppointmentResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
         return ApiResponse.<AppointmentResponse>builder()
@@ -31,6 +35,7 @@ public class AppointmentController {
                 .build();
     }
 
+    @Operation(summary = "Xem chi tiết lịch hẹn")
     @GetMapping("/appointments/{appointmentId}")
     public ApiResponse<AppointmentLabSampleResponse> getAppointmentById(@PathVariable("appointmentId") int appointmentId) {
         return ApiResponse.<AppointmentLabSampleResponse>builder()
@@ -39,6 +44,7 @@ public class AppointmentController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách lịch hẹn")
     @GetMapping("/appointments")
     public ApiResponse<List<AppointmentLabSampleResponse>> getAllAppointments() {
         return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
@@ -47,6 +53,7 @@ public class AppointmentController {
                 .build();
     }
 
+    @Operation(summary = "Check-in bệnh nhân đến khám")
     @PostMapping("/appointments/{appointmentId}/check-in")
     public ApiResponse<AppointmentLabSampleResponse> checkinAppointment(@PathVariable("appointmentId") int appointmentId, @RequestBody LabSampleCreationRequest request) {
         return ApiResponse.<AppointmentLabSampleResponse>builder()
@@ -55,6 +62,7 @@ public class AppointmentController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật kết quả xét nghiệm")
     @PutMapping("/lab-samples/{sampleId}/results")
     public ApiResponse<LabResultResponse> updateLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
         return ApiResponse.<LabResultResponse>builder()
@@ -63,6 +71,7 @@ public class AppointmentController {
                 .build();
     }
 
+    @Operation(summary = "Chọn phác đồ điều trị")
     @PostMapping("/appointments/{appointmentId}/prescription/{prescriptionId}")
     public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId) {
         return ApiResponse.<PrescriptionResponse>builder()
