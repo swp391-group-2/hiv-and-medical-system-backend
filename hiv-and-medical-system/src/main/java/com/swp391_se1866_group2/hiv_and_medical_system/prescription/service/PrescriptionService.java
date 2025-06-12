@@ -35,7 +35,7 @@ public class PrescriptionService {
     PrescriptionItemRepository prescriptionItemRepository;
     MedicationRepository medicationRepository;
 
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     public PrescriptionResponse createPrescription(PrescriptionCreationRequest request){
         if (prescriptionRepository.existsByName(request.getName())) {
             throw new AppException(ErrorCode.PRESCRIPTION_EXISTED);
