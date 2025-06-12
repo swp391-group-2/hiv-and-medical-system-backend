@@ -8,6 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +23,7 @@ import java.util.List;
 public class AppointmentController {
     AppointmentService appointmentService;
 
-    @PostMapping
+    @PostMapping("/appointments")
     public ApiResponse<AppointmentResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
         return ApiResponse.<AppointmentResponse>builder()
                 .result(appointmentService.createAppointment(request))
@@ -62,6 +63,13 @@ public class AppointmentController {
                 .build();
     }
 
+    @PostMapping("/appointments/{appointmentId}/prescription/{prescriptionId}")
+    public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId) {
+        return ApiResponse.<PrescriptionResponse>builder()
+                .success(true)
+                .result(appointmentService.choosePrescription(prescriptionId,appointmentId))
+                .build();
+    }
 
 
 
