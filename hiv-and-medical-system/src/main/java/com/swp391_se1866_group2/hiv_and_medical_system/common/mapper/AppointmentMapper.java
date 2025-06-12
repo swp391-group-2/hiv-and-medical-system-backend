@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Mapper(componentModel = "spring",
-        uses = {PatientMapper.class, LabSampleMapper.class, LabTestMapper.class},
+        uses = {PatientMapper.class, LabSampleMapper.class, LabTestMapper.class, PrescriptionMapper.class},
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapper {
@@ -41,7 +41,6 @@ public interface AppointmentMapper {
     @Mapping(target = "price", source = "service.price")
     @Mapping(target = "labTestSlotId", source = "labTestSlot.id")
     @Mapping(target = "scheduleSlotId", source = "scheduleSlot.id")
-    @Mapping(target = "prescriptionId", source = "prescription.id")
     @Mapping(target = "labSampleId", source = "labSample.id")
     @Mapping(target = "doctorName", expression = "java(getDoctorName(appointment))")
     @Mapping(target = "status", source = "status")
@@ -49,6 +48,7 @@ public interface AppointmentMapper {
     @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
     @Mapping(target = "slotDescription", expression = "java(getSlotDescription(appointment))")
     @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
+    @Mapping(target = "prescription", source = "prescription")
     AppointmentLabSampleResponse toAppointmentLabResponse(Appointment appointment);
 
     default String getDoctorName(Appointment appointment) {
