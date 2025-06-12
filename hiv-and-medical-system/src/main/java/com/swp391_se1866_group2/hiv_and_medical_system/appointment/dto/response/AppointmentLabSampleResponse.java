@@ -5,6 +5,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.L
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabResult;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -31,8 +33,8 @@ public class AppointmentLabSampleResponse {
     LocalTime startTime;
     LocalTime endTime;
     String slotDescription;
-    Integer prescriptionId;
     Integer labSampleId;
     LabSampleResponse labSample;
     LabResultResponse labResult;
+    PrescriptionResponse prescription;
 }
