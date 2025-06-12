@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,5 +51,9 @@ public class Prescription {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "prescription")
     @JsonManagedReference("prescriptionItems-prescription")
     List<com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.PrescriptionItem> prescriptionItems = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JoinColumn(name = "appointment_id")
+    Appointment appointment;
 
 }

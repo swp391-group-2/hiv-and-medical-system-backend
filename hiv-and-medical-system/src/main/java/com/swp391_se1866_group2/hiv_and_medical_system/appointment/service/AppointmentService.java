@@ -10,12 +10,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AppointmentMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PrescriptionMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.service.LabSampleService;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabResult;
@@ -26,6 +24,9 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTe
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.ScheduleSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
@@ -40,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,11 +54,12 @@ public class AppointmentService {
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
     LabTestSlotService labTestSlotService;
-    LabSampleService labSampleService;
     ScheduleSlotService scheduleSlotService;
+    PrescriptionRepository prescriptionRepository;
     PatientService patientService;
     ServiceService serviceService;
 
+    PrescriptionMapper prescriptionMapper;
     LabTestMapper labTestMapper;
     AppointmentMapper appointmentMapper;
 
@@ -101,6 +102,10 @@ public class AppointmentService {
             LabResult labResult = labResultRepository.findByLabSampleId(appointmentLabSampleResponse.getLabSampleId());
             appointmentLabSampleResponse.setLabResult(labTestMapper.toLabResultResponse(labResult));
         }
+        if(appointmentLabSampleResponse.getPrescription() != null){
+            Prescription prescription = prescriptionRepository.findById(appointmentLabSampleResponse.getPrescription().getPrescriptionId()).orElse(null);
+            appointmentLabSampleResponse.setPrescription(prescriptionMapper.toPrescriptionResponse(prescription));
+        }
         return appointmentLabSampleResponse;
     }
 
@@ -112,6 +117,10 @@ public class AppointmentService {
                     if (response.getLabSampleId() != null) {
                         LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
                         response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+                    }
+                    if(response.getPrescription() != null){
+                        Prescription prescription = prescriptionRepository.findById(response.getPrescription().getPrescriptionId()).orElse(null);
+                        response.setPrescription(prescriptionMapper.toPrescriptionResponse(prescription));
                     }
                     return response;
                 })
@@ -178,6 +187,16 @@ public class AppointmentService {
         appointment.setStatus(AppoimentStatus.LAB_COMPLETED);
         appointmentRepository.save(appointment);
         return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
+    }
+    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+    public PrescriptionResponse choosePrescription(int prescriptionId, int appointmentId) {
+        Appointment appointment = getAppointmentByAppointmentId(appointmentId);
+        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
+        appointment.setPrescription(prescription);
+        prescription.setAppointment(appointment);
+        appointmentRepository.save(appointment);
+        Prescription prescriptionSaved = prescriptionRepository.save(prescription);
+        return prescriptionMapper.toPrescriptionResponse(prescriptionSaved);
     }
 
     public Appointment getAppointmentByAppointmentId(int id) {
