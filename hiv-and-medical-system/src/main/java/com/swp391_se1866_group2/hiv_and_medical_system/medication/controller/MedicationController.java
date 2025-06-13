@@ -6,6 +6,9 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.request.Me
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.MedicationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.service.MedicationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +21,12 @@ import java.util.List;
 @RequestMapping("/api/medications")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Medication API", description = "Quản lý thông tin thuốc")
 public class MedicationController {
     MedicationService medicationService;
 
     @PostMapping
+    @Operation(summary = "Thêm thuốc mới")
     public ApiResponse<MedicationResponse> createMedication(@RequestBody @Valid MedicationRequest request) {
         return ApiResponse.<MedicationResponse>builder()
                 .success(true)
@@ -29,6 +34,7 @@ public class MedicationController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh mục thuốc ")
     @GetMapping
     public ApiResponse<List<MedicationResponse>> getAllMedications() {
         return ApiResponse.<List<MedicationResponse>>builder()
@@ -37,6 +43,7 @@ public class MedicationController {
                 .build();
     }
 
+    @Operation(summary = "Lấy thông tin thuốc")
     @GetMapping("/{medicationId}")
     public ApiResponse<MedicationResponse> getMedication(@PathVariable int medicationId) {
         return ApiResponse.<MedicationResponse>builder()
@@ -45,6 +52,7 @@ public class MedicationController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật thông tin thuốc")
     @PutMapping("/{medicationId}")
     public ApiResponse<MedicationResponse> updateMedication (@PathVariable int medicationId, @RequestBody MedicationUpdateRequest request){
         return ApiResponse.<MedicationResponse>builder()
