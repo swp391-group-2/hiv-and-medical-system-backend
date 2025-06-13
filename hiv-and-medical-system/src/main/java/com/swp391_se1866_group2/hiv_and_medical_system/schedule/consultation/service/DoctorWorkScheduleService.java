@@ -39,7 +39,7 @@ public class DoctorWorkScheduleService {
     DoctorService doctorService;
     ScheduleMapper scheduleMapper;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') ")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') ")
     public DoctorWorkScheduleResponse createDoctorSchedule (String doctorId , ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
@@ -61,7 +61,7 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public DoctorWorkScheduleResponse updateDoctorSchedule (String doctorId, ScheduleUpdateRequest request, LocalDate date) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         DoctorWorkSchedule schedule = doctorWorkScheduleRepository.findByWorkDate(date)
@@ -78,7 +78,7 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkScheduleRepository.save(schedule));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<DoctorWorkScheduleResponse> createDoctorScheduleBulk (String doctorId, ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         LocalDate start = request.getWorkDate();
@@ -103,7 +103,7 @@ public class DoctorWorkScheduleService {
         return doctorWorkSchedules.stream().map(doctorWorkSchedule -> scheduleMapper.toScheduleResponse(doctorWorkSchedule)).collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('DOCTOR')")
     public List<ScheduleResponse> getDWScheduleByTokenAndBetweenDate (LocalDate startTime, LocalDate endTime) {
         DoctorResponse doctor = doctorService.getDoctorProfileByToken();
         if(startTime == null && endTime == null) {

@@ -50,6 +50,4 @@ public class LabTestParameter {
     @JsonBackReference
     LabTest labTest;
 
-    @OneToOne(mappedBy = "labTestParameter")
-    LabResult labResult;
 }

@@ -44,12 +44,12 @@ public class LabResult {
     @UpdateTimestamp
     LocalDateTime updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "lab_test_parameter_id", nullable = false)
     LabTestParameter labTestParameter;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "lab_sample_id", nullable = false)
+    @JoinColumn(name = "lab_sample_id", nullable = false, unique = true)
     LabSample labSample;
 
 

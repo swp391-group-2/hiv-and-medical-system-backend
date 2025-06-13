@@ -41,7 +41,7 @@ public class LabTestService {
     LabTestParameterRepository labTestParameterRepository;
     LabSampleRepository labSampleRepository;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
        LabTest labTest = labTestMapper.toLabTest(request);
        LabTestParameterCreationRequest parameterRequest = request.getLabTestParameter();
@@ -80,7 +80,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getLabTestByName(String labTestName) {
         List<LabTest> labTests = labTestRepository.findAllByNameContainingIgnoreCase(labTestName);
         if (labTests.isEmpty()) {
@@ -92,7 +92,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestParameterResponse updateLabTestParameter(int labTestId, int labTestParameterId, LabTestParameterUpdateRequest request) {
         LabTest labTest = labTestRepository.findById(labTestId)
                 .orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_NOT_EXISTED));
