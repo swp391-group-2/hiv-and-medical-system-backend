@@ -27,7 +27,7 @@ public class LabSampleService {
     LabSampleRepository labSampleRepository;
     LabSampleMapper labSampleMapper;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
     public LabSampleResponse createLabSample(LabSampleCreationRequest request) {
         if(labSampleRepository.existsBySampleCode(request.getSampleCode())){
             throw new AppException(ErrorCode.LAB_SAMPLE_EXISTED);
@@ -38,18 +38,18 @@ public class LabSampleService {
         return labSampleMapper.toLabSampleResponse(labSampleRepository.save(labSample));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR')")
     public List<LabSampleResponse> getLabSamples() {
         return labSampleRepository.findAll().stream()
                 .map(labSample -> labSampleMapper.toLabSampleResponse(labSample)).collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR')")
     public LabSampleResponse getLabSampleById(int id) {
         return labSampleMapper.toLabSampleResponse(labSampleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.LAB_SAMPLE_NOT_EXISTED)));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
     public LabSampleResponse upDateSampleLabById(int id, LabSampleUpdateRequest request) {
         LabSample labSample = labSampleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.LAB_SAMPLE_NOT_EXISTED));

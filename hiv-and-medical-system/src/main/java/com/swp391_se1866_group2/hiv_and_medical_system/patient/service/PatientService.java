@@ -37,12 +37,12 @@ public class PatientService {
     UserMapper userMapper;
     private final UserRepository userRepository;
 
-    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')" )
+//    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')" )
     public PatientResponse getPatient(String patientId){
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
         return patientMapper.toPatientResponse(patient);
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')")
     public List<PatientResponse> getAllPatients(){
         return patientRepository.findAll().stream()
                 .map(patientMapper::toPatientResponse)
@@ -61,7 +61,7 @@ public class PatientService {
         patient.setUser(user);
         return patientMapper.toPatientResponse(patientRepository.save(patient));
     }
-    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN')")
     public PatientResponse updatePatientProfile(String patientId , PatientUpdateRequest request) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
         patientMapper.updatePatientAndUser(request, patient);

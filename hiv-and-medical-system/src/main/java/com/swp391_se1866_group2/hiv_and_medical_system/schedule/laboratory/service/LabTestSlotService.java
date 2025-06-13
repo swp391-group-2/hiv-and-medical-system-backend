@@ -33,7 +33,7 @@ public class LabTestSlotService {
     ScheduleMapper scheduleMapper;
 
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestSlotResponse> createLabTestSlotBulk (LabTestSlotCreationRequest request) {
         List<Slot> slots = request.getSlots().stream()
                 .map(slotId -> slotService.getSlotById(slotId) )
@@ -44,7 +44,7 @@ public class LabTestSlotService {
         });
         return labTestSlotResponses;
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<List<LabTestSlotResponse>> createLabTestSlotBulkBetweenDate (LabTestSlotCreationRequestBulk request, LocalDate startDate, LocalDate endDate) {
         List<List<LabTestSlotResponse>> labTestSlotResponses = new ArrayList<>();
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {

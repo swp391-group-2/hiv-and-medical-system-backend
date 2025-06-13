@@ -63,7 +63,7 @@ public class AppointmentService {
     LabTestMapper labTestMapper;
     AppointmentMapper appointmentMapper;
 
-    @PreAuthorize("hasRole('PATIENT')")
+//    @PreAuthorize("hasRole('PATIENT')")
     public AppointmentResponse createAppointment(AppointmentCreationRequest request) {
         Patient patient = patientService.getPatientById(request.getPatientId());
         ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
@@ -95,7 +95,7 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponse(appointmentSaved);
     }
 
-    @PreAuthorize("hasRole('PATIENT') or hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('PATIENT') or hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public AppointmentLabSampleResponse getAppointmentById(int id) {
         AppointmentLabSampleResponse appointmentLabSampleResponse = appointmentMapper.toAppointmentLabResponse(appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED)));
         if(appointmentLabSampleResponse.getLabSampleId() != null){
@@ -109,7 +109,7 @@ public class AppointmentService {
         return appointmentLabSampleResponse;
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public List<AppointmentLabSampleResponse> getAllAppointments() {
         return appointmentRepository.findAll().stream()
                 .map(appointment -> {
@@ -126,7 +126,7 @@ public class AppointmentService {
                 })
                 .collect(Collectors.toList());
     }
-    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public List<AppointmentLabSampleResponse> getAllAppointmentsByStatus(AppoimentStatus status) {
         return appointmentRepository.findByStatus(status).stream()
                 .map(appointment -> {
@@ -140,7 +140,7 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public AppointmentLabSampleResponse checkinAppointment(int appointmentId, LabSampleCreationRequest request) {
         Appointment appointment = getAppointmentByAppointmentId(appointmentId);
         if (appointment.getLabSample() != null) {
@@ -170,7 +170,6 @@ public class AppointmentService {
         labResult.setLabTestParameter(labTestParameter);
         labResult.setConclusion("");
         labResult.setNote("");
-        labTestParameter.setLabResult(labResult);
         labResult.setLabSample(sample);
         sample.setLabResults(labResult);
         sample.setAppointment(appointment);
@@ -182,13 +181,16 @@ public class AppointmentService {
 
     public LabResultResponse updateLabResultAppointment(int sampleId, LabResultUpdateRequest request) {
         LabResult labResult =  labResultRepository.findByLabSampleId(sampleId);
+        if(labResult == null) {
+            throw new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED);
+        }
         labTestMapper.updateLabResult(request, labResult);
         Appointment appointment = getAppointmentByAppointmentId(labResult.getLabSample().getAppointment().getId());
         appointment.setStatus(AppoimentStatus.LAB_COMPLETED);
         appointmentRepository.save(appointment);
         return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
     }
-    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public PrescriptionResponse choosePrescription(int prescriptionId, int appointmentId) {
         Appointment appointment = getAppointmentByAppointmentId(appointmentId);
         Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
