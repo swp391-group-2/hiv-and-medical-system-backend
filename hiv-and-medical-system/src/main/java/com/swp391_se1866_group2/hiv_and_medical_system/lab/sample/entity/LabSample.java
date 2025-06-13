@@ -36,7 +36,7 @@ public class LabSample {
     @JoinColumn(name = "appointment_id", nullable = false)
     Appointment appointment;
     @CreationTimestamp
-    LocalDateTime collectedAt;
+    LocalDateTime coallectedAt;
     @Enumerated(EnumType.STRING)
     LabSampleStatus status = LabSampleStatus.PENDING;
     @CreationTimestamp
