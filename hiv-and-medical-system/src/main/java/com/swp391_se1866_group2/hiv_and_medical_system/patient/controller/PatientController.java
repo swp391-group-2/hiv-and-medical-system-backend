@@ -51,4 +51,12 @@ public class PatientController {
                 .build();
     }
 
+    @GetMapping("/patientProfile/{email}")
+    public ApiResponse<PatientResponse> getPatientProfileByEmail(@PathVariable String email) {
+        return ApiResponse.<PatientResponse>builder()
+                .result(patientService.getPatientByEmail(email))
+                .success(true)
+                .build();
+    }
+
 }

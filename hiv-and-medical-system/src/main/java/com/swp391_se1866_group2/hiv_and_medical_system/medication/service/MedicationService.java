@@ -25,7 +25,7 @@ public class MedicationService {
     MedicationMapper medicationMapper;
     MedicationRepository medicationRepository;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public MedicationResponse createMedication(MedicationRequest request) {
         if(medicationRepository.existsByNameAndStrength(request.getName(), request.getStrength())){
             throw new AppException(ErrorCode.MEDICATION_EXISTED);
@@ -35,21 +35,21 @@ public class MedicationService {
         return medicationMapper.toMedicationResponse((medicationRepository.saveAndFlush(medication)));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('PATIENT') or hasRole('LAB_TECHNICIAN')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('PATIENT') or hasRole('LAB_TECHNICIAN')")
     public MedicationResponse getMedication(int medicationId) {
         Medication medication = medicationRepository.findById(medicationId)
                 .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
         return medicationMapper.toMedicationResponse(medication);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('PATIENT') or hasRole('LAB_TECHNICIAN')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('PATIENT') or hasRole('LAB_TECHNICIAN')")
     public List <MedicationResponse> getAllMedications() {
         return medicationRepository.findAll().stream()
                 .map(medicationMapper::toMedicationResponse)
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public MedicationResponse updateMedication(int medicationId, MedicationUpdateRequest request) {
         Medication medication = medicationRepository.findById(medicationId)
                 .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
