@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 
-public enum AppoimentStatus {
+public enum AppointmentStatus {
     SCHEDULED,
     CHECKED_IN,
     LAB_COMPLETED,

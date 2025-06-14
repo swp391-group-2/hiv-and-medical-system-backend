@@ -23,9 +23,13 @@ public class LabSample {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @Column(nullable = false, unique = true)
+    @Column
     String sampleCode;
     String sampleType;
+    String sampleCodeCD4;
+    String sampleTypeCD4;
+    String sampleCodeVirus;
+    String sampleTypeVirus;
     @OneToOne(
             mappedBy = "labSample",
             cascade = { CascadeType.PERSIST, CascadeType.MERGE },

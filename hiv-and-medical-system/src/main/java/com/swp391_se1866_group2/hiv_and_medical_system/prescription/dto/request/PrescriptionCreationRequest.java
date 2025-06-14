@@ -19,6 +19,5 @@ public class PrescriptionCreationRequest {
     String contraindication;
     String sideEffect;
     String instructions;
-    LocalDate prescriptionDate;
     List<PrescriptionItemCreationRequest> prescriptionItems;
 }

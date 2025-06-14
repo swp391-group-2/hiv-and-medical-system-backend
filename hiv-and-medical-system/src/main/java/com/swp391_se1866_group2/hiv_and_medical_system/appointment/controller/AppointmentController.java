@@ -73,13 +73,21 @@ public class AppointmentController {
 
     @Operation(summary = "Chọn phác đồ điều trị")
     @PostMapping("/appointments/{appointmentId}/prescription/{prescriptionId}")
-    public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId) {
+    public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId, @RequestBody String note) {
         return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
-                .result(appointmentService.choosePrescription(prescriptionId,appointmentId))
+                .result(appointmentService.choosePrescription(prescriptionId,appointmentId, note))
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách lịch appointment theo status")
+    @GetMapping("/appointments/status/{status}")
+    public ApiResponse<List<AppointmentLabSampleResponse>> getAppointmentsByStatus(@PathVariable("status") String status) {
+        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
+                .result(appointmentService.getAllAppointmentsByStatus(status))
+                .success(true)
+                .build();
+    }
 
 
 

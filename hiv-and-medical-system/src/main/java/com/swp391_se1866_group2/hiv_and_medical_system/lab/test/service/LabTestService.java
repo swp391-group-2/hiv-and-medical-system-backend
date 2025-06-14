@@ -72,7 +72,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getAllLabTests(){
         return labTestRepository.findAll().stream()
                 .map(labTestMapper::toLabTestResponse)
