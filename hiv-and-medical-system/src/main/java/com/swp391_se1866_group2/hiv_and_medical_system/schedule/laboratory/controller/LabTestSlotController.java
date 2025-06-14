@@ -28,7 +28,7 @@ public class LabTestSlotController {
     @Operation(summary = "Tạo danh sách slot xét nghiệm", description = "Tạo nhiều slot xét nghiệm trong 1 ngày")
     public ApiResponse<List<LabTestSlotResponse>> createLabTestSlotBulk (@RequestBody LabTestSlotCreationRequest request) {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
-                .result(labTestSlotService.createLabTestSlotBulk(request))
+                .data(labTestSlotService.createLabTestSlotBulk(request))
                 .success(true)
                 .build();
     }
@@ -39,7 +39,7 @@ public class LabTestSlotController {
              @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
              @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
             return ApiResponse.<List<List<LabTestSlotResponse>>>builder()
-                    .result(labTestSlotService.createLabTestSlotBulkBetweenDate(request,startDate,endDate))
+                    .data(labTestSlotService.createLabTestSlotBulkBetweenDate(request,startDate,endDate))
                     .success(true)
                     .build();
     }
@@ -48,7 +48,7 @@ public class LabTestSlotController {
     @Operation(summary = "Lấy danh sách tất cả slot xét nghiệm")
     public ApiResponse<List<LabTestSlotResponse>> getLabTestSlots () {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
-                .result(labTestSlotService.getAllLabTestSlots())
+                .data(labTestSlotService.getAllLabTestSlots())
                 .success(true)
                 .build();
     }
@@ -57,7 +57,7 @@ public class LabTestSlotController {
     @Operation(summary = "Lấy danh sách slot xét nghiệm theo ngày")
     public ApiResponse<List<LabTestSlotResponse>> getLabTestSlotsByDate (@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ApiResponse.<List<LabTestSlotResponse>>builder()
-                .result(labTestSlotService.getAllLabTestSlotByDate(date))
+                .data(labTestSlotService.getAllLabTestSlotByDate(date))
                 .success(true)
                 .build();
     }
@@ -66,7 +66,7 @@ public class LabTestSlotController {
     @Operation(summary = "Lấy slot xét nghiệm theo ID")
     public ApiResponse<LabTestSlotResponse> getLabTestSlotById (@PathVariable int labTestSlotId) {
         return ApiResponse.<LabTestSlotResponse>builder()
-                .result(labTestSlotService.getLabTestResponseSlotById(labTestSlotId))
+                .data(labTestSlotService.getLabTestResponseSlotById(labTestSlotId))
                 .success(true)
                 .build();
     }

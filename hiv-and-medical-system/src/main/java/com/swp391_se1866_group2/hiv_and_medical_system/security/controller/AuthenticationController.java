@@ -6,7 +6,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.LogoutRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
@@ -36,7 +35,7 @@ public class AuthenticationController {
     public ApiResponse<PatientResponse> signup(@RequestBody @Valid UserCreationRequest request){
         return ApiResponse.<PatientResponse>builder()
                 .success(true)
-                .result(authenticationService.createPatientAccount(request, Role.PATIENT.name()))
+                .data(authenticationService.createPatientAccount(request, Role.PATIENT.name()))
                 .build();
     }
 
@@ -44,30 +43,36 @@ public class AuthenticationController {
     public ApiResponse<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request ){
         return ApiResponse.<AuthenticationResponse>builder()
                 .success(true)
-                .result(authenticationService.authenticate(request))
+                .data(authenticationService.authenticate(request))
                 .build();
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
-        authenticationService.logout(request);
+    public ApiResponse<Void> logout() {
         return ApiResponse.<Void>builder()
                 .success(true)
+                .message("Logged out successfully")
                 .build();
     }
 
     @PostMapping("/introspect")
-    public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request)
+    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
-        return ApiResponse.<IntrospectResponse>builder().result(result).build();
+        return ApiResponse.<IntrospectResponse>builder()
+                .data(result)
+                .success(true)
+                .build();
     }
 
     @PostMapping("/refresh")
-    public ApiResponse<RefreshResponse> refreshToken(@RequestBody RefreshRequest request)
+    ApiResponse<RefreshResponse> refreshToken(@RequestBody RefreshRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
-        return ApiResponse.<RefreshResponse>builder().result(result).success(true).build();
+        return ApiResponse.<RefreshResponse>builder()
+                .data(result)
+                .success(true)
+                .build();
     }
 
 

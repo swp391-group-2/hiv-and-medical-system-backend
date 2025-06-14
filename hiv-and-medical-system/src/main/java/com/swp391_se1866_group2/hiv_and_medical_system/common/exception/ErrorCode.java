@@ -45,8 +45,9 @@ public enum ErrorCode {
     APPOINTMENT_NOT_EXISTED(1054, "Appointment not existed", HttpStatus.NOT_FOUND),
     ALREADY_CHECKED_IN(1055, "Appointment already checked in", HttpStatus.CONFLICT),
     LAB_RESULT_NOT_EXISTED(1056, "Lab result not existed", HttpStatus.NOT_FOUND),
-    BLOG_EXISTED(1057, "Blog already existed", HttpStatus.BAD_REQUEST),
-    BLOG_NOT_EXISTED(1058, "Blog not existed", HttpStatus.NOT_FOUND)
+    LAB_RESULT_CAN_NOT_ALLOWED(1057, "Lab result can not return allowed", HttpStatus.CONFLICT),
+    BLOG_EXISTED(1058, "Blog already existed", HttpStatus.BAD_REQUEST),
+    BLOG_NOT_EXISTED(1059, "Blog not existed", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
