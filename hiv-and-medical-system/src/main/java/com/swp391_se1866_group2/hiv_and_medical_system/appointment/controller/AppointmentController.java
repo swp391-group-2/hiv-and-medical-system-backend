@@ -88,6 +88,24 @@ public class AppointmentController {
                 .success(true)
                 .build();
     }
+    @Operation(summary = "Xác nhận có trả kết quả lab-result về cho bệnh nhân hay không?")
+    @PostMapping("/appointments/{appointmentId}/can-return")
+    public ApiResponse<Boolean> canReturnAppointment(@PathVariable("appointmentId") int appointmentId, @RequestBody boolean status) {
+        if(appointmentService.isResultReturnAllowed(appointmentId, status)){
+            return ApiResponse.<Boolean>builder()
+                    .success(true)
+                    .message("Lab result can return.")
+                    .data(true)
+                    .build();
+        }
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .message("Lab result can not return.")
+                .data(false)
+                .build();
+
+    }
+
 
 
 
