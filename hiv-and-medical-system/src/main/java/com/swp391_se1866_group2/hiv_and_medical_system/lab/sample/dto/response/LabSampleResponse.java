@@ -14,6 +14,10 @@ public class LabSampleResponse {
     int id;
     String sampleCode;
     String sampleType;
+    String sampleCodeCD4;
+    String sampleTypeCD4;
+    String sampleCodeVirus;
+    String sampleTypeVirus;
     LabSampleResponse results;
     LocalDateTime collectedAt;
     String status;

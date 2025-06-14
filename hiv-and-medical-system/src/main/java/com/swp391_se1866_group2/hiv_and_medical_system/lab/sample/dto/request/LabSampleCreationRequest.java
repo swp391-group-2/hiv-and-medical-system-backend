@@ -11,4 +11,8 @@ import lombok.experimental.FieldDefaults;
 public class LabSampleCreationRequest {
     String sampleCode;
     String sampleType;
+    String sampleCodeCD4;
+    String sampleTypeCD4;
+    String sampleCodeVirus;
+    String sampleTypeVirus;
 }

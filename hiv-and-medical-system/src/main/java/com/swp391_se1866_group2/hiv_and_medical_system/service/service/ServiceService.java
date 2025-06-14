@@ -26,7 +26,7 @@ public class ServiceService {
     ServiceRepository serviceRepository;
     ServiceMapper serviceMapper;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ServiceResponse createService(ServiceCreationRequest request) {
         if(serviceRepository.existsByServiceType(request.getServiceType())){
             throw new AppException(ErrorCode.SERVICE_TYPE_EXISTED);
@@ -35,7 +35,7 @@ public class ServiceService {
         return serviceMapper.toServiceResponse(serviceRepository.save(service));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ServiceResponse updateService(int serviceId, ServiceUpdateRequest request) {
         ServiceEntity service = serviceRepository.findById(serviceId)
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));

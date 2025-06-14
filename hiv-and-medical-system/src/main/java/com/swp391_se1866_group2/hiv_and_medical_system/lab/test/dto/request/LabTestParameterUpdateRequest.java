@@ -13,7 +13,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class LabTestParameterUpdateRequest {
-    String unit;
+    String unitCD4;
+    String unitViralLoad;
     String normalRangeCD4;
     String normalRangeStringViralLoad;
     String description;

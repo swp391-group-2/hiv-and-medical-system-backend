@@ -35,14 +35,10 @@ public class PrescriptionService {
     PrescriptionItemRepository prescriptionItemRepository;
     MedicationRepository medicationRepository;
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     public PrescriptionResponse createPrescription(PrescriptionCreationRequest request){
-        if (prescriptionRepository.existsByName(request.getName())) {
-            throw new AppException(ErrorCode.PRESCRIPTION_EXISTED);
-        }
 
         Prescription prescription = prescriptionMapper.toPrescription(request);
-        prescription.setPrescriptionDate(LocalDate.now());
         Prescription savedPrescription = prescriptionRepository.save(prescription);
 
         List<PrescriptionItem> prescriptionItems = new ArrayList<>();
@@ -66,7 +62,7 @@ public class PrescriptionService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('PATIENT') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('PATIENT') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<PrescriptionResponse> getAllPrescriptions(){
         return prescriptionRepository.findAll().stream()
                 .map(prescriptionMapper::toPrescriptionResponse)
@@ -74,7 +70,7 @@ public class PrescriptionService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('PATIENT') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('PATIENT') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<PrescriptionResponse> getPrescriptionByName(String prescriptionName) {
         List<Prescription> prescriptions = prescriptionRepository.findAllByNameContainingIgnoreCase(prescriptionName);
         if (prescriptions.isEmpty()) {
@@ -86,7 +82,7 @@ public class PrescriptionService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('DOCTOR')")
     public PrescriptionItemResponse updatePrescription(int prescriptionId, int prescriptionItemId, PrescriptionItemUpdateRequest request) {
         Prescription prescription = prescriptionRepository.findById(prescriptionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));

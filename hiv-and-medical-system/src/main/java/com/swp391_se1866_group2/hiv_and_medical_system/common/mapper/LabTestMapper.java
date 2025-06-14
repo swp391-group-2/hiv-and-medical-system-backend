@@ -26,7 +26,7 @@ public interface LabTestMapper {
     @Mapping(source = "id", target = "labTestParameterId")
     LabTestParameterResponse toLabTestParameterResponse(LabTestParameter labTestParameter);
 
-
+    @Mapping(source = "labTestParameter", target = "labTestParameter")
     @Mapping(source = "labSample", target = "labSample")
     @Mapping(source = "id", target = "labResultId")
     LabResultResponse toLabResultResponse(LabResult labResult);
@@ -35,4 +35,5 @@ public interface LabTestMapper {
     void updateLabResult(LabResultUpdateRequest request, @MappingTarget LabResult labResult);
 
     void updateLabTestParameter(LabTestParameterUpdateRequest request, @MappingTarget LabTestParameter labTestParameter);
+
 }
