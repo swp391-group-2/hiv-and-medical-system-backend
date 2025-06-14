@@ -28,19 +28,18 @@ public class Prescription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     String name;
 
-    @Column(nullable = false, columnDefinition = "NVARCHAR(200)")
+    @Column( columnDefinition = "NVARCHAR(250)")
     String contraindication;
 
     @Column(nullable = false)
     String sideEffect;
 
-    @Column(columnDefinition = "NVARCHAR(200)", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(250)", nullable = false)
     String instructions;
 
-    LocalDate prescriptionDate;
 
     @CreationTimestamp
     LocalDateTime createdAt;
