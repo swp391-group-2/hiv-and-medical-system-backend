@@ -28,7 +28,7 @@ public class UserController {
     public ApiResponse<UserResponse> createManager(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "MANAGER"))
+                .data(userService.createUser(request, "MANAGER"))
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getAllManagers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.MANAGER))
+                .data(userService.getAllUsers(Role.MANAGER))
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping("/managers/{managerId}")
     public ApiResponse<UserResponse> getManager(@PathVariable String managerId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(managerId))
+                .data(userService.getUser(managerId))
                 .success(true)
                 .build();
     }
@@ -60,7 +60,7 @@ public class UserController {
     public ApiResponse<UserResponse> createStaff(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "STAFF"))
+                .data(userService.createUser(request, "STAFF"))
                 .build();
     }
 
@@ -70,7 +70,7 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getAllStaffs() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.STAFF))
+                .data(userService.getAllUsers(Role.STAFF))
                 .build();
     }
 
@@ -79,7 +79,7 @@ public class UserController {
     @Operation(summary = "Lấy thông tin staff")
     public ApiResponse<UserResponse> getStaff(@PathVariable String staffId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(staffId))
+                .data(userService.getUser(staffId))
                 .success(true)
                 .build();
     }
@@ -92,7 +92,7 @@ public class UserController {
     public ApiResponse<UserResponse> createLabTechnician(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "LAB_TECHNICIAN"))
+                .data(userService.createUser(request, "LAB_TECHNICIAN"))
                 .build();
     }
 
@@ -102,7 +102,7 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getAllLabTechnicians() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.LAB_TECHNICIAN))
+                .data(userService.getAllUsers(Role.LAB_TECHNICIAN))
                 .build();
     }
 
@@ -111,7 +111,7 @@ public class UserController {
     @Operation(summary = "Lấy thông tin lab technician")
     public ApiResponse<UserResponse> getLabTechnician(@PathVariable String labTechnicianId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(labTechnicianId))
+                .data(userService.getUser(labTechnicianId))
                 .success(true)
                 .build();
     }

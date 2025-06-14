@@ -24,8 +24,8 @@ logs/
 
 ### Secrets & Config ###
 # Không commit file config có dữ liệu thật
-/application-*.properties
-/application-*.yml
+src/main/resources/application-*.properties
+src/main/resources/application-*.yml
 .env
 *.jks
 

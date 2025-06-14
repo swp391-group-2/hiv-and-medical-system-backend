@@ -28,7 +28,7 @@ public class LabTestController {
     public ApiResponse<LabTestResponse> createLabTest(@RequestBody @Valid LabTestCreationRequest request) {
         return ApiResponse.<LabTestResponse>builder()
                 .success(true)
-                .result(labTestService.createLabTest(request))
+                .data(labTestService.createLabTest(request))
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class LabTestController {
     public ApiResponse<List<LabTestResponse>> getAllLabTests() {
         return ApiResponse.<List<LabTestResponse>>builder()
                 .success(true)
-                .result(labTestService.getAllLabTests())
+                .data(labTestService.getAllLabTests())
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class LabTestController {
     public ApiResponse<List<LabTestResponse>> getLabTestByName(@PathVariable String labTestName) {
         return ApiResponse.<List<LabTestResponse>>builder()
                 .success(true)
-                .result(labTestService.getLabTestByName(labTestName))
+                .data(labTestService.getLabTestByName(labTestName))
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class LabTestController {
             @RequestBody @Valid LabTestParameterUpdateRequest request) {
         return ApiResponse.<LabTestParameterResponse>builder()
                 .success(true)
-                .result(labTestService.updateLabTestParameter(labTestId, labTestParameterId, request))
+                .data(labTestService.updateLabTestParameter(labTestId, labTestParameterId, request))
                 .build();
     }
 }
