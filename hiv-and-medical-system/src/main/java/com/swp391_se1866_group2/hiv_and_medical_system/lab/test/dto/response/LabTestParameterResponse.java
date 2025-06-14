@@ -16,8 +16,9 @@ public class LabTestParameterResponse {
     int labTestParameterId;
     String parameterName;
     ParameterType parameterType;
-    String unit;
+    String unitCD4;
+    String unitViralLoad;
     String normalRangeCD4;
-     String normalRangeStringViralLoad;
+    String normalRangeStringViralLoad;
     String description;
 }
