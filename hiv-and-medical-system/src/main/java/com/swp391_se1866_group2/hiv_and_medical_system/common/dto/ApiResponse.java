@@ -16,5 +16,5 @@ public class ApiResponse <T> {
     @Builder.Default
     boolean success = false;
     String message;
-    T result;
+    T data;
 }
