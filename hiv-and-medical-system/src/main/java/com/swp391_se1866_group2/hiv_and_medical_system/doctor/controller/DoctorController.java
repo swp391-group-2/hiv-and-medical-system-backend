@@ -59,6 +59,7 @@ public class DoctorController {
     }
 
     @GetMapping("/doctorProfile/{email}")
+    @Operation(summary = "Lấy thông tin bác sĩ bằng email")
     public ApiResponse<DoctorResponse> getDoctorProfileByEmail(@PathVariable String email) {
        return ApiResponse.<DoctorResponse>builder()
                .success(true)
@@ -66,5 +67,13 @@ public class DoctorController {
                .build();
     }
 
+    @GetMapping("/top")
+    @Operation(summary = "Lấy top 4 thông tin bác sĩ có đánh giá cao nhất")
+    public ApiResponse<List<DoctorResponse>> getTopDoctors(){
+        return ApiResponse.<List<DoctorResponse>>builder()
+                .success(true)
+                .data(doctorService.getTopDoctorsForHome())
+                .build();
+    }
 
 }

@@ -182,16 +182,31 @@ public class AppointmentService {
     }
 
     public LabResultResponse updateLabResultAppointment(int sampleId, LabResultUpdateRequest request) {
-        LabResult labResult =  labResultRepository.findByLabSampleId(sampleId);
+        LabResult labResult = labResultRepository.findByLabSampleId(sampleId);
         if(labResult == null) {
             throw new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED);
         }
         labTestMapper.updateLabResult(request, labResult);
-        Appointment appointment = getAppointmentByAppointmentId(labResult.getLabSample().getAppointment().getId());
-        appointment.setStatus(AppointmentStatus.LAB_COMPLETED);
-        appointmentRepository.save(appointment);
+        labResult.setResultStatus(ResultStatus.FINISHED);
         return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
     }
+
+    public boolean isResultReturnAllowed(int appointmentId , boolean status){
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        LabResult labResult = labResultRepository.findLabResultByLabSampleId(appointment.getLabSample().getId()).orElseThrow(() -> new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED));
+        if(!labResult.getResultStatus().equals(ResultStatus.FINISHED)){
+            throw new AppException(ErrorCode.LAB_RESULT_CAN_NOT_ALLOWED);
+        }
+        if(!status){
+            labResult.setResultStatus(ResultStatus.REJECTED);
+            labResultRepository.save(labResult);
+            return false;
+        }
+        appointment.setStatus(AppointmentStatus.LAB_COMPLETED);
+        appointmentRepository.save(appointment);
+        return true;
+    }
+
 //    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public PrescriptionResponse choosePrescription(int prescriptionId, int appointmentId, String note) {
         Appointment appointment = getAppointmentByAppointmentId(appointmentId);
