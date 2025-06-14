@@ -54,12 +54,14 @@ public class LabTestService {
 
         ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
         if(parameterType == ParameterType.NUMERIC){
-            labTestParameter.setUnit(parameterRequest.getUnit());
+            labTestParameter.setUnitCD4(parameterRequest.getUnitCD4());
+            labTestParameter.setUnitViralLoad(parameterRequest.getUnitViralLoad());
             labTestParameter.setNormalRangeCD4(parameterRequest.getNormalRangeCD4());
             labTestParameter.setNormalRangeStringViralLoad(parameterRequest.getNormalRangeStringViralLoad());
         }
         else {
-            labTestParameter.setUnit(null);
+            labTestParameter.setUnitCD4(null);
+            labTestParameter.setUnitViralLoad(null);
             labTestParameter.setNormalRangeCD4(null);
             labTestParameter.setNormalRangeStringViralLoad(null);
         }
@@ -102,7 +104,8 @@ public class LabTestService {
             throw new AppException(ErrorCode.LAB_TEST_PARAMETER_NOT_EXISTED);
         }
 
-        labTestParameter.setUnit(request.getUnit());
+        labTestParameter.setUnitCD4(request.getUnitCD4());
+        labTestParameter.setUnitViralLoad(request.getUnitViralLoad());
         labTestParameter.setNormalRangeCD4(request.getNormalRangeCD4());
         labTestParameter.setNormalRangeStringViralLoad(request.getNormalRangeStringViralLoad());
         labTestParameter.setDescription(request.getDescription());
