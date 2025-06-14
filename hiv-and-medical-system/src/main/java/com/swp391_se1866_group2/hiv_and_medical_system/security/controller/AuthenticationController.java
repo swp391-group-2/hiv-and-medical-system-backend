@@ -6,7 +6,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.LogoutRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
@@ -49,10 +48,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
-        authenticationService.logout(request);
+    public ApiResponse<Void> logout() {
         return ApiResponse.<Void>builder()
                 .success(true)
+                .message("Logged out successfully")
                 .build();
     }
 
