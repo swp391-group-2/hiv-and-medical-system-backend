@@ -34,7 +34,7 @@ public class DoctorWorkScheduleController {
     public ApiResponse<List<DoctorWorkScheduleResponse>> getAllDoctorWorkSchedule(){
         return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
                 .success(true)
-                .result(scheduleService.getAllDoctorWorkSchedule())
+                .data(scheduleService.getAllDoctorWorkSchedule())
                 .build();
     }
 
@@ -44,7 +44,7 @@ public class DoctorWorkScheduleController {
             , @RequestBody @Valid ScheduleCreationRequest request){
        return ApiResponse.<DoctorWorkScheduleResponse>builder()
                .success(true)
-               .result(scheduleService.createDoctorSchedule(doctorId, request))
+               .data(scheduleService.createDoctorSchedule(doctorId, request))
                .build();
     }
 
@@ -54,7 +54,7 @@ public class DoctorWorkScheduleController {
             , @RequestBody @Valid ScheduleCreationRequest request){
         return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
                 .success(true)
-                .result(scheduleService.createDoctorScheduleBulk(doctorId, request))
+                .data(scheduleService.createDoctorScheduleBulk(doctorId, request))
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class DoctorWorkScheduleController {
     @Operation(summary = "Lấy lịch làm việc theo ngày")
     public ApiResponse<List<ScheduleResponse>> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return ApiResponse.<List<ScheduleResponse>>builder()
-                .result(scheduleService.getDoctorWorkScheduleByDate(doctorId, date))
+                .data(scheduleService.getDoctorWorkScheduleByDate(doctorId, date))
                 .success(true)
                 .build();
     }
@@ -71,7 +71,7 @@ public class DoctorWorkScheduleController {
     @Operation(summary = "Lấy toàn bộ lịch làm việc của bác sĩ")
     public ApiResponse<List<ScheduleResponse>> getAllSchedules(@PathVariable("doctorId") String doctorId){
         return ApiResponse.<List<ScheduleResponse>>builder()
-                .result(scheduleService.getDoctorWorkScheduleByDoctorId(doctorId))
+                .data(scheduleService.getDoctorWorkScheduleByDoctorId(doctorId))
                 .success(true)
                 .build();
     }
@@ -81,7 +81,7 @@ public class DoctorWorkScheduleController {
     public ApiResponse<List<ScheduleResponse>> getMySchedules(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
         return ApiResponse.<List<ScheduleResponse>>builder()
                 .success(true)
-                .result(scheduleService.getDWScheduleByTokenAndBetweenDate(startDate, endDate))
+                .data(scheduleService.getDWScheduleByTokenAndBetweenDate(startDate, endDate))
                 .build();
     }
 
@@ -90,7 +90,7 @@ public class DoctorWorkScheduleController {
     public ApiResponse<DoctorWorkScheduleResponse> updateSchedules(@PathVariable("doctorId") String doctorId, @RequestBody @Valid ScheduleUpdateRequest request, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return ApiResponse.<DoctorWorkScheduleResponse>builder()
                 .success(true)
-                .result(scheduleService.updateDoctorSchedule(doctorId, request, date))
+                .data(scheduleService.updateDoctorSchedule(doctorId, request, date))
                 .build();
     }
 
@@ -100,7 +100,7 @@ public class DoctorWorkScheduleController {
     public ApiResponse<ScheduleSlotResponse> updateScheduleSlot (@PathVariable("scheduleSlotId") int scheduleSlotId){
         return ApiResponse.<ScheduleSlotResponse>builder()
                 .success(true)
-                .result(scheduleSlotService.updateScheduleSlotStatus(scheduleSlotId))
+                .data(scheduleSlotService.updateScheduleSlotStatus(scheduleSlotId))
                 .build();
     }
 

@@ -30,7 +30,7 @@ public class AppointmentController {
     @PostMapping("/appointments")
     public ApiResponse<AppointmentResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
         return ApiResponse.<AppointmentResponse>builder()
-                .result(appointmentService.createAppointment(request))
+                .data(appointmentService.createAppointment(request))
                 .success(true)
                 .build();
     }
@@ -39,7 +39,7 @@ public class AppointmentController {
     @GetMapping("/appointments/{appointmentId}")
     public ApiResponse<AppointmentLabSampleResponse> getAppointmentById(@PathVariable("appointmentId") int appointmentId) {
         return ApiResponse.<AppointmentLabSampleResponse>builder()
-                .result(appointmentService.getAppointmentById(appointmentId))
+                .data(appointmentService.getAppointmentById(appointmentId))
                 .success(true)
                 .build();
     }
@@ -48,7 +48,7 @@ public class AppointmentController {
     @GetMapping("/appointments")
     public ApiResponse<List<AppointmentLabSampleResponse>> getAllAppointments() {
         return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
-                .result(appointmentService.getAllAppointments())
+                .data(appointmentService.getAllAppointments())
                 .success(true)
                 .build();
     }
@@ -57,7 +57,7 @@ public class AppointmentController {
     @PostMapping("/appointments/{appointmentId}/check-in")
     public ApiResponse<AppointmentLabSampleResponse> checkinAppointment(@PathVariable("appointmentId") int appointmentId, @RequestBody LabSampleCreationRequest request) {
         return ApiResponse.<AppointmentLabSampleResponse>builder()
-                .result(appointmentService.checkinAppointment(appointmentId,request ))
+                .data(appointmentService.checkinAppointment(appointmentId,request ))
                 .success(true)
                 .build();
     }
@@ -67,7 +67,7 @@ public class AppointmentController {
     public ApiResponse<LabResultResponse> updateLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
         return ApiResponse.<LabResultResponse>builder()
                 .success(true)
-                .result(appointmentService.updateLabResultAppointment(sampleId, request))
+                .data(appointmentService.updateLabResultAppointment(sampleId, request))
                 .build();
     }
 
@@ -76,7 +76,7 @@ public class AppointmentController {
     public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId, @RequestBody String note) {
         return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
-                .result(appointmentService.choosePrescription(prescriptionId,appointmentId, note))
+                .data(appointmentService.choosePrescription(prescriptionId,appointmentId, note))
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class AppointmentController {
     @GetMapping("/appointments/status/{status}")
     public ApiResponse<List<AppointmentLabSampleResponse>> getAppointmentsByStatus(@PathVariable("status") String status) {
         return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
-                .result(appointmentService.getAllAppointmentsByStatus(status))
+                .data(appointmentService.getAllAppointmentsByStatus(status))
                 .success(true)
                 .build();
     }

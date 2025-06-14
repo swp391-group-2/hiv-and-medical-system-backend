@@ -25,7 +25,7 @@ public class PatientController {
     @Operation(summary = "Lấy danh sách bệnh nhân")
     public ApiResponse<List<PatientResponse>> getAllPatients() {
         return ApiResponse.<List<PatientResponse>>builder()
-                .result(patientService.getAllPatients())
+                .data(patientService.getAllPatients())
                 .success(true)
                 .build();
     }
@@ -35,7 +35,7 @@ public class PatientController {
     public ApiResponse<PatientResponse> getMyInfo() {
         return ApiResponse.<PatientResponse>builder()
                 .success(true)
-                .result(patientService.getPatientProfileByToken())
+                .data(patientService.getPatientProfileByToken())
                 .build();
     }
 
@@ -44,7 +44,7 @@ public class PatientController {
     @Operation(summary = "Xem thông tin bệnh nhân")
     public ApiResponse<PatientResponse> getPatient(@PathVariable String patientid) {
         return ApiResponse.<PatientResponse>builder()
-                .result(patientService.getPatient(patientid))
+                .data(patientService.getPatient(patientid))
                 .success(true)
                 .build();
     }
@@ -53,7 +53,7 @@ public class PatientController {
     @Operation(summary = "Cập nhật thông tin bệnh nhân")
     public ApiResponse<PatientResponse> updatePatientProfile (@PathVariable String patientid, @RequestBody PatientUpdateRequest request){
         return ApiResponse.<PatientResponse>builder()
-                .result(patientService.updatePatientProfile(patientid, request ))
+                .data(patientService.updatePatientProfile(patientid, request ))
                 .success(true)
                 .build();
     }
@@ -61,7 +61,7 @@ public class PatientController {
     @GetMapping("/patientProfile/{email}")
     public ApiResponse<PatientResponse> getPatientProfileByEmail(@PathVariable String email) {
         return ApiResponse.<PatientResponse>builder()
-                .result(patientService.getPatientByEmail(email))
+                .data(patientService.getPatientByEmail(email))
                 .success(true)
                 .build();
     }

@@ -25,7 +25,7 @@ public class ServiceController {
     @Operation(summary = "Tạo dịch vụ mới")
     public ApiResponse<ServiceResponse> createService (@RequestBody ServiceCreationRequest request){
         return ApiResponse.<ServiceResponse>builder()
-                .result(serviceService.createService(request))
+                .data(serviceService.createService(request))
                 .success(true)
                 .build();
     }
@@ -35,7 +35,7 @@ public class ServiceController {
     public ApiResponse<ServiceResponse> updateService (@PathVariable("serviceId") int serviceId ,
                                                        @RequestBody ServiceUpdateRequest request){
         return ApiResponse.<ServiceResponse>builder()
-                .result(serviceService.updateService(serviceId, request))
+                .data(serviceService.updateService(serviceId, request))
                 .success(true)
                 .build();
     }
@@ -44,7 +44,7 @@ public class ServiceController {
     @Operation(summary = "Lấy danh sách tất cả dịch vụ")
     public ApiResponse<List<ServiceResponse>> getAllServices (){
         return ApiResponse.<List<ServiceResponse>>builder()
-                .result(serviceService.getAllServices())
+                .data(serviceService.getAllServices())
                 .success(true)
                 .build();
     }
@@ -53,7 +53,7 @@ public class ServiceController {
     @Operation(summary = "Lấy thông tin dịch vụ theo ID")
     public ApiResponse<ServiceResponse> getService(@PathVariable("serviceId") int serviceId){
         return ApiResponse.<ServiceResponse>builder()
-                .result(serviceService.getService(serviceId))
+                .data(serviceService.getService(serviceId))
                 .build();
     }
 

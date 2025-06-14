@@ -26,7 +26,7 @@ public class DoctorController {
     @Operation(summary = "Tạo mới bác sĩ")
     public ApiResponse<DoctorResponse> createDoctor(@RequestBody @Valid DoctorCreationRequest request){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.createDoctorAccount(request))
+                .data(doctorService.createDoctorAccount(request))
                 .success(true)
                 .build();
     }
@@ -36,7 +36,7 @@ public class DoctorController {
     public ApiResponse<List<DoctorResponse>> getDoctors(){
         return ApiResponse.<List<DoctorResponse>>builder()
                 .success(true)
-                .result(doctorService.getAllDoctor())
+                .data(doctorService.getAllDoctor())
                 .build();
     }
 
@@ -44,7 +44,7 @@ public class DoctorController {
     @Operation(summary = "Xem thông tin bác sĩ")
     public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorId){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.getDoctorResponseById(doctorId))
+                .data(doctorService.getDoctorResponseById(doctorId))
                 .success(true)
                 .build();
     }
@@ -54,7 +54,7 @@ public class DoctorController {
     public ApiResponse<DoctorResponse> getDoctorInfo(){
         return ApiResponse.<DoctorResponse>builder()
                 .success(true)
-                .result(doctorService.getDoctorProfileByToken())
+                .data(doctorService.getDoctorProfileByToken())
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class DoctorController {
     public ApiResponse<DoctorResponse> getDoctorProfileByEmail(@PathVariable String email) {
        return ApiResponse.<DoctorResponse>builder()
                .success(true)
-               .result(doctorService.getDoctorByEmail(email))
+               .data(doctorService.getDoctorByEmail(email))
                .build();
     }
 
