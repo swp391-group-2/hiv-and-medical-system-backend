@@ -26,24 +26,24 @@ public class SlotService {
     SlotRepository slotRepository;
     SlotMapper slotMapper;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public SlotResponse createSlot (SlotCreationRequest request){
         if(slotRepository.findBySlotNumber(request.getSlotNumber()) != null){
             throw new AppException(ErrorCode.SLOT_EXISTED);
         }
         return slotMapper.toSlotResponse(slotRepository.save(slotMapper.toSlot(request)));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<SlotResponse> getAllSlots(){
         return slotRepository.findAll().stream()
                 .map(slot -> slotMapper.toSlotResponse(slot))
                 .collect(Collectors.toList());
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public SlotResponse getSlotResponseBy (int id){
         return slotMapper.toSlotResponse(slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED)));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public SlotResponse updateSlot (int id, SlotUpDateRequest request){
         Slot slot = slotRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOT_EXISTED));
         slotMapper.updateSlot(request, slot);

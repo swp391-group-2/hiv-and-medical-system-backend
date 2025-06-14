@@ -34,7 +34,7 @@ public class DoctorService {
 
     PasswordEncoder passwordEncoder;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public DoctorResponse createDoctorAccount (DoctorCreationRequest request){
         if(userService.isEmailExisted(request.getEmail())){
             throw new AppException(ErrorCode.EMAIL_EXISTED) ;

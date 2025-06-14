@@ -79,20 +79,11 @@ public class AuthenticationService {
         var refreshToken = generateRefreshToken(user);
         AuthenticationResponse authen = AuthenticationResponse
                 .builder()
+                .user(userMapper.toUserResponse(user))
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .authenticated(true)
                 .build();
-        if(user.getRole().equals(Role.PATIENT.name())){
-            PatientResponse patient = patientService.getPatientByEmail(user.getEmail());
-            authen.setUser(patient);
-        }else if(user.getRole().equals(Role.DOCTOR.name())){
-            DoctorResponse doctor = doctorService.getDoctorByEmail(user.getEmail());
-            authen.setUser(doctor);
-        }
-        else{
-            authen.setUser(userMapper.toUserResponse(user));
-        }
         return authen;
     }
 
@@ -118,7 +109,7 @@ public class AuthenticationService {
                 .claim("id", user.getId())
                 .issuer("medcarehiv.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
+                .expirationTime(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", "ROLE_" + user.getRole())
                 .build();

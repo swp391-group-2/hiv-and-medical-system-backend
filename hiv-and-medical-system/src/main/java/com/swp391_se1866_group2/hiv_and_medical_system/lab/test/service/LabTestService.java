@@ -41,7 +41,7 @@ public class LabTestService {
     LabTestParameterRepository labTestParameterRepository;
     LabSampleRepository labSampleRepository;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
        LabTest labTest = labTestMapper.toLabTest(request);
        LabTestParameterCreationRequest parameterRequest = request.getLabTestParameter();
@@ -54,12 +54,14 @@ public class LabTestService {
 
         ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
         if(parameterType == ParameterType.NUMERIC){
-            labTestParameter.setUnit(parameterRequest.getUnit());
+            labTestParameter.setUnitCD4(parameterRequest.getUnitCD4());
+            labTestParameter.setUnitViralLoad(parameterRequest.getUnitViralLoad());
             labTestParameter.setNormalRangeCD4(parameterRequest.getNormalRangeCD4());
             labTestParameter.setNormalRangeStringViralLoad(parameterRequest.getNormalRangeStringViralLoad());
         }
         else {
-            labTestParameter.setUnit(null);
+            labTestParameter.setUnitCD4(null);
+            labTestParameter.setUnitViralLoad(null);
             labTestParameter.setNormalRangeCD4(null);
             labTestParameter.setNormalRangeStringViralLoad(null);
         }
@@ -72,7 +74,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getAllLabTests(){
         return labTestRepository.findAll().stream()
                 .map(labTestMapper::toLabTestResponse)
@@ -80,7 +82,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('DOCTOR') or hasRole('LAB_TECHNICIAN') or hasRole('STAFF') or hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LabTestResponse> getLabTestByName(String labTestName) {
         List<LabTest> labTests = labTestRepository.findAllByNameContainingIgnoreCase(labTestName);
         if (labTests.isEmpty()) {
@@ -92,7 +94,7 @@ public class LabTestService {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestParameterResponse updateLabTestParameter(int labTestId, int labTestParameterId, LabTestParameterUpdateRequest request) {
         LabTest labTest = labTestRepository.findById(labTestId)
                 .orElseThrow(() -> new AppException(ErrorCode.LAB_TEST_NOT_EXISTED));
@@ -102,7 +104,8 @@ public class LabTestService {
             throw new AppException(ErrorCode.LAB_TEST_PARAMETER_NOT_EXISTED);
         }
 
-        labTestParameter.setUnit(request.getUnit());
+        labTestParameter.setUnitCD4(request.getUnitCD4());
+        labTestParameter.setUnitViralLoad(request.getUnitViralLoad());
         labTestParameter.setNormalRangeCD4(request.getNormalRangeCD4());
         labTestParameter.setNormalRangeStringViralLoad(request.getNormalRangeStringViralLoad());
         labTestParameter.setDescription(request.getDescription());
