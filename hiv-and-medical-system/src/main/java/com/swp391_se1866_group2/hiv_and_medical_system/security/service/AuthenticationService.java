@@ -5,21 +5,15 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.UserMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.LogoutRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
@@ -27,7 +21,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.Ref
 import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.InvalidatedToken;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.repository.InvalidatedTokenRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
@@ -150,19 +143,6 @@ public class AuthenticationService {
         return jwsObject.serialize();
     }
 
-
-    public void logout(LogoutRequest request) throws ParseException, JOSEException {
-        var signToken = verifyToken(request.getToken());
-        String jit = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
-
-        invalidatedTokenRepository.save(invalidatedToken);
-    }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SINGER_KEY.getBytes());
