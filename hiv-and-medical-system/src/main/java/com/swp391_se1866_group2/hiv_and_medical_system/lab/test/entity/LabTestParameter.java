@@ -31,7 +31,9 @@ public class LabTestParameter {
 
     ParameterType parameterType;
 
-    String unit;
+    String unitCD4;
+
+    String unitViralLoad;
 
     String normalRangeCD4;
 
