@@ -27,7 +27,7 @@ public class LabSampleController {
     public ApiResponse<LabSampleResponse> createLabSample (@RequestBody LabSampleCreationRequest request) {
         return ApiResponse.<LabSampleResponse>builder()
                 .success(true)
-                .result(labSampleService.createLabSample(request))
+                .data(labSampleService.createLabSample(request))
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class LabSampleController {
     public ApiResponse<List<LabSampleResponse>> getAllLabSamples () {
         return ApiResponse.<List<LabSampleResponse>>builder()
                 .success(true)
-                .result(labSampleService.getLabSamples())
+                .data(labSampleService.getLabSamples())
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class LabSampleController {
     public ApiResponse<LabSampleResponse> getLabSampleById (@PathVariable int labSampleId) {
         return ApiResponse.<LabSampleResponse>builder()
                 .success(true)
-                .result(labSampleService.getLabSampleById(labSampleId))
+                .data(labSampleService.getLabSampleById(labSampleId))
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class LabSampleController {
                                                                @RequestBody LabSampleUpdateRequest request){
         return ApiResponse.<LabSampleResponse>builder()
                 .success(true)
-                .result(labSampleService.upDateSampleLabById(labSampleId, request))
+                .data(labSampleService.upDateSampleLabById(labSampleId, request))
                 .build();
     }
 

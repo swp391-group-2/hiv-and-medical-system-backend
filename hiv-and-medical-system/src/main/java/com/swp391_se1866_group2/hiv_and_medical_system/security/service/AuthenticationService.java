@@ -23,6 +23,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.Logo
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.RefreshResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.InvalidatedToken;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.repository.InvalidatedTokenRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
@@ -177,8 +178,8 @@ public class AuthenticationService {
         return signedJWT;
     }
 
-    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-        var signedJWT = verifyToken(request.getToken());
+    public RefreshResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getRefreshToken());
 
         var jit = signedJWT.getJWTClaimsSet().getJWTID();
         var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -194,9 +195,7 @@ public class AuthenticationService {
                 userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var accessToken = generateToken(user);
-        var refreshToken = generateRefreshToken(user);
-
-        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).authenticated(true).build();
+        return RefreshResponse.builder().accessToken(accessToken).build();
     }
 
 }

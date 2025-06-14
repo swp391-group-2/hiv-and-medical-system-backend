@@ -28,7 +28,7 @@ public class PrescriptionController {
     public ApiResponse<PrescriptionResponse> createPrescription(@RequestBody @Valid PrescriptionCreationRequest request) {
         return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
-                .result(prescriptionService.createPrescription(request))
+                .data(prescriptionService.createPrescription(request))
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class PrescriptionController {
     public ApiResponse<List<PrescriptionResponse>> getAllPrescriptions() {
         return ApiResponse.<List<PrescriptionResponse>>builder()
                 .success(true)
-                .result(prescriptionService.getAllPrescriptions())
+                .data(prescriptionService.getAllPrescriptions())
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class PrescriptionController {
     public ApiResponse<List<PrescriptionResponse>> getPrescriptionByName(@PathVariable String prescriptionName) {
         return ApiResponse.<List<PrescriptionResponse>>builder()
                 .success(true)
-                .result(prescriptionService.getPrescriptionByName(prescriptionName))
+                .data(prescriptionService.getPrescriptionByName(prescriptionName))
                 .build();
     }
 
@@ -56,7 +56,7 @@ public class PrescriptionController {
     public ApiResponse<PrescriptionItemResponse> updatePrescription(@PathVariable int prescriptionId, @PathVariable int prescriptionItemId, @RequestBody @Valid PrescriptionItemUpdateRequest request) {
         return ApiResponse.<PrescriptionItemResponse>builder()
                 .success(true)
-                .result(prescriptionService.updatePrescription(prescriptionId, prescriptionItemId, request))
+                .data(prescriptionService.updatePrescription(prescriptionId, prescriptionItemId, request))
                 .build();
     }
 
