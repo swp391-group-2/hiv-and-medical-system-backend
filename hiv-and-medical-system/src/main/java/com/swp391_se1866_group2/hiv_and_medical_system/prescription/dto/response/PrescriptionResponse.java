@@ -20,7 +20,6 @@ public class PrescriptionResponse {
     String contraindication;
     String sideEffect;
     String instructions;
-    LocalDate prescriptionDate;
     List<PrescriptionItemResponse> prescriptionItems;
 
 }

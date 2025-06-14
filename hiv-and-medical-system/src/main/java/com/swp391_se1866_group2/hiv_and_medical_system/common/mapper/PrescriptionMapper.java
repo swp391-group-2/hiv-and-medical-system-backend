@@ -20,7 +20,6 @@ import java.util.List;
 
 public interface PrescriptionMapper {
     @Mapping(source = "id", target = "prescriptionId")
-    @Mapping(source = "prescriptionDate", target = "prescriptionDate")
     @Mapping(source = "prescriptionItems", target = "prescriptionItems")
     PrescriptionResponse toPrescriptionResponse(Prescription prescription);
 
