@@ -1,7 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity;
 
-import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppoimentStatus;
-import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
@@ -40,7 +39,8 @@ public class Appointment {
     @JoinColumn(name = "lab_sample_id")
     LabSample labSample;
     @Enumerated(EnumType.STRING)
-    AppoimentStatus status;
+    AppointmentStatus status;
+    String note;
     @CreationTimestamp
     @Column(updatable = false)
     LocalDateTime createdAt;
