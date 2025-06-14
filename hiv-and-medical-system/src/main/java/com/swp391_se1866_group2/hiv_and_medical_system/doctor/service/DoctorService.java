@@ -6,20 +6,26 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository.DoctorRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +80,16 @@ public class DoctorService {
         return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
+
+    public DoctorResponse updatePatientProfile(String doctorId , DoctorUpdateRequest request) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException(ErrorCode.DOCTOR_NOT_EXISTED.getMessage()));
+        doctorMapper.updateDoctor(request, doctor);
+        return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
+    }
+
+    public List<DoctorResponse> getTopDoctorsForHome(){
+        return new ArrayList<>(doctorRepository.getTopDoctor(PageRequest.of(0, 4)).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED)));
+    }
 
 
 
