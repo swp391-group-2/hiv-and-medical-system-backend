@@ -1,12 +1,10 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -22,5 +20,7 @@ public interface DoctorMapper {
     DoctorResponse toDoctorResponse(Doctor doctor);
 
     Doctor toDoctor(DoctorCreationRequest request);
+    @Mapping(source = "fullName", target = "user.fullName")
+    void updateDoctor(DoctorUpdateRequest request, @MappingTarget Doctor doctor);
 
 }
