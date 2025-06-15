@@ -1,9 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.image.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,4 +18,7 @@ public class Image {
     int id;
     String url;
     boolean isActive;
+    @ManyToOne
+    @JsonIgnore
+    Doctor doctor;
 }

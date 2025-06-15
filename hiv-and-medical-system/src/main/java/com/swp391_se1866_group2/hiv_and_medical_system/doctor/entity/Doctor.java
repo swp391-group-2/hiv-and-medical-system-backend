@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,4 +34,6 @@ public class Doctor {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
     @JsonBackReference("doctor-schedules")
     Set<DoctorWorkSchedule> doctorWorkSchedules;
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Image> image;
 }
