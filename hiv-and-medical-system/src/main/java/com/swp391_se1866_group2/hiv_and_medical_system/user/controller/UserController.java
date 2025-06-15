@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     // MANAGER
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/managers")
     @Operation(summary = "Tạo manager mới")
     public ApiResponse<UserResponse> createManager(@RequestBody @Valid UserCreationRequest request) {
@@ -32,7 +32,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/managers")
     @Operation(summary = "Lấy danh sách các manager")
     public ApiResponse<List<UserResponse>> getAllManagers() {
@@ -42,7 +42,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Lấy thông tin manager")
     @GetMapping("/managers/{managerId}")
     public ApiResponse<UserResponse> getManager(@PathVariable String managerId) {
@@ -54,7 +54,7 @@ public class UserController {
 
 
     //STAFF
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/staffs")
     @Operation(summary = "Tạo staff mới")
     public ApiResponse<UserResponse> createStaff(@RequestBody @Valid UserCreationRequest request) {
@@ -64,7 +64,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/staffs")
     @Operation(summary = "Lấy danh sách các staff")
     public ApiResponse<List<UserResponse>> getAllStaffs() {
@@ -74,7 +74,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/staffs/{staffId}")
     @Operation(summary = "Lấy thông tin staff")
     public ApiResponse<UserResponse> getStaff(@PathVariable String staffId) {
@@ -86,7 +86,7 @@ public class UserController {
 
 
     // LAB_TECHNICIAN
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/lab-technicians")
     @Operation(summary = "Tạo lab technician mới")
     public ApiResponse<UserResponse> createLabTechnician(@RequestBody @Valid UserCreationRequest request) {
@@ -96,7 +96,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/lab-technicians")
     @Operation(summary = "Lấy danh sách các lab technician")
     public ApiResponse<List<UserResponse>> getAllLabTechnicians() {
@@ -106,7 +106,7 @@ public class UserController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/lab-technicians/{labTechnicianId}")
     @Operation(summary = "Lấy thông tin lab technician")
     public ApiResponse<UserResponse> getLabTechnician(@PathVariable String labTechnicianId) {
