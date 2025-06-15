@@ -64,10 +64,10 @@ public class AppointmentController {
 
     @Operation(summary = "Cập nhật kết quả xét nghiệm")
     @PutMapping("/lab-samples/{sampleId}/results")
-    public ApiResponse<LabResultResponse> updateLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
+    public ApiResponse<LabResultResponse> inputLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
         return ApiResponse.<LabResultResponse>builder()
                 .success(true)
-                .data(appointmentService.updateLabResultAppointment(sampleId, request))
+                .data(appointmentService.inputLabResultAppointment(sampleId, request))
                 .build();
     }
 

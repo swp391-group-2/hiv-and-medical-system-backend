@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,7 @@ public class Prescription {
     @Column(columnDefinition = "NVARCHAR(250)", nullable = false)
     String instructions;
 
+    String dosageForm;
 
     @CreationTimestamp
     LocalDateTime createdAt;
