@@ -59,11 +59,11 @@ public class DoctorService {
     }
 
     public List<DoctorResponse> getAllDoctor (){
-        return doctorRepository.findAll().stream().map(doctor -> doctorMapper.toDoctorResponse(doctor)).collect(Collectors.toList());
+        return doctorRepository.getAllDoctor().orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
     public DoctorResponse getDoctorResponseById(String id){
-        return doctorMapper.toDoctorResponse(doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+        return doctorRepository.getDoctorById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
     public DoctorResponse getDoctorProfileByToken(){
@@ -79,7 +79,6 @@ public class DoctorService {
     public DoctorResponse getDoctorByEmail(String email){
         return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
-
 
     public DoctorResponse updateDoctorProfile(String doctorId , DoctorUpdateRequest request) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException(ErrorCode.DOCTOR_NOT_EXISTED.getMessage()));
