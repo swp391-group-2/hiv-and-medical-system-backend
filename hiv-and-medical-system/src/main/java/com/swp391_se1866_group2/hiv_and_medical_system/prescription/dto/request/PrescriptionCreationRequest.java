@@ -18,6 +18,7 @@ public class PrescriptionCreationRequest {
     String name;
     String contraindication;
     String sideEffect;
+    String dosageForm;
     String instructions;
     List<PrescriptionItemCreationRequest> prescriptionItems;
 }

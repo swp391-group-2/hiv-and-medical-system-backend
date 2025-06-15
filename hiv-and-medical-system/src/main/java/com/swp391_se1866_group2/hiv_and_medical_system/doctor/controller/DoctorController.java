@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.doctor.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,7 @@ public class DoctorController {
                 .build();
     }
 
-    @GetMapping("myInfo")
+    @GetMapping("/myInfo")
     @Operation(summary = "Lấy thông tin bác sĩ bằng token")
     public ApiResponse<DoctorResponse> getDoctorInfo(){
         return ApiResponse.<DoctorResponse>builder()
@@ -76,4 +77,12 @@ public class DoctorController {
                 .build();
     }
 
+    @PutMapping("/{doctorId}")
+    @Operation(summary = "update thông tin của bác sĩ")
+    public ApiResponse<DoctorResponse> updateDoctor(@PathVariable String doctorId, @RequestBody DoctorUpdateRequest request){
+        return ApiResponse.<DoctorResponse>builder()
+                .success(true)
+                .data(doctorService.updateDoctorProfile(doctorId,request))
+                .build();
+    }
 }

@@ -30,7 +30,6 @@ public class LabResult {
     Double resultNumericViralLoad;
     String resultText;
     @CreationTimestamp
-    @Column(nullable = false)
     LocalDate resultDate;
 
     @Column(nullable = false)
