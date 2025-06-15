@@ -19,6 +19,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,8 +60,8 @@ public class DoctorService {
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
 
-    public List<DoctorResponse> getAllDoctor (){
-        return doctorRepository.getAllDoctor().orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    public Slice<DoctorResponse> getAllDoctor (Pageable pageable){
+        return doctorRepository.getAllDoctor(pageable).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
     public DoctorResponse getDoctorResponseById(String id){
