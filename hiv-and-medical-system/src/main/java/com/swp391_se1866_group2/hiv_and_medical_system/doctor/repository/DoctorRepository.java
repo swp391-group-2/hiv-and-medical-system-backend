@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +40,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
             d.id, u.id, u.email, u.fullName, u.status, u.code, d.specialization, d.licenseNumber, (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true)
         )
         FROM Doctor d JOIN d.user u""")
-    Optional<List<DoctorResponse>> getAllDoctor ();
+    Optional<Slice<DoctorResponse>> getAllDoctor (Pageable pageable);
 
     @Query("""
         SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse (

@@ -11,6 +11,10 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,10 +38,14 @@ public class DoctorController {
 
     @GetMapping()
     @Operation(summary = "Lấy danh sách bác sĩ")
-    public ApiResponse<List<DoctorResponse>> getDoctors(){
-        return ApiResponse.<List<DoctorResponse>>builder()
+    public ApiResponse<Slice<DoctorResponse>> getDoctors(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "13") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("u.fullName"));
+        return ApiResponse.<Slice<DoctorResponse>>builder()
                 .success(true)
-                .data(doctorService.getAllDoctor())
+                .data(doctorService.getAllDoctor(pageable))
                 .build();
     }
 
