@@ -22,96 +22,96 @@ public class UserController {
     private final UserService userService;
 
     // MANAGER
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/managers")
     @Operation(summary = "Tạo manager mới")
     public ApiResponse<UserResponse> createManager(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "MANAGER"))
+                .data(userService.createUser(request, "MANAGER"))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/managers")
     @Operation(summary = "Lấy danh sách các manager")
     public ApiResponse<List<UserResponse>> getAllManagers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.MANAGER))
+                .data(userService.getAllUsers(Role.MANAGER))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Lấy thông tin manager")
     @GetMapping("/managers/{managerId}")
     public ApiResponse<UserResponse> getManager(@PathVariable String managerId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(managerId))
+                .data(userService.getUser(managerId))
                 .success(true)
                 .build();
     }
 
 
     //STAFF
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/staffs")
     @Operation(summary = "Tạo staff mới")
     public ApiResponse<UserResponse> createStaff(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "STAFF"))
+                .data(userService.createUser(request, "STAFF"))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/staffs")
     @Operation(summary = "Lấy danh sách các staff")
     public ApiResponse<List<UserResponse>> getAllStaffs() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.STAFF))
+                .data(userService.getAllUsers(Role.STAFF))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/staffs/{staffId}")
     @Operation(summary = "Lấy thông tin staff")
     public ApiResponse<UserResponse> getStaff(@PathVariable String staffId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(staffId))
+                .data(userService.getUser(staffId))
                 .success(true)
                 .build();
     }
 
 
     // LAB_TECHNICIAN
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/lab-technicians")
     @Operation(summary = "Tạo lab technician mới")
     public ApiResponse<UserResponse> createLabTechnician(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .success(true)
-                .result(userService.createUser(request, "LAB_TECHNICIAN"))
+                .data(userService.createUser(request, "LAB_TECHNICIAN"))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/lab-technicians")
     @Operation(summary = "Lấy danh sách các lab technician")
     public ApiResponse<List<UserResponse>> getAllLabTechnicians() {
         return ApiResponse.<List<UserResponse>>builder()
                 .success(true)
-                .result(userService.getAllUsers(Role.LAB_TECHNICIAN))
+                .data(userService.getAllUsers(Role.LAB_TECHNICIAN))
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/lab-technicians/{labTechnicianId}")
     @Operation(summary = "Lấy thông tin lab technician")
     public ApiResponse<UserResponse> getLabTechnician(@PathVariable String labTechnicianId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(labTechnicianId))
+                .data(userService.getUser(labTechnicianId))
                 .success(true)
                 .build();
     }

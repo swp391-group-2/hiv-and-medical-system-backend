@@ -45,6 +45,8 @@ public enum ErrorCode {
     APPOINTMENT_NOT_EXISTED(1054, "Appointment not existed", HttpStatus.NOT_FOUND),
     ALREADY_CHECKED_IN(1055, "Appointment already checked in", HttpStatus.CONFLICT),
     LAB_RESULT_NOT_EXISTED(1056, "Lab result not existed", HttpStatus.NOT_FOUND),
+    LAB_RESULT_CAN_NOT_ALLOWED(1057, "Lab result can not return allowed", HttpStatus.CONFLICT),
+    UPLOAD_FAILED(1058, "Upload image failed", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {

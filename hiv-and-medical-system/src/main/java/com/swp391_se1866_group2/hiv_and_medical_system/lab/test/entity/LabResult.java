@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity;
 
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ResultStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,6 @@ public class LabResult {
     Double resultNumericViralLoad;
     String resultText;
     @CreationTimestamp
-    @Column(nullable = false)
     LocalDate resultDate;
 
     @Column(nullable = false)
@@ -37,6 +37,9 @@ public class LabResult {
 
     @Column(nullable = false, columnDefinition = "NVARCHAR(200)")
     String note;
+
+    @Enumerated(EnumType.STRING)
+    ResultStatus resultStatus = ResultStatus.PENDING;
 
     @CreationTimestamp
     LocalDateTime createdAt;

@@ -21,6 +21,7 @@ import java.util.List;
 public interface PrescriptionMapper {
     @Mapping(source = "id", target = "prescriptionId")
     @Mapping(source = "prescriptionItems", target = "prescriptionItems")
+    @Mapping(source = "dosageForm", target = "dosageForm")
     PrescriptionResponse toPrescriptionResponse(Prescription prescription);
 
     @Mapping(source = "id", target = "prescriptionItemId")

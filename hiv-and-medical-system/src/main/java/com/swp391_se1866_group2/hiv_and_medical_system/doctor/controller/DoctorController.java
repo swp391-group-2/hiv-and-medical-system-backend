@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.doctor.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class DoctorController {
     @Operation(summary = "Tạo mới bác sĩ")
     public ApiResponse<DoctorResponse> createDoctor(@RequestBody @Valid DoctorCreationRequest request){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.createDoctorAccount(request))
+                .data(doctorService.createDoctorAccount(request))
                 .success(true)
                 .build();
     }
@@ -36,7 +37,7 @@ public class DoctorController {
     public ApiResponse<List<DoctorResponse>> getDoctors(){
         return ApiResponse.<List<DoctorResponse>>builder()
                 .success(true)
-                .result(doctorService.getAllDoctor())
+                .data(doctorService.getAllDoctor())
                 .build();
     }
 
@@ -44,27 +45,44 @@ public class DoctorController {
     @Operation(summary = "Xem thông tin bác sĩ")
     public ApiResponse<DoctorResponse> getDoctorById(@PathVariable String doctorId){
         return ApiResponse.<DoctorResponse>builder()
-                .result(doctorService.getDoctorResponseById(doctorId))
+                .data(doctorService.getDoctorResponseById(doctorId))
                 .success(true)
                 .build();
     }
 
-    @GetMapping("myInfo")
+    @GetMapping("/myInfo")
     @Operation(summary = "Lấy thông tin bác sĩ bằng token")
     public ApiResponse<DoctorResponse> getDoctorInfo(){
         return ApiResponse.<DoctorResponse>builder()
                 .success(true)
-                .result(doctorService.getDoctorProfileByToken())
+                .data(doctorService.getDoctorProfileByToken())
                 .build();
     }
 
     @GetMapping("/doctorProfile/{email}")
+    @Operation(summary = "Lấy thông tin bác sĩ bằng email")
     public ApiResponse<DoctorResponse> getDoctorProfileByEmail(@PathVariable String email) {
        return ApiResponse.<DoctorResponse>builder()
                .success(true)
-               .result(doctorService.getDoctorByEmail(email))
+               .data(doctorService.getDoctorByEmail(email))
                .build();
     }
 
+    @GetMapping("/top")
+    @Operation(summary = "Lấy top 4 thông tin bác sĩ có đánh giá cao nhất")
+    public ApiResponse<List<DoctorResponse>> getTopDoctors(){
+        return ApiResponse.<List<DoctorResponse>>builder()
+                .success(true)
+                .data(doctorService.getTopDoctorsForHome())
+                .build();
+    }
 
+    @PutMapping("/{doctorId}")
+    @Operation(summary = "update thông tin của bác sĩ")
+    public ApiResponse<DoctorResponse> updateDoctor(@PathVariable String doctorId, @RequestBody DoctorUpdateRequest request){
+        return ApiResponse.<DoctorResponse>builder()
+                .success(true)
+                .data(doctorService.updateDoctorProfile(doctorId,request))
+                .build();
+    }
 }

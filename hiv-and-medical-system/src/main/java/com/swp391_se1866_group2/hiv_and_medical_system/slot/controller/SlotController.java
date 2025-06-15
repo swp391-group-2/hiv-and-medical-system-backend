@@ -26,7 +26,7 @@ public class SlotController {
     public ApiResponse<SlotResponse> createSlot (@RequestBody SlotCreationRequest request){
         return ApiResponse.<SlotResponse>builder()
                 .success(true)
-                .result(slotService.createSlot(request))
+                .data(slotService.createSlot(request))
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class SlotController {
     @Operation(summary = "Lấy tất cả slot")
     public ApiResponse<List<SlotResponse>> getAllSlots(){
         return ApiResponse.<List<SlotResponse>>builder()
-                .result(slotService.getAllSlots())
+                .data(slotService.getAllSlots())
                 .success(true)
                 .build();
     }
@@ -44,7 +44,7 @@ public class SlotController {
     public ApiResponse<SlotResponse> getSlot (@PathVariable int slotid){
         return ApiResponse.<SlotResponse>builder()
                 .success(true)
-                .result(slotService.getSlotResponseBy(slotid))
+                .data(slotService.getSlotResponseBy(slotid))
                 .build();
     }
 
@@ -53,7 +53,7 @@ public class SlotController {
     public ApiResponse<SlotResponse> updateSlot (@PathVariable int slotid, @RequestBody SlotUpDateRequest request){
         return ApiResponse.<SlotResponse>builder()
                 .success(true)
-                .result(slotService.updateSlot(slotid, request))
+                .data(slotService.updateSlot(slotid, request))
                 .build();
     }
 

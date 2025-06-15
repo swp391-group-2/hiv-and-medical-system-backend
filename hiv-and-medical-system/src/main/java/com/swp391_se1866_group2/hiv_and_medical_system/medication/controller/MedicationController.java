@@ -30,7 +30,7 @@ public class MedicationController {
     public ApiResponse<MedicationResponse> createMedication(@RequestBody @Valid MedicationRequest request) {
         return ApiResponse.<MedicationResponse>builder()
                 .success(true)
-                .result(medicationService.createMedication(request))
+                .data(medicationService.createMedication(request))
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class MedicationController {
     public ApiResponse<List<MedicationResponse>> getAllMedications() {
         return ApiResponse.<List<MedicationResponse>>builder()
                 .success(true)
-                .result(medicationService.getAllMedications())
+                .data(medicationService.getAllMedications())
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class MedicationController {
     @GetMapping("/{medicationId}")
     public ApiResponse<MedicationResponse> getMedication(@PathVariable int medicationId) {
         return ApiResponse.<MedicationResponse>builder()
-                .result(medicationService.getMedication(medicationId))
+                .data(medicationService.getMedication(medicationId))
                 .success(true)
                 .build();
     }
@@ -56,7 +56,7 @@ public class MedicationController {
     @PutMapping("/{medicationId}")
     public ApiResponse<MedicationResponse> updateMedication (@PathVariable int medicationId, @RequestBody MedicationUpdateRequest request){
         return ApiResponse.<MedicationResponse>builder()
-                .result(medicationService.updateMedication(medicationId, request))
+                .data(medicationService.updateMedication(medicationId, request))
                 .success(true)
                 .build();
     }
