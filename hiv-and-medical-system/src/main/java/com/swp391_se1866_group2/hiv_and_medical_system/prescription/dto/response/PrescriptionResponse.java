@@ -19,6 +19,7 @@ public class PrescriptionResponse {
     String name;
     String contraindication;
     String sideEffect;
+    String dosageForm;
     String instructions;
     List<PrescriptionItemResponse> prescriptionItems;
 
