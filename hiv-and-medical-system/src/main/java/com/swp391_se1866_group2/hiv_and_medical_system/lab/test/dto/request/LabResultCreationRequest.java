@@ -21,7 +21,6 @@ public class LabResultCreationRequest {
     Double resultNumericViralLoad;
     String conclusion;
     String note;
-    LocalDate resultDate;
     int labTestParameterId;
     int sampleId;
 }

@@ -2,20 +2,20 @@ package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service;
 
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ParameterType;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ResultStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.*;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestParameterResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabResult;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestParameter;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabResultRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
@@ -37,9 +37,9 @@ public class LabTestService {
     ServiceService serviceService;
 
     LabTestMapper labTestMapper;
+    LabResultRepository labResultRepository;
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
-    LabSampleRepository labSampleRepository;
 
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
@@ -112,6 +112,22 @@ public class LabTestService {
 
         labTestParameterRepository.save(labTestParameter);
         return labTestMapper.toLabTestParameterResponse(labTestParameter);
+    }
+
+    public LabResultResponse updateLabResult(LabResult labResult, LabResultUpdateRequest request) {
+        labTestMapper.updateLabResult(request, labResult);
+        labResult.setResultStatus(ResultStatus.FINISHED);
+        return labTestMapper.toLabResultResponse(labResultRepository.save(labResult));
+    }
+
+    public LabResultResponse inputLabResult (int sampleId, LabResultUpdateRequest request){
+        LabResult labResult = labResultRepository.findByLabSampleId(sampleId);
+        if(labResult == null) {
+            throw new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED);
+        }
+        labTestMapper.updateLabResult(request, labResult);
+        labResult.setResultStatus(ResultStatus.FINISHED);
+        return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
     }
 
 

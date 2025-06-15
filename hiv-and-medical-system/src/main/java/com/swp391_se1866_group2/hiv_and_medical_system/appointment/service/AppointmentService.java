@@ -23,6 +23,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestPa
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabResultRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
@@ -55,6 +56,7 @@ public class AppointmentService {
     LabTestParameterRepository labTestParameterRepository;
     LabTestSlotService labTestSlotService;
     ScheduleSlotService scheduleSlotService;
+    LabTestService labTestService;
     PrescriptionRepository prescriptionRepository;
     PatientService patientService;
     ServiceService serviceService;
@@ -181,14 +183,8 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentLabResponse(appointmentRepository.save(appointment));
     }
 
-    public LabResultResponse updateLabResultAppointment(int sampleId, LabResultUpdateRequest request) {
-        LabResult labResult = labResultRepository.findByLabSampleId(sampleId);
-        if(labResult == null) {
-            throw new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED);
-        }
-        labTestMapper.updateLabResult(request, labResult);
-        labResult.setResultStatus(ResultStatus.FINISHED);
-        return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
+    public LabResultResponse inputLabResultAppointment(int sampleId, LabResultUpdateRequest request) {
+        return labTestService.inputLabResult(sampleId, request);
     }
 
     public boolean isResultReturnAllowed(int appointmentId , boolean status){
@@ -202,7 +198,11 @@ public class AppointmentService {
             labResultRepository.save(labResult);
             return false;
         }
-        appointment.setStatus(AppointmentStatus.LAB_COMPLETED);
+        if(appointment.getService().getServiceType().equals(ServiceType.CONSULTATION)){
+            appointment.setStatus(AppointmentStatus.LAB_COMPLETED);
+        }else{
+            appointment.setStatus(AppointmentStatus.COMPLETED);
+        }
         appointmentRepository.save(appointment);
         return true;
     }
@@ -222,6 +222,12 @@ public class AppointmentService {
 
     public Appointment getAppointmentByAppointmentId(int id) {
         return appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+    }
+
+    public LabResultResponse updateLabResultAppointment(int appointmentId, LabResultUpdateRequest request) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        LabResult labResult = labResultRepository.findLabResultByLabSampleId(appointment.getLabSample().getId()).orElseThrow(() -> new AppException(ErrorCode.LAB_RESULT_NOT_EXISTED));
+        return labTestService.updateLabResult(labResult, request);
     }
 
 }
