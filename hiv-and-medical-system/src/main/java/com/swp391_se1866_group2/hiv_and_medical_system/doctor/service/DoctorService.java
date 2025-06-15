@@ -81,7 +81,7 @@ public class DoctorService {
     }
 
 
-    public DoctorResponse updatePatientProfile(String doctorId , DoctorUpdateRequest request) {
+    public DoctorResponse updateDoctorProfile(String doctorId , DoctorUpdateRequest request) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException(ErrorCode.DOCTOR_NOT_EXISTED.getMessage()));
         doctorMapper.updateDoctor(request, doctor);
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
