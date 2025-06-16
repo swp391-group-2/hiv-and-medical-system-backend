@@ -27,7 +27,7 @@ public class DoctorWorkSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     int id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     LocalDate workDate;
     String status = "available";
     @CreationTimestamp

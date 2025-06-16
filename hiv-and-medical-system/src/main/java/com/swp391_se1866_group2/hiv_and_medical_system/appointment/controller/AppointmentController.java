@@ -103,9 +103,17 @@ public class AppointmentController {
                 .message("Lab result can not return.")
                 .data(false)
                 .build();
-
     }
 
+
+    @Operation(summary = "Lấy danh sách lịch appointment theo status của từng bác sĩ ")
+    @GetMapping("/doctors/me/appointments/{status}")
+    public ApiResponse<List<AppointmentLabSampleResponse>> getDoctorAppointmentStatus(@PathVariable("status") String status) {
+        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
+                .data(appointmentService.getAllDoctorAppointmentsByStatus(status))
+                .success(true)
+                .build();
+    }
 
 
 
