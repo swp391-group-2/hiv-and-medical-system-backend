@@ -19,6 +19,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,8 +60,9 @@ public class DoctorService {
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
 
-    public List<DoctorResponse> getAllDoctor (){
-        return doctorRepository.getAllDoctor().orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    public List<DoctorResponse> getAllDoctor (Pageable pageable){
+        Slice<DoctorResponse> slice = doctorRepository.getAllDoctor(pageable).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+        return slice.getContent();
     }
 
     public DoctorResponse getDoctorResponseById(String id){
@@ -78,6 +81,10 @@ public class DoctorService {
 
     public DoctorResponse getDoctorByEmail(String email){
         return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    }
+
+    public Doctor getDoctorEntityByEmail(String email){
+        return doctorRepository.findDoctorEntityByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
     public DoctorResponse updateDoctorProfile(String doctorId , DoctorUpdateRequest request) {
