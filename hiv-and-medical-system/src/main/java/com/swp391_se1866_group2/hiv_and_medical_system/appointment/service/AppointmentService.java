@@ -12,6 +12,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.Appointment
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabSampleMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PrescriptionMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSample;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.repository.LabSampleRepository;
@@ -60,6 +62,7 @@ public class AppointmentService {
     PrescriptionRepository prescriptionRepository;
     PatientService patientService;
     ServiceService serviceService;
+    DoctorService doctorService;
 
     PrescriptionMapper prescriptionMapper;
     LabTestMapper labTestMapper;
@@ -131,8 +134,7 @@ public class AppointmentService {
     }
 //    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
     public List<AppointmentLabSampleResponse> getAllAppointmentsByStatus(String status) {
-        status = status.toUpperCase();
-        return appointmentRepository.findByStatus(AppointmentStatus.valueOf(status))
+        return appointmentRepository.findByStatus(AppointmentStatus.valueOf(status.toUpperCase()))
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED))
                 .stream()
                 .map(appointment -> {
@@ -230,4 +232,30 @@ public class AppointmentService {
         return labTestService.updateLabResult(labResult, request);
     }
 
+    public List<AppointmentLabSampleResponse> getAllDoctorAppointmentsByStatus(String status) {
+        DoctorResponse doctorResponse = doctorService.getDoctorProfileByToken();
+        AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+        if( !(appointmentStatus.equals(AppointmentStatus.LAB_COMPLETED) || appointmentStatus.equals(AppointmentStatus.COMPLETED)) ){
+            throw new AppException(ErrorCode.INPUT_STATUS_FAILED);
+        }
+        List<Appointment> appointments = appointmentRepository.findByStatus(appointmentStatus)
+                .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<Appointment> filterAppointments =  appointments.stream()
+                        .filter(appointment -> {
+                            ScheduleSlot slot = appointment.getScheduleSlot();
+                            if (slot == null) return false;
+                            return !slot.getSchedule().getDoctor().getId().equals(doctorResponse.getDoctorId());
+                        })
+                        .toList();
+        return  filterAppointments.stream()
+                .map(appointment -> {
+                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
+                    if(response.getLabSampleId() != null){
+                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
+                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+                    }
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
 }
