@@ -38,12 +38,12 @@ public class DoctorController {
 
     @GetMapping()
     @Operation(summary = "Lấy danh sách bác sĩ")
-    public ApiResponse<Slice<DoctorResponse>> getDoctors(
+    public ApiResponse<List<DoctorResponse>> getDoctors(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "13") int size
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by("u.fullName"));
-        return ApiResponse.<Slice<DoctorResponse>>builder()
+        return ApiResponse.<List<DoctorResponse>>builder()
                 .success(true)
                 .data(doctorService.getAllDoctor(pageable))
                 .build();

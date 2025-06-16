@@ -60,8 +60,9 @@ public class DoctorService {
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
 
-    public Slice<DoctorResponse> getAllDoctor (Pageable pageable){
-        return doctorRepository.getAllDoctor(pageable).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    public List<DoctorResponse> getAllDoctor (Pageable pageable){
+        Slice<DoctorResponse> slice = doctorRepository.getAllDoctor(pageable).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+        return slice.getContent();
     }
 
     public DoctorResponse getDoctorResponseById(String id){
@@ -80,6 +81,10 @@ public class DoctorService {
 
     public DoctorResponse getDoctorByEmail(String email){
         return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    }
+
+    public Doctor getDoctorEntityByEmail(String email){
+        return doctorRepository.findDoctorEntityByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
     public DoctorResponse updateDoctorProfile(String doctorId , DoctorUpdateRequest request) {
