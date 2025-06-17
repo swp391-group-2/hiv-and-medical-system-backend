@@ -1,10 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PatientPrescriptionItem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String dosage;
     String frequency;
@@ -29,8 +27,6 @@ public class PatientPrescriptionItem {
     LocalDateTime createdAt;
     @UpdateTimestamp
     LocalDateTime updatedAt;
-    @ManyToOne
-    PatientPrescription patientPrescription;
     @ManyToOne
     Medication medication;
 }

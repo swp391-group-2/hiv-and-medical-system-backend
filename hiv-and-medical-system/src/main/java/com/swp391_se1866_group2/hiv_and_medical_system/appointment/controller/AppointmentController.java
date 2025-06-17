@@ -71,15 +71,6 @@ public class AppointmentController {
                 .build();
     }
 
-    @Operation(summary = "Chọn phác đồ điều trị")
-    @PostMapping("/appointments/{appointmentId}/prescription/{prescriptionId}")
-    public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId, @RequestBody String note) {
-        return ApiResponse.<PrescriptionResponse>builder()
-                .success(true)
-                .data(appointmentService.choosePrescription(prescriptionId,appointmentId, note))
-                .build();
-    }
-
     @Operation(summary = "Lấy danh sách lịch appointment theo status")
     @GetMapping("/appointments/status/{status}")
     public ApiResponse<List<AppointmentLabSampleResponse>> getAppointmentsByStatus(@PathVariable("status") String status) {
