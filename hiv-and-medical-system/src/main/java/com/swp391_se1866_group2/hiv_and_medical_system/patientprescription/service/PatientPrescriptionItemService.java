@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientPres
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.service.MedicationService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.request.PaPrescriptionItemCreation;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response.PaPrescriptionItemResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescription;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescriptionItem;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.repository.PatientPrescriptionItemRepository;
 import lombok.AccessLevel;
@@ -22,9 +23,9 @@ public class PatientPrescriptionItemService {
 
     MedicationService medicationService;
 
-    public PaPrescriptionItemResponse create(PaPrescriptionItemCreation request) {
+    public PatientPrescriptionItem create(PaPrescriptionItemCreation request) {
         medicationService.getMedication(request.getMedicationId());
         PatientPrescriptionItem patientPrescriptionItem = patientPrescriptionMapper.toPatientPrescriptionItem(request);
-        return patientPrescriptionMapper.toPaPrescriptionItemResponse(paPreItemRepository.save(patientPrescriptionItem));
+        return paPreItemRepository.save(patientPrescriptionItem);
     }
 }
