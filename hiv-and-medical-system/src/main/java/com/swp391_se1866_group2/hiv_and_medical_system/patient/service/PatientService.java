@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,14 @@ public class PatientService {
 //    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN')")
     public PatientResponse updatePatientProfile(String patientId , PatientUpdateRequest request) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+//        if(patient.getUser().getCode() == null || patient.getUser().getCode().isEmpty()) {
+//            User user = userRepository.findById(patient.getUser().getId())
+//                    .orElseThrow(() -> new RuntimeException(ErrorCode.USER_NOT_EXISTED.getMessage()));
+//            Long genCode = patientRepository.getNextPatientCodeSequence();
+//            String patientCode = String.format("PA%6d", genCode);
+//            user.setCode(patientCode);
+//            userRepository.save(user);
+//        }
         patientMapper.updatePatientAndUser(request, patient);
         patient.setUpdatedProfile(isUpdateProfile(patient));
         return patientMapper.toPatientResponse(patientRepository.save(patient));

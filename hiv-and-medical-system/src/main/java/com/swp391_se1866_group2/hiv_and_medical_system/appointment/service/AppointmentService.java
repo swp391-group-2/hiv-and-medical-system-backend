@@ -216,10 +216,8 @@ public class AppointmentService {
         Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
         appointment.setPrescription(prescription);
         appointment.setStatus(AppointmentStatus.COMPLETED);
-        prescription.setAppointment(appointment);
         appointmentRepository.save(appointment);
-        Prescription prescriptionSaved = prescriptionRepository.save(prescription);
-        return prescriptionMapper.toPrescriptionResponse(prescriptionSaved);
+        return prescriptionMapper.toPrescriptionResponse(prescription);
     }
 
     public Appointment getAppointmentByAppointmentId(int id) {
