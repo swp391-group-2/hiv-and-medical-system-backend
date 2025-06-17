@@ -57,4 +57,13 @@ public class ServiceController {
                 .build();
     }
 
+
+    @GetMapping("/type/{serviceType}")
+    @Operation(summary = "Lấy thông tin dịch vụ theo ID")
+    public ApiResponse<ServiceResponse> getService(@PathVariable("serviceType") String serviceType){
+        return ApiResponse.<ServiceResponse>builder()
+                .data(serviceService.getServiceByType(serviceType))
+                .build();
+    }
+
 }

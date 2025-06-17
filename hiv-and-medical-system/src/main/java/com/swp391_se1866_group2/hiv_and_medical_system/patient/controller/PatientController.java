@@ -6,6 +6,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.Pati
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -51,7 +52,7 @@ public class PatientController {
 
     @PutMapping("/{patientid}")
     @Operation(summary = "Cập nhật thông tin bệnh nhân")
-    public ApiResponse<PatientResponse> updatePatientProfile (@PathVariable String patientid, @RequestBody PatientUpdateRequest request){
+    public ApiResponse<PatientResponse> updatePatientProfile (@PathVariable String patientid, @RequestBody @Valid PatientUpdateRequest request){
         return ApiResponse.<PatientResponse>builder()
                 .data(patientService.updatePatientProfile(patientid, request ))
                 .success(true)
