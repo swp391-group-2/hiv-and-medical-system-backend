@@ -1,6 +1,5 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response;
 
-import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +10,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaPrescriptionResponse {
+public class PaPrescriptionItemResponse {
     int id;
-    int duration;
-    String note;
+    String dosage;
+    String frequency;
+    int quantity;
+    String medicationName;
 }

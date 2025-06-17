@@ -19,9 +19,10 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PatientPrescription {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     int duration;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Appointment appointment;
     @CreationTimestamp
     @Column(updatable = false)

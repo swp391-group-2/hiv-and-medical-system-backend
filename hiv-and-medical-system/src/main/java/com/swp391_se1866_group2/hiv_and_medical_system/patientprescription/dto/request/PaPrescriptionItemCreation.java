@@ -10,5 +10,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaPrescriptionCreationRequest {
+public class PaPrescriptionItemCreation {
+    String dosage;
+    String frequency;
+    int quantity;
+    int medicationId;
 }
