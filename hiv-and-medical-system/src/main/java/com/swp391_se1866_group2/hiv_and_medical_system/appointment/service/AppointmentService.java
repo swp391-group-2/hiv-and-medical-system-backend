@@ -210,15 +210,15 @@ public class AppointmentService {
     }
 
 //    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
-    public PrescriptionResponse choosePrescription(int prescriptionId, int appointmentId, String note) {
-        Appointment appointment = getAppointmentByAppointmentId(appointmentId);
-        appointment.setNote(note);
-        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
-        appointment.setPrescription(prescription);
-        appointment.setStatus(AppointmentStatus.COMPLETED);
-        appointmentRepository.save(appointment);
-        return prescriptionMapper.toPrescriptionResponse(prescription);
-    }
+//    public PrescriptionResponse choosePrescription(int patientPrescriptionId, int appointmentId, String note) {
+//        Appointment appointment = getAppointmentByAppointmentId(appointmentId);
+//        appointment.setNote(note);
+//        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
+//        appointment.setPatientPrescription(prescription);
+//        appointment.setStatus(AppointmentStatus.COMPLETED);
+//        appointmentRepository.save(appointment);
+//        return prescriptionMapper.toPrescriptionResponse(prescription);
+//    }
 
     public Appointment getAppointmentByAppointmentId(int id) {
         return appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
