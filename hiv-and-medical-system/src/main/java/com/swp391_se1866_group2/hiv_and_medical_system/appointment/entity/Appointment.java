@@ -31,7 +31,7 @@ public class Appointment {
     LabTestSlot labTestSlot;
     @ManyToOne(fetch = FetchType.LAZY)
     ServiceEntity service;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     Prescription prescription;
     @ManyToOne(fetch = FetchType.LAZY)
     ScheduleSlot scheduleSlot;
