@@ -23,17 +23,18 @@ public class PatientPrescription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     int duration;
+    String note;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Appointment appointment;
     @CreationTimestamp
     @Column(updatable = false)
-    String note;
+    LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
-    Prescription prescription;
+    Prescription prescriptionDefault;
     @OneToMany
     @JsonManagedReference("patientPrescriptionItems-patientPrescription")
     List<PatientPrescriptionItem> patientPrescriptionItems;
-    LocalDateTime createdAt;
+
     @UpdateTimestamp
     LocalDateTime updatedAt;
 

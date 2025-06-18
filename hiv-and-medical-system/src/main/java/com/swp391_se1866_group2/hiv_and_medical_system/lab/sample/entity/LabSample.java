@@ -32,7 +32,7 @@ public class LabSample {
     String sampleTypeVirus;
     @OneToOne(
             mappedBy = "labSample",
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     LabResult labResults;
