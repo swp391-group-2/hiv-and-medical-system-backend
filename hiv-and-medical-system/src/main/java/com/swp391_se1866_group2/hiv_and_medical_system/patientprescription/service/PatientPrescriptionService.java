@@ -1,5 +1,10 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientPrescriptionMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.request.PaPrescriptionCreation;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response.PaPrescriptionResponse;
@@ -23,8 +28,11 @@ public class PatientPrescriptionService {
     PatientPrescriptionRepository prescriptionRepository;
     PatientPrescriptionMapper patientPrescriptionMapper;
     PatientPrescriptionItemService prescriptionItemService;
+    AppointmentRepository appointmentRepository;
 
-    public PaPrescriptionResponse createPatientPrescription (PaPrescriptionCreation request) {
+    public PaPrescriptionResponse createPatientPrescription (PaPrescriptionCreation request, int appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
         PatientPrescription patientPrescription = patientPrescriptionMapper.toPatientPrescription(request);
         List<PatientPrescriptionItem> patientPrescriptionItemList = new ArrayList<>();
         request.getPatientPrescriptionItems().forEach(paPrescriptionItemCreation -> {

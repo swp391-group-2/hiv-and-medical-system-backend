@@ -20,11 +20,13 @@ public class PatientPrescriptionController {
     PatientPrescriptionService patientPrescriptionService;
 
     @PostMapping
-    public ApiResponse<PaPrescriptionResponse> choosePatientPrescription (@RequestBody PaPrescriptionCreation request) {
+    public ApiResponse<PaPrescriptionResponse> choosePatientPrescription (@RequestBody PaPrescriptionCreation request, int appointmentId) {
         return ApiResponse.<PaPrescriptionResponse>builder()
-                .data(patientPrescriptionService.createPatientPrescription(request))
+                .data(patientPrescriptionService.createPatientPrescription(request, appointmentId))
                 .success(true)
                 .build();
     }
+
+
 
 }
