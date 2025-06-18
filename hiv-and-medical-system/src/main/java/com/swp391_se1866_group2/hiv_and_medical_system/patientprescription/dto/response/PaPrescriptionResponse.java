@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +18,6 @@ public class PaPrescriptionResponse {
     int id;
     int duration;
     String note;
+    LocalDateTime createdAt;
+    List<PaPrescriptionResponse> paPrescriptionResponses;
 }

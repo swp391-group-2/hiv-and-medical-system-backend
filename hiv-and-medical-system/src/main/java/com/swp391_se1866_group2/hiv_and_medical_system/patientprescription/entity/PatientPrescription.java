@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.enti
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,8 @@ public class PatientPrescription {
     @CreationTimestamp
     @Column(updatable = false)
     String note;
+    @ManyToOne(fetch = FetchType.LAZY)
+    Prescription prescription;
     @OneToMany
     @JsonManagedReference("patientPrescriptionItems-patientPrescription")
     List<PatientPrescriptionItem> patientPrescriptionItems;
