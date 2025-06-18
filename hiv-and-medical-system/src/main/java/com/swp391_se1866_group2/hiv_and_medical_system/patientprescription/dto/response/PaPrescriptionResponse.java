@@ -22,6 +22,7 @@ public class PaPrescriptionResponse {
     int duration;
     String note;
     LocalDateTime createdAt;
-    PrescriptionResponse prescription;
-    List<PaPrescriptionItemResponse> paPrescriptionItems;
+    int prescriptionDefaultId;
+    String prescriptionDefaultName;
+    List<PaPrescriptionItemResponse> patientPrescriptionItems;
 }

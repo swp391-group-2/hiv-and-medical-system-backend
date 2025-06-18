@@ -6,12 +6,15 @@ import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.Appoi
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientPrescriptionMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
+import com.swp391_se1866_group2.hiv_and_medical_system.medication.repository.MedicationRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.request.PaPrescriptionCreation;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response.PaPrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescription;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescriptionItem;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.repository.PatientPrescriptionItemRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.repository.PatientPrescriptionRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import lombok.AccessLevel;
@@ -35,6 +38,8 @@ public class PatientPrescriptionService {
     AppointmentRepository appointmentRepository;
     PatientRepository patientRepository;
     PrescriptionRepository prescriptionRepository;
+    MedicationRepository medicationRepository;
+    private final PatientPrescriptionItemRepository patientPrescriptionItemRepository;
 
     public PaPrescriptionResponse createPatientPrescription (PaPrescriptionCreation request) {
         Appointment appointment = appointmentRepository.findById(request.getAppointmentId())
@@ -42,9 +47,14 @@ public class PatientPrescriptionService {
         PatientPrescription patientPrescription = patientPrescriptionMapper.toPatientPrescription(request);
         List<PatientPrescriptionItem> patientPrescriptionItemList = new ArrayList<>();
         request.getPatientPrescriptionItems().forEach(paPrescriptionItemCreation -> {
-            patientPrescriptionItemList.add(prescriptionItemService.create(paPrescriptionItemCreation));
+            PatientPrescriptionItem item = patientPrescriptionMapper.toPatientPrescriptionItem(paPrescriptionItemCreation);
+            Medication medication = medicationRepository.findById(paPrescriptionItemCreation.getMedicationId())
+                    .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
+            item.setMedication(medication);
+            patientPrescriptionItemRepository.save(item);
+            patientPrescriptionItemList.add(patientPrescriptionItemRepository.save(item));
         });
-        patientPrescription.setPrescription(prescriptionRepository.findById(request.getPrescriptionId())
+        patientPrescription.setPrescriptionDefault(prescriptionRepository.findById(request.getPrescriptionId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED)));
         patientPrescription.setPatientPrescriptionItems(patientPrescriptionItemList);
         appointment.setPatientPrescription(patientPrescription);
