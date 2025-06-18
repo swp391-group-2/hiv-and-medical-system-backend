@@ -1,6 +1,10 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service;
 
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ParameterType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ResultStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
@@ -18,6 +22,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTestPa
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabResultRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestParameterRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +32,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +42,12 @@ import java.util.stream.Collectors;
 @Transactional
 public class LabTestService {
     ServiceService serviceService;
-
+    PatientService patientService;
     LabTestMapper labTestMapper;
     LabResultRepository labResultRepository;
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
+    AppointmentRepository appointmentRepository;
 
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LabTestResponse createLabTest(LabTestCreationRequest request){
@@ -128,6 +136,29 @@ public class LabTestService {
         labTestMapper.updateLabResult(request, labResult);
         labResult.setResultStatus(ResultStatus.FINISHED);
         return labTestMapper.toLabResultResponse(labResultRepository.save(labResult)) ;
+    }
+
+    public List<LabResultResponse> getLabResultByPatientId(String patientId){
+        Patient patient = patientService.getPatientById(patientId);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        if(appointments == null || appointments.isEmpty()) {
+            return null;
+        }
+        List<LabResult> labResults = new ArrayList<>();
+        appointments.forEach(appointment -> {
+            if(appointment.getLabSample() != null) {
+                LabResult labResult = labResultRepository.findByLabSampleId(appointment.getLabSample().getId());
+                if(labResult != null){
+                    labResults.add(labResult);
+                }
+            }
+        });
+        if(labResults.isEmpty()) {
+            return null;
+        }
+        return labResults.stream()
+                .map(labTestMapper::toLabResultResponse)
+                .collect(Collectors.toList());
     }
 
 
