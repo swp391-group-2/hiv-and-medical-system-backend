@@ -70,8 +70,10 @@ public class PatientPrescriptionService {
     public List<PaPrescriptionResponse> getPatientPrescriptionByPatientId (String patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient)
-                .orElseThrow(()-> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            throw new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED);
+        }
         return appointments.stream()
                 .map(appointment -> patientPrescriptionMapper.toPaPrescriptionResponse(appointment.getPatientPrescription()))
                 .collect(Collectors.toList());
