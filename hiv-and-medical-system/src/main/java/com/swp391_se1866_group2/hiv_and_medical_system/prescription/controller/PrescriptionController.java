@@ -41,15 +41,14 @@ public class PrescriptionController {
                 .build();
     }
 
-    @GetMapping("{prescriptionName}")
-    @Operation(summary = "Xem thông tin phác đồ theo tên")
-    public ApiResponse<List<PrescriptionResponse>> getPrescriptionByName(@PathVariable String prescriptionName) {
-        return ApiResponse.<List<PrescriptionResponse>>builder()
+    @GetMapping("/{prescriptionId}")
+    @Operation(summary = "Xem thông tin phác đồ theo id")
+    public ApiResponse<PrescriptionResponse> getPrescriptionById(@PathVariable int prescriptionId) {
+        return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
-                .data(prescriptionService.getPrescriptionByName(prescriptionName))
+                .data(prescriptionService.getPrescriptionById(prescriptionId))
                 .build();
     }
-
 
     @PutMapping("/{prescriptionId}/{prescriptionItemId}")
     @Operation(summary = "Cập nhật thông tin phác đồ")
