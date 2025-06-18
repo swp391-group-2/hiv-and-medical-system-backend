@@ -245,4 +245,7 @@ public class AppointmentService {
                 })
                 .collect(Collectors.toList());
     }
+
+
+
 }
