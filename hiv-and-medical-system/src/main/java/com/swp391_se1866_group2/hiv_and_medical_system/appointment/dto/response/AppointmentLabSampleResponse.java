@@ -19,6 +19,7 @@ import java.time.LocalTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppointmentLabSampleResponse {
     int appointmentId;
+    String appointmentCode;
     AppointmentStatus status;
     PatientResponse patient;
     Integer serviceId;
