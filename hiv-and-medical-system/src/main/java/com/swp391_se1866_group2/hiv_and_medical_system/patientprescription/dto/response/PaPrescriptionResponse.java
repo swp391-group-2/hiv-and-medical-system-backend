@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescriptionItem;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import lombok.AccessLevel;
@@ -21,6 +22,7 @@ public class PaPrescriptionResponse {
     int duration;
     String note;
     LocalDateTime createdAt;
-    PrescriptionResponse prescription;
-    List<PaPrescriptionResponse> paPrescriptionResponses;
+    int prescriptionDefaultId;
+    String prescriptionDefaultName;
+    List<PaPrescriptionItemResponse> patientPrescriptionItems;
 }

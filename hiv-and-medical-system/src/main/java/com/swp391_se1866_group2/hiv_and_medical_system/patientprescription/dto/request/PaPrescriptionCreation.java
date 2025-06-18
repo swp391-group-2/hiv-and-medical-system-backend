@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaPrescriptionCreation {
-    String dosage;
+    String duration;
     String frequency;
     int quantity;
     int prescriptionId;
