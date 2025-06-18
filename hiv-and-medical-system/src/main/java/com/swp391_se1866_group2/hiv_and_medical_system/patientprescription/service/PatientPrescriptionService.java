@@ -39,6 +39,8 @@ public class PatientPrescriptionService {
             patientPrescriptionItemList.add(prescriptionItemService.create(paPrescriptionItemCreation));
         });
         patientPrescription.setPatientPrescriptionItems(patientPrescriptionItemList);
+        appointment.setPatientPrescription(patientPrescription);
+        patientPrescription.setAppointment(appointment);
         return patientPrescriptionMapper.toPaPrescriptionResponse(prescriptionRepository.save(patientPrescription));
     }
 
