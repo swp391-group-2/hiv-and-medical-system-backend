@@ -7,26 +7,32 @@ import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.servi
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/patients/prescriptions")
+@RequestMapping("/prescriptions/patients")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PatientPrescriptionController {
     PatientPrescriptionService patientPrescriptionService;
 
     @PostMapping
-    public ApiResponse<PaPrescriptionResponse> choosePatientPrescription (@RequestBody PaPrescriptionCreation request, int appointmentId) {
+    public ApiResponse<PaPrescriptionResponse> choosePatientPrescription (@RequestBody PaPrescriptionCreation request) {
         return ApiResponse.<PaPrescriptionResponse>builder()
-                .data(patientPrescriptionService.createPatientPrescription(request, appointmentId))
+                .data(patientPrescriptionService.createPatientPrescription(request))
                 .success(true)
                 .build();
     }
 
+    @GetMapping("/{patientId}")
+    public ApiResponse<List<PaPrescriptionResponse>> getAllPatientPrescriptionById (@PathVariable("patientId") String patientId) {
+        return ApiResponse.<List<PaPrescriptionResponse>>builder()
+                .data(patientPrescriptionService.getPatientPrescriptionByPatientId(patientId))
+                .success(true)
+                .build();
+    }
 
 
 }

@@ -16,5 +16,7 @@ public class PaPrescriptionCreation {
     String dosage;
     String frequency;
     int quantity;
+    int prescriptionId;
+    int appointmentId;
     List<PaPrescriptionItemCreation> patientPrescriptionItems;
 }
