@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
@@ -44,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,9 +70,10 @@ public class AppointmentService {
     LabTestMapper labTestMapper;
     LabSampleMapper labSampleMapper;
     AppointmentMapper appointmentMapper;
+    private final PatientRepository patientRepository;
 
-//    @PreAuthorize("hasRole('PATIENT')")
-    public AppointmentResponse createAppointment(AppointmentCreationRequest request) {
+    //    @PreAuthorize("hasRole('PATIENT')")
+    public AppointmentCreationResponse createAppointment(AppointmentCreationRequest request) {
         Patient patient = patientService.getPatientById(request.getPatientId());
         ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
         Appointment appointment = Appointment.builder()
@@ -97,8 +100,10 @@ public class AppointmentService {
         }
         appointment.setStatus(AppointmentStatus.SCHEDULED);
         Appointment appointmentSaved = appointmentRepository.save(appointment);
-
-        return appointmentMapper.toAppointmentResponse(appointmentSaved);
+        String appointmentCode = String.format("App%06d", appointmentSaved.getId());
+        appointmentRepository.updateAppointmentCode(appointmentSaved.getId(), appointmentCode);
+        appointmentSaved.setAppointmentCode(appointmentCode);
+        return appointmentMapper.toAppointmentBasicResponse(appointmentSaved);
     }
 
 //    @PreAuthorize("hasRole('PATIENT') or hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
@@ -243,6 +248,14 @@ public class AppointmentService {
                     }
                     return response;
                 })
+                .collect(Collectors.toList());
+    }
+
+    public List<AppointmentCreationResponse> getAllAppointmentByPatientId(String patientId) {
+        Patient patient = patientService.getPatientById(patientId);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        return appointments.stream()
+                .map(appointmentMapper::toAppointmentBasicResponse)
                 .collect(Collectors.toList());
     }
 
