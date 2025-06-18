@@ -15,5 +15,6 @@ public interface PatientRepository extends JpaRepository<Patient, String> {
             SELECT new com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse (p.id, u.id, u.email, u.fullName, u.status, u.code, p.dob, p.gender, p.address, p.phoneNumber, p.identificationCard, p.healthInsurance, p.occupation) FROM Patient p JOIN p.user u WHERE u.email = :email""")
     Optional<PatientResponse> findPatientByUserEmail(@Param("email") String email);
 
-
+    @Query(value = "SELECT NEXT VALUE FOR code", nativeQuery = true)
+    Long getNextPatientCodeSequence();
 }

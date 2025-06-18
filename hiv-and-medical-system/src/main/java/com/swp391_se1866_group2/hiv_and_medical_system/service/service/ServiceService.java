@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.service.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ServiceMapper;
@@ -57,6 +58,16 @@ public class ServiceService {
     public ServiceEntity getServiceEntityById(int serviceId) {
         return serviceRepository.findById(serviceId)
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));
+    }
+
+    public ServiceResponse getServiceByType(String type) {
+        ServiceType serviceType;
+        try {
+            serviceType = ServiceType.valueOf(type.toUpperCase());
+        }catch (AppException e){
+            throw new AppException(ErrorCode.SERVICE_TYPE_NOT_EXISTED);
+        }
+        return serviceMapper.toServiceResponse(serviceRepository.findByServiceType(serviceType).orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED)));
     }
 
 }

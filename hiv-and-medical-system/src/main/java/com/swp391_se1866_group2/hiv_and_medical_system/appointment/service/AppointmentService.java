@@ -8,10 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.Ap
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AppointmentMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabSampleMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.LabTestMapper;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PrescriptionMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.request.LabSampleCreationRequest;
@@ -27,7 +24,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTe
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.repository.LabTestRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescription;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.repository.PatientPrescriptionRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
@@ -59,11 +59,11 @@ public class AppointmentService {
     LabTestSlotService labTestSlotService;
     ScheduleSlotService scheduleSlotService;
     LabTestService labTestService;
-    PrescriptionRepository prescriptionRepository;
+    PatientPrescriptionRepository patientPrescriptionRepository;
     PatientService patientService;
     ServiceService serviceService;
     DoctorService doctorService;
-
+    PatientPrescriptionMapper patientPrescriptionMapper;
     PrescriptionMapper prescriptionMapper;
     LabTestMapper labTestMapper;
     LabSampleMapper labSampleMapper;
@@ -108,9 +108,9 @@ public class AppointmentService {
             LabResult labResult = labResultRepository.findByLabSampleId(appointmentLabSampleResponse.getLabSampleId());
             appointmentLabSampleResponse.setLabResult(labTestMapper.toLabResultResponse(labResult));
         }
-        if(appointmentLabSampleResponse.getPrescription() != null){
-            Prescription prescription = prescriptionRepository.findById(appointmentLabSampleResponse.getPrescription().getPrescriptionId()).orElse(null);
-            appointmentLabSampleResponse.setPrescription(prescriptionMapper.toPrescriptionResponse(prescription));
+        if(appointmentLabSampleResponse.getPatientPrescription() != null){
+            PatientPrescription prescription = patientPrescriptionRepository.findById(appointmentLabSampleResponse.getPatientPrescription().getId()).orElse(null);
+            appointmentLabSampleResponse.setPatientPrescription(patientPrescriptionMapper.toPaPrescriptionResponse(prescription));
         }
         return appointmentLabSampleResponse;
     }
@@ -124,9 +124,9 @@ public class AppointmentService {
                         LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
                         response.setLabResult(labTestMapper.toLabResultResponse(labResult));
                     }
-                    if(response.getPrescription() != null){
-                        Prescription prescription = prescriptionRepository.findById(response.getPrescription().getPrescriptionId()).orElse(null);
-                        response.setPrescription(prescriptionMapper.toPrescriptionResponse(prescription));
+                    if(response.getPatientPrescription() != null){
+                        PatientPrescription prescription = patientPrescriptionRepository.findById(response.getPatientPrescription().getId()).orElse(null);
+                        response.setPatientPrescription(patientPrescriptionMapper.toPaPrescriptionResponse(prescription));
                     }
                     return response;
                 })
@@ -209,19 +209,6 @@ public class AppointmentService {
         return true;
     }
 
-//    @PreAuthorize("hasRole('MANAGER') or hasRole('LAB_TECHNICIAN') or hasRole('DOCTOR') or hasRole('STAFF') or hasRole('ADMIN')")
-    public PrescriptionResponse choosePrescription(int prescriptionId, int appointmentId, String note) {
-        Appointment appointment = getAppointmentByAppointmentId(appointmentId);
-        appointment.setNote(note);
-        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
-        appointment.setPrescription(prescription);
-        appointment.setStatus(AppointmentStatus.COMPLETED);
-        prescription.setAppointment(appointment);
-        appointmentRepository.save(appointment);
-        Prescription prescriptionSaved = prescriptionRepository.save(prescription);
-        return prescriptionMapper.toPrescriptionResponse(prescriptionSaved);
-    }
-
     public Appointment getAppointmentByAppointmentId(int id) {
         return appointmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
     }
@@ -258,4 +245,7 @@ public class AppointmentService {
                 })
                 .collect(Collectors.toList());
     }
+
+
+
 }
