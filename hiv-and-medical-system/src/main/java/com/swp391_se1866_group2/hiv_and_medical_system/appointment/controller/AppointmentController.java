@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
@@ -28,8 +29,8 @@ public class AppointmentController {
 
     @Operation(summary = "Đặt lịch hẹn")
     @PostMapping("/appointments")
-    public ApiResponse<AppointmentResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
-        return ApiResponse.<AppointmentResponse>builder()
+    public ApiResponse<AppointmentCreationResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
+        return ApiResponse.<AppointmentCreationResponse>builder()
                 .data(appointmentService.createAppointment(request))
                 .success(true)
                 .build();

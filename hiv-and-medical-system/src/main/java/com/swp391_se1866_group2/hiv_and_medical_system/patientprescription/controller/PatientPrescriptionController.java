@@ -26,13 +26,5 @@ public class PatientPrescriptionController {
                 .build();
     }
 
-    @GetMapping("/{patientId}")
-    public ApiResponse<List<PaPrescriptionResponse>> getAllPatientPrescriptionById (@PathVariable("patientId") String patientId) {
-        return ApiResponse.<List<PaPrescriptionResponse>>builder()
-                .data(patientPrescriptionService.getPatientPrescriptionByPatientId(patientId))
-                .success(true)
-                .build();
-    }
-
 
 }
