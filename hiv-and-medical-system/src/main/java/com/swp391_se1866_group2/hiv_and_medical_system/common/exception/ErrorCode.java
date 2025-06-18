@@ -48,6 +48,7 @@ public enum ErrorCode {
     LAB_RESULT_CAN_NOT_ALLOWED(1057, "Lab result can not return allowed", HttpStatus.CONFLICT),
     UPLOAD_FAILED(1058, "Upload image failed", HttpStatus.INTERNAL_SERVER_ERROR),
     INPUT_STATUS_FAILED(1059, "Input status failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    PATIENT_PRESCRIPTION_NOT_EXISTED(1060, "Patient Prescription not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
