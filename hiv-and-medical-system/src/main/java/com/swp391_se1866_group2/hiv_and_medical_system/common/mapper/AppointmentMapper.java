@@ -23,7 +23,7 @@ public interface AppointmentMapper {
     @Mapping(target = "price", source = "service.price")
     @Mapping(target = "labTestSlotId", source = "labTestSlot.id")
     @Mapping(target = "scheduleSlotId", source = "scheduleSlot.id")
-    @Mapping(target = "prescriptionId", source = "prescription.id")
+    @Mapping(target = "patientPrescriptionId", source = "patientPrescription.id")
     @Mapping(target = "labSampleId", source = "labSample.id")
     @Mapping(target = "doctorName", expression = "java(getDoctorName(appointment))")
     @Mapping(target = "status", source = "status")
@@ -48,7 +48,7 @@ public interface AppointmentMapper {
     @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
     @Mapping(target = "slotDescription", expression = "java(getSlotDescription(appointment))")
     @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
-    @Mapping(target = "prescription", source = "prescription")
+    @Mapping(target = "patientPrescription", source = "patientPrescription")
     AppointmentLabSampleResponse toAppointmentLabResponse(Appointment appointment);
 
     default String getDoctorName(Appointment appointment) {
