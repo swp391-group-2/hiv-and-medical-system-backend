@@ -27,7 +27,7 @@ public class AppointmentResponse {
     LocalTime startTime;
     LocalTime endTime;
     String slotDescription;
-    Integer prescriptionId;
+    Integer patientPrescriptionId;
     Integer labSampleId;
     AppointmentStatus status;
 }
