@@ -13,6 +13,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.M
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +40,16 @@ public class BlogService {
         return blogMapper.toBlogResponse(blogRepository.save(blog));
     }
 
-    public List<BlogResponse> getAllBlogs(){
-        return blogRepository.findAll().stream()
-                .map(blogMapper::toBlogResponse)
-                .collect(Collectors.toList());
+    public Slice<BlogResponse> getAllBlogs(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return blogRepository.getAllBlogs(pageable);
+
     }
 
     public BlogResponse getBlogByTitle(String title) {
         String editTitle = title.trim();
-        Blog blog = blogRepository.findByTitleIgnoreCase(editTitle)
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-        return blogMapper.toBlogResponse(blog);
+        return blogRepository.findByTitleIgnoreCase(editTitle)
+                .orElseThrow(()-> new AppException(ErrorCode.BLOG_NOT_EXISTED));
     }
 
     public BlogResponse getBlogById(int blogId) {

@@ -18,8 +18,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.Refr
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.RefreshResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.entity.InvalidatedToken;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.repository.InvalidatedTokenRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
@@ -50,7 +48,6 @@ public class AuthenticationService {
     DoctorService doctorService;
     PatientService patientService;
     UserService userService;
-    InvalidatedTokenRepository invalidatedTokenRepository;
     UserRepository userRepository;
 
     DoctorMapper doctorMapper;
@@ -152,27 +149,13 @@ public class AuthenticationService {
         if(!(verified && expiryTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-
         return signedJWT;
     }
 
     public RefreshResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var signedJWT = verifyToken(request.getRefreshToken());
-
-        var jit = signedJWT.getJWTClaimsSet().getJWTID();
-        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-        InvalidatedToken invalidatedToken =
-                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
-
-        invalidatedTokenRepository.save(invalidatedToken);
-
         var email = signedJWT.getJWTClaimsSet().getSubject();
-
-        var user =
-                userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var accessToken = generateToken(user);
         return RefreshResponse.builder().accessToken(accessToken).build();

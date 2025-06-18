@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,22 +28,22 @@ public class BlogController {
     public ApiResponse<BlogResponse> createBlog (@RequestBody @Valid BlogCreationRequest request){
         return ApiResponse.<BlogResponse>builder()
                 .success(true)
-                .result(blogService.createBlog(request))
+                .data(blogService.createBlog(request))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<BlogResponse>> getAllBlogs() {
-        return ApiResponse.<List<BlogResponse>>builder()
+    public ApiResponse<Slice<BlogResponse>> getAllBlogs(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+        return ApiResponse.<Slice<BlogResponse>>builder()
                 .success(true)
-                .result(blogService.getAllBlogs())
+                .data(blogService.getAllBlogs(page,size))
                 .build();
     }
 
     @GetMapping("/{blogId}")
     public ApiResponse<BlogResponse> getBlogById(@PathVariable int blogId) {
         return ApiResponse.<BlogResponse>builder()
-                .result(blogService.getBlogById(blogId))
+                .data(blogService.getBlogById(blogId))
                 .success(true)
                 .build();
     }
@@ -49,7 +51,7 @@ public class BlogController {
     @GetMapping("/title/{title}")
     public ApiResponse<BlogResponse> getBlogByTitle(@PathVariable String title) {
         return ApiResponse.<BlogResponse>builder()
-                .result(blogService.getBlogByTitle(title))
+                .data(blogService.getBlogByTitle(title))
                 .success(true)
                 .build();
     }
@@ -57,7 +59,7 @@ public class BlogController {
     @PutMapping("/{blogId}")
     public ApiResponse<BlogResponse> updateMedication (@PathVariable int blogId, @RequestBody BlogUpdateRequest request){
         return ApiResponse.<BlogResponse>builder()
-                .result(blogService.updateBlog(blogId,request))
+                .data(blogService.updateBlog(blogId,request))
                 .success(true)
                 .build();
     }
