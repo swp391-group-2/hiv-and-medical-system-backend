@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.serv
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientPrescriptionMapper;
@@ -58,6 +59,8 @@ public class PatientPrescriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED)));
         patientPrescription.setPatientPrescriptionItems(patientPrescriptionItemList);
         appointment.setPatientPrescription(patientPrescription);
+        appointment.setStatus(AppointmentStatus.COMPLETED);
+        appointmentRepository.save(appointment);
         patientPrescription.setAppointment(appointment);
         return patientPrescriptionMapper.toPaPrescriptionResponse(patientPrescriptionRepository.save(patientPrescription));
     }
