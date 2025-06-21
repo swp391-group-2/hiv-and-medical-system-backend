@@ -1,7 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.payment.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

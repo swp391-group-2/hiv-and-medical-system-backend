@@ -8,7 +8,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.PaymentStatu
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.dto.PaymentRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.payment.dto.StripeResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.entity.Payment;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.repository.PaymentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
