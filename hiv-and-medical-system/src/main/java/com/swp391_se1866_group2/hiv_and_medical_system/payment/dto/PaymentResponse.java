@@ -8,5 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponse {
-    private String clientSecret;
+    private Long id;
+    private String patientId;
+    private String service;
+    private int scheduleSlotId;
+    private int labTestSlotId;
+    private long amount;
 }

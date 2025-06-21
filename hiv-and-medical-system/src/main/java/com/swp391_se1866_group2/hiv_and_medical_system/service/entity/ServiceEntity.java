@@ -20,7 +20,7 @@ public class ServiceEntity {
     @Column(nullable = false)
     String name;
     @Column(nullable = false)
-    double price;
+    Long price;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     ServiceType serviceType;
