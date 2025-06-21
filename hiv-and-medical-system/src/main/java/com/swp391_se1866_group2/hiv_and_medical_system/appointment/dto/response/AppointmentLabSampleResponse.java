@@ -25,7 +25,7 @@ public class AppointmentLabSampleResponse {
     Integer serviceId;
     String serviceName;
     String serviceType;
-    Double price;
+    Long price;
     String note;
     Integer labTestSlotId;
     String doctorName;

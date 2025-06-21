@@ -13,5 +13,4 @@ public class PaymentRequest {
     private int serviceId;
     private int scheduleSlotId;
     private int labTestSlotId;
-    private long amount;
 }

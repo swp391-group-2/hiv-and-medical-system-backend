@@ -20,7 +20,7 @@ public class AppointmentResponse {
     Integer serviceId;
     String serviceName;
     String serviceType;
-    Double price;
+    Long price;
     Integer labTestSlotId;
     String doctorName;
     Integer scheduleSlotId;
