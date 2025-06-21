@@ -36,9 +36,8 @@ public class StripeWebhookController {
 
 
     @PostMapping
-    public ApiResponse<AppointmentCreationResponse> handle (@RequestHeader("Stripe-Signature") String signature, @RequestBody String payload) throws SignatureVerificationException {
+    public ApiResponse<String> handle (@RequestHeader("Stripe-Signature") String signature, @RequestBody String payload) throws SignatureVerificationException {
         Event event = Webhook.constructEvent(payload, signature, endpointSecret);
-        AppointmentCreationResponse appointmentResponse = null;
         if ("checkout.session.completed".equals(event.getType())) {
             Session session = (Session)event.getDataObjectDeserializer()
                     .getObject().orElseThrow();
@@ -59,13 +58,25 @@ public class StripeWebhookController {
                 appointment.setPatientId(payment.getPatientId());
                 appointment.setServiceId(payment.getServiceId());
                 appointment.setScheduleSlotId(payment.getScheduleSlotId());
-                appointmentResponse = appointmentService.createAppointment(appointment);
+                appointmentService.createAppointment(appointment);
             }
+            return ApiResponse.<String>builder()
+                    .success(true)
+                    .data("Payment successfully created")
+                    .build();
 
         }
-        return ApiResponse.<AppointmentCreationResponse>builder()
+        if ("checkout.session.expired".equals(event.getType())) {
+            Session session = (Session)event.getDataObjectDeserializer().getObject().orElseThrow();
+            paymentRepo.findBySessionId(session.getId())
+                    .ifPresent(p -> {
+                        p.setStatus(PaymentStatus.FAILED);
+                        paymentRepo.save(p);
+                    });
+        }
+        return ApiResponse.<String>builder()
                 .success(true)
-                .data(appointmentResponse)
+                .data("Payment cancelled")
                 .build();
     }
 
