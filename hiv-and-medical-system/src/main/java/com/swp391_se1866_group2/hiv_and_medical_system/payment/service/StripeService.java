@@ -75,6 +75,8 @@ public class StripeService {
         payment.setSessionId(session.getId());
         paymentRepository.save(payment);
 
+
+        
         return session.getUrl();
     }
 
