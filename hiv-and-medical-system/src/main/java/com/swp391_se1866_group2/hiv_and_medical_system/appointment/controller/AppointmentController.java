@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
@@ -28,8 +29,8 @@ public class AppointmentController {
 
     @Operation(summary = "Đặt lịch hẹn")
     @PostMapping("/appointments")
-    public ApiResponse<AppointmentResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
-        return ApiResponse.<AppointmentResponse>builder()
+    public ApiResponse<AppointmentCreationResponse> createAppointment(@RequestBody AppointmentCreationRequest request) {
+        return ApiResponse.<AppointmentCreationResponse>builder()
                 .data(appointmentService.createAppointment(request))
                 .success(true)
                 .build();
@@ -64,19 +65,10 @@ public class AppointmentController {
 
     @Operation(summary = "Cập nhật kết quả xét nghiệm")
     @PutMapping("/lab-samples/{sampleId}/results")
-    public ApiResponse<LabResultResponse> updateLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
+    public ApiResponse<LabResultResponse> inputLabResult(@PathVariable("sampleId") int sampleId, @RequestBody LabResultUpdateRequest request) {
         return ApiResponse.<LabResultResponse>builder()
                 .success(true)
-                .data(appointmentService.updateLabResultAppointment(sampleId, request))
-                .build();
-    }
-
-    @Operation(summary = "Chọn phác đồ điều trị")
-    @PostMapping("/appointments/{appointmentId}/prescription/{prescriptionId}")
-    public ApiResponse<PrescriptionResponse> choosePrescription (@PathVariable("appointmentId") int appointmentId, @PathVariable("prescriptionId") int prescriptionId, @RequestBody String note) {
-        return ApiResponse.<PrescriptionResponse>builder()
-                .success(true)
-                .data(appointmentService.choosePrescription(prescriptionId,appointmentId, note))
+                .data(appointmentService.inputLabResultAppointment(sampleId, request))
                 .build();
     }
 
@@ -103,9 +95,17 @@ public class AppointmentController {
                 .message("Lab result can not return.")
                 .data(false)
                 .build();
-
     }
 
+
+    @Operation(summary = "Lấy danh sách lịch appointment theo status của từng bác sĩ ")
+    @GetMapping("/doctors/me/appointments/{status}")
+    public ApiResponse<List<AppointmentLabSampleResponse>> getDoctorAppointmentStatus(@PathVariable("status") String status) {
+        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
+                .data(appointmentService.getAllDoctorAppointmentsByStatus(status))
+                .success(true)
+                .build();
+    }
 
 
 

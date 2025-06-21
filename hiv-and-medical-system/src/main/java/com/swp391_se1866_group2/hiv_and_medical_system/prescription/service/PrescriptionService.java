@@ -97,6 +97,11 @@ public class PrescriptionService {
         return prescriptionMapper.toPrescriptionItemResponse(prescriptionItem);
     }
 
+    public PrescriptionResponse getPrescriptionById(int prescriptionId) {
+        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
+        return prescriptionMapper.toPrescriptionResponse(prescription);
+    }
+
 
 
 }

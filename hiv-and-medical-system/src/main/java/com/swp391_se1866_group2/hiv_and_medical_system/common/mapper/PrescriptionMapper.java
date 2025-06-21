@@ -15,18 +15,19 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",
+@Mapper(componentModel = "spring",uses = {MedicationMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface PrescriptionMapper {
     @Mapping(source = "id", target = "prescriptionId")
     @Mapping(source = "prescriptionItems", target = "prescriptionItems")
+    @Mapping(source = "dosageForm", target = "dosageForm")
     PrescriptionResponse toPrescriptionResponse(Prescription prescription);
 
     @Mapping(source = "id", target = "prescriptionItemId")
     @Mapping(source = "medication", target = "medication")
     PrescriptionItemResponse toPrescriptionItemResponse(PrescriptionItem prescriptionItem);
-    MedicationResponse toMedicationResponse(Medication medication);
+
     Prescription toPrescription(PrescriptionCreationRequest request);
 
     @Mapping(source = "dosage", target = "dosage")

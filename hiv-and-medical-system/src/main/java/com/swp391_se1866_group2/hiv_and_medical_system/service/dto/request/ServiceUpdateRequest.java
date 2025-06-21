@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceUpdateRequest {
     String name;
-    double price;
+    Long price;
 }

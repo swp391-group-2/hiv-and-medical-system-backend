@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapper {
     @Mapping(target = "appointmentId", source = "id")
+    @Mapping(target = "appointmentCode", source = "appointmentCode")
     @Mapping(target = "patient", source = "patient")
     @Mapping(target = "serviceId", source = "service.id")
     @Mapping(target = "serviceName", source = "service.name")
@@ -23,7 +25,7 @@ public interface AppointmentMapper {
     @Mapping(target = "price", source = "service.price")
     @Mapping(target = "labTestSlotId", source = "labTestSlot.id")
     @Mapping(target = "scheduleSlotId", source = "scheduleSlot.id")
-    @Mapping(target = "prescriptionId", source = "prescription.id")
+    @Mapping(target = "patientPrescriptionId", source = "patientPrescription.id")
     @Mapping(target = "labSampleId", source = "labSample.id")
     @Mapping(target = "doctorName", expression = "java(getDoctorName(appointment))")
     @Mapping(target = "status", source = "status")
@@ -34,6 +36,20 @@ public interface AppointmentMapper {
     AppointmentResponse toAppointmentResponse(Appointment appointment);
 
     @Mapping(target = "appointmentId", source = "id")
+    @Mapping(target = "appointmentCode", source = "appointmentCode")
+    @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "serviceName", source = "service.name")
+    @Mapping(target = "serviceType", source = "service.serviceType")
+    @Mapping(target = "startTime", expression = "java(getStartTime(appointment))")
+    @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
+    @Mapping(target = "doctorName", expression = "java(getDoctorName(appointment))")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "labSampleId", source = "labSample.id")
+    @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
+    AppointmentCreationResponse toAppointmentBasicResponse(Appointment appointment);
+
+    @Mapping(target = "appointmentId", source = "id")
+    @Mapping(target = "appointmentCode", source = "appointmentCode")
     @Mapping(target = "patient", source = "patient")
     @Mapping(target = "serviceId", source = "service.id")
     @Mapping(target = "serviceName", source = "service.name")
@@ -48,7 +64,7 @@ public interface AppointmentMapper {
     @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
     @Mapping(target = "slotDescription", expression = "java(getSlotDescription(appointment))")
     @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
-    @Mapping(target = "prescription", source = "prescription")
+    @Mapping(target = "patientPrescription", source = "patientPrescription")
     AppointmentLabSampleResponse toAppointmentLabResponse(Appointment appointment);
 
     default String getDoctorName(Appointment appointment) {

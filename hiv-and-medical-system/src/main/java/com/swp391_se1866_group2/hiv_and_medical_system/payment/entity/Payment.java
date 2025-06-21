@@ -1,17 +1,32 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.payment.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.PaymentStatus;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
-@Component
-@ConfigurationProperties(prefix = "vnpay")
-@Getter
-@Setter
+import java.time.Instant;
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Payment {
-    private String tmnCode;
-    private String secretKey;
-    private String returnUrl;
-    private String payUrl;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String patientId;
+    private int serviceId;
+    private int scheduleSlotId;
+    private int labTestSlotId;
+    private Long amount;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+    private String sessionId;
+    private String paymentIntentId;
+    @CreationTimestamp
+    private Instant succeededAt;
 }

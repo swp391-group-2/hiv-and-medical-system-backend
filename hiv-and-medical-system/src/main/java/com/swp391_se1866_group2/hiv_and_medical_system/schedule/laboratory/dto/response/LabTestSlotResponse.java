@@ -2,9 +2,6 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.dto.
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabTestStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.entity.Slot;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

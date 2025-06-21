@@ -15,11 +15,12 @@ import java.time.LocalTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppointmentResponse {
     int appointmentId;
+    String appointmentCode;
     PatientResponse patient;
     Integer serviceId;
     String serviceName;
     String serviceType;
-    Double price;
+    Long price;
     Integer labTestSlotId;
     String doctorName;
     Integer scheduleSlotId;
@@ -27,7 +28,7 @@ public class AppointmentResponse {
     LocalTime startTime;
     LocalTime endTime;
     String slotDescription;
-    Integer prescriptionId;
+    Integer patientPrescriptionId;
     Integer labSampleId;
     AppointmentStatus status;
 }

@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.doctor.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,10 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,10 +38,14 @@ public class DoctorController {
 
     @GetMapping()
     @Operation(summary = "Lấy danh sách bác sĩ")
-    public ApiResponse<List<DoctorResponse>> getDoctors(){
+    public ApiResponse<List<DoctorResponse>> getDoctors(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "13") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("u.fullName"));
         return ApiResponse.<List<DoctorResponse>>builder()
                 .success(true)
-                .data(doctorService.getAllDoctor())
+                .data(doctorService.getAllDoctor(pageable))
                 .build();
     }
 
@@ -49,7 +58,7 @@ public class DoctorController {
                 .build();
     }
 
-    @GetMapping("myInfo")
+    @GetMapping("/myInfo")
     @Operation(summary = "Lấy thông tin bác sĩ bằng token")
     public ApiResponse<DoctorResponse> getDoctorInfo(){
         return ApiResponse.<DoctorResponse>builder()
@@ -76,4 +85,12 @@ public class DoctorController {
                 .build();
     }
 
+    @PutMapping("/{doctorId}")
+    @Operation(summary = "update thông tin của bác sĩ")
+    public ApiResponse<DoctorResponse> updateDoctor(@PathVariable String doctorId, @RequestBody DoctorUpdateRequest request){
+        return ApiResponse.<DoctorResponse>builder()
+                .success(true)
+                .data(doctorService.updateDoctorProfile(doctorId,request))
+                .build();
+    }
 }

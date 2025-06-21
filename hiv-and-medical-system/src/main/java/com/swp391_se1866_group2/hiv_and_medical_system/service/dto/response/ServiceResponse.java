@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class ServiceResponse {
     int id;
     String name;
-    double price;
+    Long price;
     ServiceType serviceType;
 }

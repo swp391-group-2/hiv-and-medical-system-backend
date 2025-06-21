@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentS
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.dto.response.LabSampleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response.PaPrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,12 +19,13 @@ import java.time.LocalTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppointmentLabSampleResponse {
     int appointmentId;
+    String appointmentCode;
     AppointmentStatus status;
     PatientResponse patient;
     Integer serviceId;
     String serviceName;
     String serviceType;
-    Double price;
+    Long price;
     String note;
     Integer labTestSlotId;
     String doctorName;
@@ -35,5 +37,5 @@ public class AppointmentLabSampleResponse {
     Integer labSampleId;
     LabSampleResponse labSample;
     LabResultResponse labResult;
-    PrescriptionResponse prescription;
+    PaPrescriptionResponse patientPrescription;
 }
