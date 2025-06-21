@@ -25,5 +25,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'DOCTOR' AND DATE(u.createdAt) BETWEEN :startDate AND :endDate")
     long countDoctors(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    User getUserByEmail(String email);
 
 }

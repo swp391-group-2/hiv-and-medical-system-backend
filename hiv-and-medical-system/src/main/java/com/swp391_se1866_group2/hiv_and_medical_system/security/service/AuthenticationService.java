@@ -56,6 +56,10 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
     public PatientResponse createPatientAccount (UserCreationRequest request, String role){
+        User user = userRepository.getUserByEmail(request.getEmail());
+        if(user != null){
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
         return patientService.createPatient(request, role);
     }
 
