@@ -14,7 +14,4 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentService {
     PaymentRepository paymentRepository;
-
-
-
 }
