@@ -4,6 +4,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabTestStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.PaymentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
@@ -13,6 +14,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.payment.entity.Payment;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.repository.PaymentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.repository.LabTestSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.repository.ServiceRepository;
 import lombok.AccessLevel;
@@ -30,16 +33,20 @@ public class StripeService {
     final PaymentRepository paymentRepository;
     final  ServiceRepository serviceRepository;
     final ScheduleSlotRepository scheduleSlotRepo;
+    final LabTestSlotRepository labTestSlotRepo;
 
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
     public String createCheckoutSession(PaymentRequest request) throws StripeException {
         Stripe.apiKey = stripeSecretKey;
         ServiceEntity service = serviceRepository.findById(request.getServiceId()).orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));
-        ScheduleSlot scheduleSlot = scheduleSlotRepo.findById(request.getScheduleSlotId()).orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_SLOT_NOT_EXISTED));
-        if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE.name())){
-            throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
+        ScheduleSlot scheduleSlot = scheduleSlotRepo.findScheduleSlotById(request.getScheduleSlotId());
+        if(scheduleSlot != null){
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE.name())){
+                throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
+            }
         }
+
         String price = String.valueOf(service.getPrice());
         Payment payment = Payment.builder()
                 .patientId(request.getPatientId())
@@ -56,8 +63,8 @@ public class StripeService {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:5173")
-                .setCancelUrl("http://localhost:8080/payment/cancel")
+                .setSuccessUrl("http://localhost:5173/payment-success")
+                .setCancelUrl("http://localhost:5173/payment-cancel")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
