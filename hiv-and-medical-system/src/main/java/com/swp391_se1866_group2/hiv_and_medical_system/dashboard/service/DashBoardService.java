@@ -2,7 +2,6 @@ package com.swp391_se1866_group2.hiv_and_medical_system.dashboard.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.projection.MaxMinAppointmentResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.query.AppointmentCountPerDate;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
