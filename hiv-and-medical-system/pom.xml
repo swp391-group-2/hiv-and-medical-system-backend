@@ -92,6 +92,7 @@
 			<artifactId>cloudinary-http45</artifactId>
 			<version>1.39.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
