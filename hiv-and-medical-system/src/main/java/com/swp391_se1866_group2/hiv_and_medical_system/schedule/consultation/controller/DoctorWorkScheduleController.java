@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleDTOResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.DoctorWorkScheduleService;
@@ -60,8 +61,8 @@ public class DoctorWorkScheduleController {
 
     @GetMapping("/{doctorId}/schedules/date")
     @Operation(summary = "Lấy lịch làm việc theo ngày")
-    public ApiResponse<List<ScheduleResponse>> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        return ApiResponse.<List<ScheduleResponse>>builder()
+    public ApiResponse<ScheduleDTOResponse> getAllSchedulesByDate(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ApiResponse.<ScheduleDTOResponse>builder()
                 .data(scheduleService.getDoctorWorkScheduleByDate(doctorId, date))
                 .success(true)
                 .build();
