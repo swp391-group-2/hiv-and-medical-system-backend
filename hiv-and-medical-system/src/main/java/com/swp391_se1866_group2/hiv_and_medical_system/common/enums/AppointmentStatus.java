@@ -9,7 +9,9 @@ public enum AppointmentStatus {
     SCHEDULED,
     CHECKED_IN,
     LAB_COMPLETED,
-    COMPLETED;
+    COMPLETED,
+    CANCELLED,
+    ;
 
     @JsonCreator
     public static ServiceType from(String value) {

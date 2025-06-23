@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patient.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
@@ -90,8 +91,8 @@ public class PatientController {
 
     @GetMapping("/{patientId}/prescriptions")
     @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
-    public ApiResponse<List<PaPrescriptionResponse>> getPrescriptionsByPatient(@PathVariable String patientId) {
-        return ApiResponse.<List<PaPrescriptionResponse>>builder()
+    public ApiResponse<PaPrescriptionResponse> getPrescriptionsByPatient(@PathVariable String patientId) {
+        return ApiResponse.<PaPrescriptionResponse>builder()
                 .success(true)
                 .data(patientPrescriptionService.getPatientPrescriptionByPatientId(patientId))
                 .build();
@@ -105,4 +106,14 @@ public class PatientController {
                 .data(labTestService.getLabResultByPatientId(patientId))
                 .build();
     }
+
+    @GetMapping("/{patientId}/prescriptions/completed")
+    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
+    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {
+        return ApiResponse.<List<AppointmentPatientResponse>>builder()
+                .success(true)
+                .data(appointmentService.getAllAppointmentCompletedByPatientId(patientId))
+                .build();
+    }
+
 }

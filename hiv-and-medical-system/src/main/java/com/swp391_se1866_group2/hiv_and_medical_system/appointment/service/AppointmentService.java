@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
@@ -44,6 +45,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -259,6 +263,38 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    public boolean cancelAppointment(int appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+
+        LocalDateTime now = LocalDateTime.now();
+        Duration diff = Duration.between(now, appointment.getCreatedAt());
+        if(diff.toHours() > 24){
+            throw new AppException(ErrorCode.CANCELLATION_DEADLINE_EXCEEDED);
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+
+        if(appointment.getScheduleSlot() != null){
+            appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.AVAILABLE.name());
+        }
+
+        return true;
+    }
+
+    public List<AppointmentPatientResponse> getAllAppointmentCompletedByPatientId(String patientId) {
+        Patient patient = patientService.getPatientById(patientId);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<AppointmentPatientResponse> appPatient = appointments.stream()
+                .map(appointmentMapper::toAppointmentPatientResponse)
+                .toList();
+        List<AppointmentPatientResponse> response = new ArrayList<>();
+        appPatient.forEach(appointment -> {
+            if(appointment.getStatus().equals(AppointmentStatus.COMPLETED) && appointment.getServiceType().equals(ServiceType.CONSULTATION.name())){
+                response.add(appointment);
+            }
+        });
+        return response;
+    }
 
 
 }
