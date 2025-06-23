@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,30 +36,29 @@ public class DashBoardService {
         return new StatsResponse(title, value, change, isGrowing);
     }
 
-    public StatsResponse getTotalPatients(LocalDate startDate, LocalDate endDate, LocalDate now){
-
-        long currentValue = userRepository.countPatients(startDate, now);
+    public StatsResponse getTotalPatients(LocalDate startDate, LocalDate endDate){
         long previousValue = userRepository.countPatients(startDate, endDate);
+        long currentValue = userRepository.countPatients(startDate, LocalDate.now());
         return formatStats("Tổng khách hàng", currentValue, previousValue, " bệnh nhân");
     }
 
-    public StatsResponse getTotalDoctors(LocalDate startDate, LocalDate endDate, LocalDate now){
-        long currentValue = userRepository.countDoctors(startDate, now);
+    public StatsResponse getTotalDoctors(LocalDate startDate, LocalDate endDate){
         long previousValue = userRepository.countDoctors(startDate, endDate);
+        long currentValue = userRepository.countDoctors(startDate, LocalDate.now());
         return formatStats("Bác sĩ hoạt động", currentValue, previousValue, " bác sĩ");
     }
 
-    public StatsResponse getTotalTodayAppointment(LocalDate startDate, LocalDate endDate, LocalDate now){
-        long currentValue = appointmentRepository.countAppointments(startDate, now);
+    public StatsResponse getTotalTodayAppointment(LocalDate startDate, LocalDate endDate){
         long previousValue = appointmentRepository.countAppointments(startDate, endDate);
+        long currentValue = appointmentRepository.countAppointments(startDate, LocalDate.now());
         return formatStats("Lịch hẹn hôm nay", currentValue, previousValue, " lịch hẹn");
     }
 
-    public List<StatsResponse> getAllStats(LocalDate startDate, LocalDate endDate, LocalDate now){
+    public List<StatsResponse> getAllStats(LocalDate startDate, LocalDate endDate){
         return List.of(
-                getTotalPatients(startDate, endDate, now),
-                getTotalDoctors(startDate, endDate, now),
-                getTotalTodayAppointment(startDate, endDate, now)
+                getTotalPatients(startDate, endDate),
+                getTotalDoctors(startDate, endDate),
+                getTotalTodayAppointment(startDate, endDate)
         );
     }
 

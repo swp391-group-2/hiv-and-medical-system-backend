@@ -27,7 +27,7 @@ public class DashBoardController {
     public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
-                .data(dashBoardService.getAllStats(startDate, endDate, LocalDate.now()))
+                .data(dashBoardService.getAllStats(startDate, endDate))
                 .build();
 
     }
