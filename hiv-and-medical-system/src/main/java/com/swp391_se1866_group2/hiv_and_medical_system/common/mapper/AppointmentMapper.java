@@ -2,8 +2,11 @@ package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import org.hibernate.LazyInitializationException;
 import org.mapstruct.*;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -12,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Mapper(componentModel = "spring",
-        uses = {PatientMapper.class, LabSampleMapper.class, LabTestMapper.class, PrescriptionMapper.class},
+        uses = {PatientMapper.class, LabSampleMapper.class, LabTestMapper.class, PrescriptionMapper.class, PatientPrescriptionMapper.class, DoctorMapper.class},
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapper {
@@ -47,6 +50,20 @@ public interface AppointmentMapper {
     @Mapping(target = "labSampleId", source = "labSample.id")
     @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
     AppointmentCreationResponse toAppointmentBasicResponse(Appointment appointment);
+
+    @Mapping(target = "appointmentId", source = "id")
+    @Mapping(target = "appointmentCode", source = "appointmentCode")
+    @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "serviceName", source = "service.name")
+    @Mapping(target = "serviceType", source = "service.serviceType")
+    @Mapping(target = "startTime", expression = "java(getStartTime(appointment))")
+    @Mapping(target = "endTime", expression = "java(getEndTime(appointment))")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "labResult", source = "labSample.labResults")
+    @Mapping(target = "patientPrescription", source = "patientPrescription")
+    @Mapping(target = "date", expression = "java(getAppointmentDate(appointment))")
+    @Mapping(target ="doctor", expression = "java(getDoctor(appointment))")
+    AppointmentPatientResponse toAppointmentPatientResponse(Appointment appointment);
 
     @Mapping(target = "appointmentId", source = "id")
     @Mapping(target = "appointmentCode", source = "appointmentCode")
@@ -182,6 +199,37 @@ public interface AppointmentMapper {
                         return appointment.getLabTestSlot().getDate();
                     } catch (LazyInitializationException e) {
                     }
+                }
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    default DoctorResponse getDoctor(Appointment appointment) {
+        try {
+            if (appointment != null && appointment.getScheduleSlot() != null) {
+                var slot = appointment.getScheduleSlot();
+                try {
+                    if (slot.getSchedule() != null) {
+                        var schedule = slot.getSchedule();
+                        try {
+                            if (schedule.getDoctor() != null) {
+                                Doctor doctor = schedule.getDoctor();
+                                return DoctorResponse.builder()
+                                        .doctorId(doctor.getId())
+                                        .doctorCode(doctor.getUser().getCode())
+                                        .email(doctor.getUser().getEmail())
+                                        .fullName(doctor.getUser().getFullName())
+                                        .licenseNumber(doctor.getLicenseNumber())
+                                        .specialization(doctor.getSpecialization())
+                                        .userStatus(doctor.getUser().getStatus())
+                                        .build();
+                            }
+                        } catch (LazyInitializationException e) {
+                        }
+                    }
+                } catch (LazyInitializationException e) {
                 }
             }
         } catch (Exception e) {

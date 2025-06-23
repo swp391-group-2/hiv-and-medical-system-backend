@@ -5,10 +5,13 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 
 public enum AppointmentStatus {
+
     SCHEDULED,
     CHECKED_IN,
     LAB_COMPLETED,
-    COMPLETED;
+    COMPLETED,
+    CANCELLED,
+    ;
 
     @JsonCreator
     public static ServiceType from(String value) {

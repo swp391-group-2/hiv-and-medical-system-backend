@@ -10,9 +10,10 @@ import java.util.Optional;
 @Repository
 public interface DoctorWorkScheduleRepository extends JpaRepository<DoctorWorkSchedule, Integer> {
 
-    List<DoctorWorkSchedule> findAllByWorkDateAndDoctorId(LocalDate workDate, String doctorId);
+    DoctorWorkSchedule findAllByWorkDateAndDoctorId(LocalDate workDate, String doctorId);
     boolean existsByWorkDateAndDoctorId(LocalDate workDate, String doctorId);
     List<DoctorWorkSchedule> findAllByDoctorId(String doctorId);
     List<DoctorWorkSchedule> findAllByWorkDateBetweenAndDoctorId(LocalDate start, LocalDate end, String doctorId);
     Optional<DoctorWorkSchedule> findByWorkDate(LocalDate workDate);
+
 }
