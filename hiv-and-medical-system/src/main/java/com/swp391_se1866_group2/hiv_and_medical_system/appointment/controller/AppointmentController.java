@@ -107,6 +107,12 @@ public class AppointmentController {
                 .build();
     }
 
-
-
+    @Operation(summary = "Hủy lịch đặt khám trong 24h")
+    @PostMapping("/appointments/{appointmentId}/cancel")
+    public ApiResponse<Boolean> cancelAppointment(@PathVariable("appointmentId") int appointmentId) {
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(appointmentService.cancelAppointment(appointmentId))
+                .build();
+    }
 }
