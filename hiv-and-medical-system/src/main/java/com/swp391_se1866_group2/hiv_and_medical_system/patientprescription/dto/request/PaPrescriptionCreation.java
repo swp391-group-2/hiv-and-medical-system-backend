@@ -15,6 +15,7 @@ import java.util.List;
 public class PaPrescriptionCreation {
     String duration;
     String frequency;
+    String note;
     int quantity;
     int prescriptionId;
     int appointmentId;

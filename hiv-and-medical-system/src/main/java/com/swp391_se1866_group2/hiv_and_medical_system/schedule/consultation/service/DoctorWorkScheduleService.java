@@ -9,7 +9,9 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorServ
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleDTOResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotDateResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
@@ -39,7 +41,7 @@ public class DoctorWorkScheduleService {
     DoctorService doctorService;
     ScheduleMapper scheduleMapper;
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') ")
+    //    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') ")
     public DoctorWorkScheduleResponse createDoctorSchedule (String doctorId , ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
         if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
@@ -93,10 +95,21 @@ public class DoctorWorkScheduleService {
         return doctorWorkSchedules;
     }
 
-    public List<ScheduleResponse> getDoctorWorkScheduleByDate (String doctorId, LocalDate workDate) {
+    public ScheduleDTOResponse getDoctorWorkScheduleByDate (String doctorId, LocalDate workDate) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
-        List<DoctorWorkSchedule> doctorWorkSchedules = doctorWorkScheduleRepository.findAllByWorkDateAndDoctorId(workDate, doctorId);
-        return doctorWorkSchedules.stream().map(scheduleMapper::toScheduleResponse).collect(Collectors.toList());
+        DoctorWorkSchedule doctorWorkSchedules = doctorWorkScheduleRepository.findAllByWorkDateAndDoctorId(workDate, doctorId);
+
+        ScheduleResponse scheduleResponse = scheduleMapper.toScheduleResponse(doctorWorkSchedules);
+
+        ScheduleDTOResponse scheduleDTOResponse = scheduleMapper.toScheduleDTOResponse(scheduleResponse);
+
+        scheduleDTOResponse.getScheduleSlots().forEach(
+                scheduleSlotDateResponse -> {
+                    scheduleSlotDateResponse.setDate(scheduleDTOResponse.getWorkDate());
+                }
+        );
+
+        return scheduleDTOResponse;
     }
 
     public List<ScheduleResponse> getDoctorWorkScheduleByDoctorId (String doctorId) {

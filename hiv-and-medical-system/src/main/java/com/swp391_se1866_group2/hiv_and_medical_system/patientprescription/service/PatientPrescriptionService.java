@@ -1,8 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Transactional
@@ -58,6 +58,7 @@ public class PatientPrescriptionService {
         patientPrescription.setPrescriptionDefault(prescriptionRepository.findById(request.getPrescriptionId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED)));
         patientPrescription.setPatientPrescriptionItems(patientPrescriptionItemList);
+        patientPrescription.setNote(request.getNote());
         appointment.setPatientPrescription(patientPrescription);
         appointment.setStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
@@ -70,16 +71,27 @@ public class PatientPrescriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.PATIENT_PRESCRIPTION_NOT_EXISTED)));
     }
 
-    public List<PaPrescriptionResponse> getPatientPrescriptionByPatientId (String patientId) {
+    public PaPrescriptionResponse getPatientPrescriptionByPatientId (String patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
         List<Appointment> appointments = appointmentRepository.findByPatient(patient);
         if(appointments == null || appointments.isEmpty()){
             throw new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED);
         }
-        return appointments.stream()
+        List<PaPrescriptionResponse> prescriptionResponses = appointments.stream()
                 .map(appointment -> patientPrescriptionMapper.toPaPrescriptionResponse(appointment.getPatientPrescription()))
-                .collect(Collectors.toList());
+                .toList();
+
+        final PaPrescriptionResponse[] response = new PaPrescriptionResponse[1];
+
+        prescriptionResponses.forEach(paPrescriptionResponse -> {
+            if(paPrescriptionResponse != null){
+                response[0] = paPrescriptionResponse ;
+            }
+        });
+
+        return response[0];
+
     }
 
 

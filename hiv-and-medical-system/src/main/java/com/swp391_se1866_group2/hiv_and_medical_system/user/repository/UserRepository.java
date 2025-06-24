@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByEmail(String email);
     Optional<User> findByEmail(String email);
     List<User> findByRole(String role);
+    User getUserByEmail(String email);
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'PATIENT' AND DATE(u.createdAt) BETWEEN :previousStart AND :previousEnd")
     long countPatients(@Param("previousStart") LocalDate previousStart, @Param("previousEnd") LocalDate previousEnd);
