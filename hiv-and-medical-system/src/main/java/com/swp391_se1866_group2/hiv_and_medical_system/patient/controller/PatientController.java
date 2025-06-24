@@ -99,7 +99,7 @@ public class PatientController {
                 .build();
     }
 
-    @GetMapping("/{patientId}/labResult")
+    @GetMapping("/{patientId}/labResults")
     @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
     public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
         return ApiResponse.<List<LabResultPatientResponse>>builder()
@@ -136,15 +136,15 @@ public class PatientController {
                 .build();
     }
 
-//    @GetMapping("/{patientId}/labResult")
-//    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
-//    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
-//        return ApiResponse.<List<LabResultPatientResponse>>builder()
-//                .success(true)
-//                .data(labTestService.getLabResultByPatientId(patientId))
-//                .build();
-//    }
-//
+    @GetMapping("/me/labResults")
+    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
+    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByToken() {
+        return ApiResponse.<List<LabResultPatientResponse>>builder()
+                .success(true)
+                .data(labTestService.getLabResultByToken())
+                .build();
+    }
+
 //    @GetMapping("/{patientId}/appointmentsCompleted")
 //    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
 //    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {

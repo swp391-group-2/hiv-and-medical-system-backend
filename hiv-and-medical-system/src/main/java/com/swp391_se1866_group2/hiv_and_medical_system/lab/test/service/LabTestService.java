@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ParameterType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ResultStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
@@ -148,7 +149,7 @@ public class LabTestService {
         }
         List<LabResultPatientResponse> labResults = new ArrayList<>();
         appointments.forEach(appointment -> {
-            if(appointment.getLabSample() != null && !appointment.getService().getServiceType().equals(ServiceType.CONSULTATION)) {
+            if(appointment.getLabSample() != null && !appointment.getService().getServiceType().equals(ServiceType.CONSULTATION)&& appointment.getStatus().equals(AppointmentStatus.COMPLETED)) {
                 LabResult labResult = labResultRepository.findByLabSampleId(appointment.getLabSample().getId());
                 if(labResult != null){
                     LabResultPatientResponse labResultPatientResponse = labTestMapper.toLabResultPatientResponse(labResult);
@@ -163,6 +164,31 @@ public class LabTestService {
         }
         return labResults;
     }
+
+    public List<LabResultPatientResponse> getLabResultByToken(){
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        if(appointments == null || appointments.isEmpty()) {
+            return null;
+        }
+        List<LabResultPatientResponse> labResults = new ArrayList<>();
+        appointments.forEach(appointment -> {
+            if(appointment.getLabSample() != null && !appointment.getService().getServiceType().equals(ServiceType.CONSULTATION) && appointment.getStatus().equals(AppointmentStatus.COMPLETED)) {
+                LabResult labResult = labResultRepository.findByLabSampleId(appointment.getLabSample().getId());
+                if(labResult != null){
+                    LabResultPatientResponse labResultPatientResponse = labTestMapper.toLabResultPatientResponse(labResult);
+                    labResultPatientResponse.setServiceName(appointment.getService().getName());
+                    labResultPatientResponse.setServiceType(appointment.getService().getServiceType().name());
+                    labResults.add(labResultPatientResponse);
+                }
+            }
+        });
+        if(labResults.isEmpty()) {
+            return null;
+        }
+        return labResults;
+    }
+
 
 
 }
