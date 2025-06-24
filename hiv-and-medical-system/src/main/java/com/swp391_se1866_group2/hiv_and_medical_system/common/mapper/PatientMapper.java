@@ -21,4 +21,6 @@ public interface PatientMapper {
 
     @Mapping(source = "fullName", target = "user.fullName")
     void updatePatientAndUser(PatientUpdateRequest request, @MappingTarget Patient patient);
+
+    Patient toPatient(PatientResponse patientResponse);
 }

@@ -104,7 +104,7 @@ public class AppointmentService {
         }
         appointment.setStatus(AppointmentStatus.SCHEDULED);
         Appointment appointmentSaved = appointmentRepository.save(appointment);
-        String appointmentCode = String.format("App%06d", appointmentSaved.getId());
+        String appointmentCode = String.format("APP%06d", appointmentSaved.getId());
         appointmentRepository.updateAppointmentCode(appointmentSaved.getId(), appointmentCode);
         appointmentSaved.setAppointmentCode(appointmentCode);
         return appointmentMapper.toAppointmentBasicResponse(appointmentSaved);
@@ -257,7 +257,7 @@ public class AppointmentService {
 
     public List<AppointmentCreationResponse> getAllAppointmentByPatientId(String patientId) {
         Patient patient = patientService.getPatientById(patientId);
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
         return appointments.stream()
                 .map(appointmentMapper::toAppointmentBasicResponse)
                 .collect(Collectors.toList());
@@ -283,7 +283,7 @@ public class AppointmentService {
 
     public List<AppointmentPatientResponse> getAllAppointmentCompletedByPatientId(String patientId) {
         Patient patient = patientService.getPatientById(patientId);
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
         List<AppointmentPatientResponse> appPatient = appointments.stream()
                 .map(appointmentMapper::toAppointmentPatientResponse)
                 .toList();
@@ -294,6 +294,14 @@ public class AppointmentService {
             }
         });
         return response;
+    }
+
+    public List<AppointmentCreationResponse> getAllAppointmentByToken() {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        return appointments.stream()
+                .map(appointmentMapper::toAppointmentBasicResponse)
+                .collect(Collectors.toList());
     }
 
 

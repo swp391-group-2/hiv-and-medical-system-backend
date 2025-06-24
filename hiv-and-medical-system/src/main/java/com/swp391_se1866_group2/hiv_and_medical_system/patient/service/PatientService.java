@@ -97,4 +97,10 @@ public class PatientService {
         return patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
     }
 
+    public Patient getPatientResponseByToken () {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        PatientResponse patientResponse = patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientRepository.findById(patientResponse.getPatientId()).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+    }
 }

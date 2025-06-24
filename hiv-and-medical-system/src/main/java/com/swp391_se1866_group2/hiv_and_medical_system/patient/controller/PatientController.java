@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
@@ -100,14 +101,14 @@ public class PatientController {
 
     @GetMapping("/{patientId}/labResult")
     @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
-    public ApiResponse<List<LabResultResponse>> getLabResultsByPatient(@PathVariable String patientId) {
-        return ApiResponse.<List<LabResultResponse>>builder()
+    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
+        return ApiResponse.<List<LabResultPatientResponse>>builder()
                 .success(true)
                 .data(labTestService.getLabResultByPatientId(patientId))
                 .build();
     }
 
-    @GetMapping("/{patientId}/prescriptions/completed")
+    @GetMapping("/{patientId}/appointmentsCompleted")
     @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
     public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {
         return ApiResponse.<List<AppointmentPatientResponse>>builder()
@@ -115,5 +116,42 @@ public class PatientController {
                 .data(appointmentService.getAllAppointmentCompletedByPatientId(patientId))
                 .build();
     }
+
+
+    @GetMapping("/me/appointments")
+    @Operation(summary = "Lấy danh sách lịch đăng kí khám và xét nghiệm")
+    public ApiResponse<List<AppointmentCreationResponse>> getAppointmentsByToken() {
+        return ApiResponse.<List<AppointmentCreationResponse>>builder()
+                .success(true)
+                .data(appointmentService.getAllAppointmentByToken())
+                .build();
+    }
+
+//    @GetMapping("/{patientId}/prescriptions")
+//    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
+//    public ApiResponse<PaPrescriptionResponse> getPrescriptionsByPatient(@PathVariable String patientId) {
+//        return ApiResponse.<PaPrescriptionResponse>builder()
+//                .success(true)
+//                .data(patientPrescriptionService.getPatientPrescriptionByPatientId(patientId))
+//                .build();
+//    }
+//
+//    @GetMapping("/{patientId}/labResult")
+//    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
+//    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
+//        return ApiResponse.<List<LabResultPatientResponse>>builder()
+//                .success(true)
+//                .data(labTestService.getLabResultByPatientId(patientId))
+//                .build();
+//    }
+//
+//    @GetMapping("/{patientId}/appointmentsCompleted")
+//    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
+//    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {
+//        return ApiResponse.<List<AppointmentPatientResponse>>builder()
+//                .success(true)
+//                .data(appointmentService.getAllAppointmentCompletedByPatientId(patientId))
+//                .build();
+//    }
 
 }
