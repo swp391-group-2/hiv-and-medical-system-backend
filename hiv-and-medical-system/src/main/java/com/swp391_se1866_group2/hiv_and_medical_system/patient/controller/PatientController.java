@@ -145,13 +145,13 @@ public class PatientController {
                 .build();
     }
 
-//    @GetMapping("/{patientId}/appointmentsCompleted")
-//    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
-//    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {
-//        return ApiResponse.<List<AppointmentPatientResponse>>builder()
-//                .success(true)
-//                .data(appointmentService.getAllAppointmentCompletedByPatientId(patientId))
-//                .build();
-//    }
+    @GetMapping("/me/appointmentsCompleted")
+    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
+    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByToken() {
+        return ApiResponse.<List<AppointmentPatientResponse>>builder()
+                .success(true)
+                .data(appointmentService.getAllAppointmentCompletedByToken())
+                .build();
+    }
 
 }
