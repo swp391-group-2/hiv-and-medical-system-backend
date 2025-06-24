@@ -304,5 +304,20 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    public List<AppointmentPatientResponse> getAllAppointmentCompletedByToken() {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<AppointmentPatientResponse> appPatient = appointments.stream()
+                .map(appointmentMapper::toAppointmentPatientResponse)
+                .toList();
+        List<AppointmentPatientResponse> response = new ArrayList<>();
+        appPatient.forEach(appointment -> {
+            if(appointment.getStatus().equals(AppointmentStatus.COMPLETED) && appointment.getServiceType().equals(ServiceType.CONSULTATION.name())){
+                response.add(appointment);
+            }
+        });
+        return response;
+    }
+
 
 }
