@@ -24,7 +24,7 @@ public class DashBoardController {
     DashBoardService dashBoardService;
 
     @GetMapping("/stats")
-    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+    public ApiResponse <List<StatsResponse>> getStats(@RequestParam(defaultValue = "2025-06-23") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(defaultValue = "2025=06-30") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
                 .data(dashBoardService.getAllStats(startDate, endDate))

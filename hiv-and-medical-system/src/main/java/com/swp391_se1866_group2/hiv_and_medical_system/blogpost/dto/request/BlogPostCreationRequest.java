@@ -1,4 +1,4 @@
-package com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.response;
+package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CancelledAppointmentResponse {
-    String cancelledAppointment;
+public class BlogPostCreationRequest {
+    String author;
+    String title;
+    String content;
+    String snippet;
 }

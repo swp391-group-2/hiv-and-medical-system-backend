@@ -1,28 +1,29 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.dashboard.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.projection.MaxMinAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DashBoardService {
 
     UserRepository userRepository;
     AppointmentRepository appointmentRepository;
 
-    private StatsResponse formatStats(String title, long currentValue, long previousValue, String suffix){
-        String value = String.format("%,d", currentValue) + suffix;
+    private StatsResponse formatStats(String title, long currentValue, long previousValue){
+        String value = String.format("%,d", currentValue);
         double percentValue;
         if(previousValue == 0){
             percentValue = (currentValue ==0) ? 0 :100;
@@ -39,19 +40,19 @@ public class DashBoardService {
     public StatsResponse getTotalPatients(LocalDate startDate, LocalDate endDate){
         long previousValue = userRepository.countPatients(startDate, endDate);
         long currentValue = userRepository.countPatients(startDate, LocalDate.now());
-        return formatStats("Tổng khách hàng", currentValue, previousValue, " bệnh nhân");
+        return formatStats("Tổng khách hàng", currentValue, previousValue);
     }
 
     public StatsResponse getTotalDoctors(LocalDate startDate, LocalDate endDate){
         long previousValue = userRepository.countDoctors(startDate, endDate);
         long currentValue = userRepository.countDoctors(startDate, LocalDate.now());
-        return formatStats("Bác sĩ hoạt động", currentValue, previousValue, " bác sĩ");
+        return formatStats("Bác sĩ hoạt động", currentValue, previousValue);
     }
 
     public StatsResponse getTotalTodayAppointment(LocalDate startDate, LocalDate endDate){
         long previousValue = appointmentRepository.countAppointments(startDate, endDate);
         long currentValue = appointmentRepository.countAppointments(startDate, LocalDate.now());
-        return formatStats("Lịch hẹn hôm nay", currentValue, previousValue, " lịch hẹn");
+        return formatStats("Lịch hẹn hôm nay", currentValue, previousValue);
     }
 
     public List<StatsResponse> getAllStats(LocalDate startDate, LocalDate endDate){
@@ -99,11 +100,10 @@ public class DashBoardService {
     public CancelledAppointmentResponse cancelledAppointment(){
         long totalAppointments = appointmentRepository.countTotalAppointments();
         long cancelledAppointments = appointmentRepository.countCancelledAppointments();
-        double cancelledValue = 0.0;
-        if (totalAppointments > 0){
-            cancelledValue = (cancelledAppointments / (double) totalAppointments) *100;
-        }
-        return new CancelledAppointmentResponse(cancelledValue);
+
+        double cancelledValue = ((double)cancelledAppointments /  totalAppointments) *100;
+        String formatCancelledValue = String.format("%.0f", cancelledValue) + "%";
+        return new CancelledAppointmentResponse(formatCancelledValue);
     }
 
     public AppointmentStatisticResponse getAllAppointmentStatistics(){
