@@ -6,6 +6,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.lab.sample.entity.LabSamp
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabResultUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.request.LabTestParameterUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestParameterResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabTestResponse;
@@ -35,5 +36,9 @@ public interface LabTestMapper {
     void updateLabResult(LabResultUpdateRequest request, @MappingTarget LabResult labResult);
 
     void updateLabTestParameter(LabTestParameterUpdateRequest request, @MappingTarget LabTestParameter labTestParameter);
+    @Mapping(source = "labTestParameter", target = "labTestParameter")
+    @Mapping(source = "labSample", target = "labSample")
+    @Mapping(source = "id", target = "labResultId")
+    LabResultPatientResponse toLabResultPatientResponse (LabResult labResult);
 
 }
