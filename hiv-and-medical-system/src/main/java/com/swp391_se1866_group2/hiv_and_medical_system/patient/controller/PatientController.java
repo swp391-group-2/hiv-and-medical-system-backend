@@ -119,7 +119,7 @@ public class PatientController {
 
 
     @GetMapping("/me/appointments")
-    @Operation(summary = "Lấy danh sách lịch đăng kí khám và xét nghiệm")
+    @Operation(summary = "Lấy danh sách lịch đăng kí khám và xét nghiệm bằng token")
     public ApiResponse<List<AppointmentCreationResponse>> getAppointmentsByToken() {
         return ApiResponse.<List<AppointmentCreationResponse>>builder()
                 .success(true)
@@ -127,15 +127,15 @@ public class PatientController {
                 .build();
     }
 
-//    @GetMapping("/{patientId}/prescriptions")
-//    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
-//    public ApiResponse<PaPrescriptionResponse> getPrescriptionsByPatient(@PathVariable String patientId) {
-//        return ApiResponse.<PaPrescriptionResponse>builder()
-//                .success(true)
-//                .data(patientPrescriptionService.getPatientPrescriptionByPatientId(patientId))
-//                .build();
-//    }
-//
+    @GetMapping("/me/prescriptions")
+    @Operation(summary = "Lấy đơn thuốc của bệnh nhân by token")
+    public ApiResponse<PaPrescriptionResponse> getPrescriptionsByToken() {
+        return ApiResponse.<PaPrescriptionResponse>builder()
+                .success(true)
+                .data(patientPrescriptionService.getPatientPrescriptionByToken())
+                .build();
+    }
+
 //    @GetMapping("/{patientId}/labResult")
 //    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
 //    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
