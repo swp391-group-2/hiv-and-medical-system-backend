@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     Optional<Appointment> findById(int id);
     Optional<List<Appointment>> findByStatus(AppointmentStatus status);
-    List<Appointment> findByPatient(Patient patient);
+    Optional<List<Appointment>> findByPatient(Patient patient);
 
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.createdAt) BETWEEN :startDate AND :endDate")
