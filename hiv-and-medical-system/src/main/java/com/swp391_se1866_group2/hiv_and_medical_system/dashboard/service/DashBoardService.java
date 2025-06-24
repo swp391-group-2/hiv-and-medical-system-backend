@@ -1,7 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.dashboard.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.projection.MaxMinAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -37,29 +37,47 @@ public class DashBoardService {
         return new StatsResponse(title, value, change, isGrowing);
     }
 
-    public StatsResponse getTotalPatients(LocalDate startDate, LocalDate endDate){
-        long previousValue = userRepository.countPatients(startDate, endDate);
-        long currentValue = userRepository.countPatients(startDate, LocalDate.now());
+    public StatsResponse getTotalPatients(LocalDate previousStart, LocalDate previousEnd){
+        long previousValue = userRepository.countPatients(previousStart, previousEnd);
+        long currentValue = userRepository.countTotalPatients();
         return formatStats("Tổng khách hàng", currentValue, previousValue);
     }
 
-    public StatsResponse getTotalDoctors(LocalDate startDate, LocalDate endDate){
-        long previousValue = userRepository.countDoctors(startDate, endDate);
-        long currentValue = userRepository.countDoctors(startDate, LocalDate.now());
+    public StatsResponse getTotalDoctors(LocalDate previousStart, LocalDate previousEnd){
+        long previousValue = userRepository.countDoctors(previousStart, previousEnd);
+        long currentValue = userRepository.countTotalDoctors();
         return formatStats("Bác sĩ hoạt động", currentValue, previousValue);
     }
 
-    public StatsResponse getTotalTodayAppointment(LocalDate startDate, LocalDate endDate){
-        long previousValue = appointmentRepository.countAppointments(startDate, endDate);
-        long currentValue = appointmentRepository.countAppointments(startDate, LocalDate.now());
+    public StatsResponse getTotalTodayAppointment(LocalDate previousStart, LocalDate previousEnd){
+        long previousValue = appointmentRepository.countAppointments(previousStart, previousEnd);
+        long currentValue = appointmentRepository.countTotalAppointments();
         return formatStats("Lịch hẹn hôm nay", currentValue, previousValue);
     }
 
-    public List<StatsResponse> getAllStats(LocalDate startDate, LocalDate endDate){
+    public List<StatsResponse> getAllStatsByMilestone(String milestone) {
+        LocalDate now = LocalDate.now();
+        LocalDate previousStart;
+        LocalDate previousEnd = now.minusDays(1);
+
+        if (milestone.equalsIgnoreCase("MONTH")) {
+            previousStart = now.minusMonths(1).withDayOfMonth(1);
+        }
+        else if (milestone.equalsIgnoreCase("YEAR")) {
+            previousStart = now.minusYears(1).withDayOfYear(1);
+        }
+        else {
+            previousStart = now.minusWeeks(1).with(DayOfWeek.MONDAY);
+        }
+
+        return getAllStats(previousStart, previousEnd);
+    }
+
+    public List<StatsResponse> getAllStats(LocalDate previousStart, LocalDate previousEnd){
         return List.of(
-                getTotalPatients(startDate, endDate),
-                getTotalDoctors(startDate, endDate),
-                getTotalTodayAppointment(startDate, endDate)
+                getTotalPatients(previousStart, previousEnd),
+                getTotalDoctors(previousStart, previousEnd),
+                getTotalTodayAppointment(previousStart, previousEnd)
         );
     }
 
@@ -101,8 +119,15 @@ public class DashBoardService {
         long totalAppointments = appointmentRepository.countTotalAppointments();
         long cancelledAppointments = appointmentRepository.countCancelledAppointments();
 
-        double cancelledValue = ((double)cancelledAppointments /  totalAppointments) *100;
-        String formatCancelledValue = String.format("%.0f", cancelledValue) + "%";
+        String formatCancelledValue;
+        if(totalAppointments == 0){
+            formatCancelledValue = "0%";
+        }
+        else {
+            double cancelledValue = ((double)cancelledAppointments /  totalAppointments) *100;
+            formatCancelledValue = String.format("%.0f", cancelledValue)  + "%";
+        }
+
         return new CancelledAppointmentResponse(formatCancelledValue);
     }
 
@@ -113,5 +138,66 @@ public class DashBoardService {
                 .cancelledAppointment(cancelledAppointment())
                 .build();
     }
+
+    public ServiceAppointmentStats getConsultationAppointments(){
+        long consultationAppointments = appointmentRepository.countConsultationAppointments();
+        long totalAppointments = appointmentRepository.countTotalAppointments();
+
+        String formatConsultationValue;
+        if (totalAppointments == 0){
+            formatConsultationValue = "0%";
+        }
+
+        else {
+            double consultationValue = ((double) consultationAppointments / totalAppointments) *100;
+            formatConsultationValue =  String.format("%.0f", consultationValue) + "%";
+        }
+
+        return new ServiceAppointmentStats("CONSULTATION", consultationAppointments, formatConsultationValue);
+    }
+
+    public ServiceAppointmentStats getScreeningAppointments(){
+        long screeningAppointments = appointmentRepository.countScreeningAppointments();
+        long totalAppointments = appointmentRepository.countTotalAppointments();
+
+        String formatScreeningValue;
+        if (totalAppointments == 0){
+            formatScreeningValue = "0%";
+        }
+
+        else {
+            double screeningValue = ((double) screeningAppointments / totalAppointments) *100;
+            formatScreeningValue =  String.format("%.0f", screeningValue) + "%";
+        }
+
+        return new ServiceAppointmentStats("SCREENING", screeningAppointments, formatScreeningValue);
+    }
+
+    public ServiceAppointmentStats getConfirmatoryAppointments(){
+        long confirmatoryAppointments = appointmentRepository.countConfirmatoryAppointments();
+        long totalAppointments = appointmentRepository.countTotalAppointments();
+
+        String formatConfirmatoryValue;
+        if (totalAppointments == 0){
+            formatConfirmatoryValue = "0%";
+        }
+
+        else {
+            double confirmatoryValue = ((double) confirmatoryAppointments / totalAppointments) *100;
+            formatConfirmatoryValue =  String.format("%.0f", confirmatoryValue) + "%";
+        }
+
+        return new ServiceAppointmentStats("CONFIRMATORY", confirmatoryAppointments, formatConfirmatoryValue);
+    }
+
+    public List<ServiceAppointmentStats> getAllServiceAppointmentStats(){
+        return List.of(
+                getConsultationAppointments(),
+                getScreeningAppointments(),
+                getConfirmatoryAppointments()
+        );
+    }
+
+
 
 }

@@ -40,6 +40,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Query(value = "SELECT DATE(created_at) AS date, COUNT(*) AS count FROM appointment GROUP BY DATE(created_at) ORDER BY count ASC LIMIT 1", nativeQuery = true)
     Optional<MaxMinAppointmentResponse> findMinAppointmentPerDay();
 
+    @Query("SELECT COUNT(a) FROM Appointment a JOIN a.service s WHERE s.serviceType = 'CONSULTATION'")
+    long countConsultationAppointments();
+
+    @Query("SELECT COUNT(a) FROM Appointment a JOIN a.service s WHERE s.serviceType = 'SCREENING'")
+    long countScreeningAppointments();
+
+    @Query("SELECT COUNT(a) FROM Appointment a JOIN a.service s WHERE s.serviceType = 'CONFIRMATORY'")
+    long countConfirmatoryAppointments();
+
+
     @Modifying
     @Transactional
     @Query("UPDATE Appointment a SET a.appointmentCode = :code WHERE a.id = :id")

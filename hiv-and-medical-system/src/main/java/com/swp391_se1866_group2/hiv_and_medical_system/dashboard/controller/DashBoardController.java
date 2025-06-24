@@ -24,10 +24,10 @@ public class DashBoardController {
     DashBoardService dashBoardService;
 
     @GetMapping("/stats")
-    public ApiResponse <List<StatsResponse>> getStats(@RequestParam(defaultValue = "2025-06-23") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(defaultValue = "2025=06-30") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+    public ApiResponse <List<StatsResponse>> getStats(@RequestParam(defaultValue = "WEEK") String milestone){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
-                .data(dashBoardService.getAllStats(startDate, endDate))
+                .data(dashBoardService.getAllStatsByMilestone(milestone))
                 .build();
 
     }
@@ -67,6 +67,15 @@ public class DashBoardController {
                 .build();
 
     }
+
+    @GetMapping("/service-type-stats")
+    public ApiResponse <List<ServiceAppointmentStats>> getAllServiceAppointmentStats(){
+        return ApiResponse.<List<ServiceAppointmentStats>>builder()
+                .success(true)
+                .data(dashBoardService.getAllServiceAppointmentStats())
+                .build();
+    }
+
 
 
 }
