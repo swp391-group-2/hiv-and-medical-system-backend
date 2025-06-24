@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.PatientMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.UserMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdatePassword;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
@@ -86,15 +87,15 @@ public class PatientService {
     public PatientResponse getPatientProfileByToken () {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
-        return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
     }
 
     public PatientResponse getPatientByEmail(String email){
-        return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
     }
 
     public Patient getPatientById (String patientId){
-        return patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientRepository.findById(patientId).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
     }
 
     public Patient getPatientResponseByToken () {
@@ -103,4 +104,17 @@ public class PatientService {
         PatientResponse patientResponse = patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
         return patientRepository.findById(patientResponse.getPatientId()).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
     }
+
+    public boolean changePatientPassword(PatientUpdatePassword request){
+        PatientResponse patientResponse = getPatientProfileByToken();
+        User user = userService.findUserByEmail(patientResponse.getEmail());
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            throw new AppException(ErrorCode.PASSWORD_NOT_MATCHES);
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
+
 }

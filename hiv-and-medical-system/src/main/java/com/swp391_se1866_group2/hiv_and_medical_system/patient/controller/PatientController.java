@@ -8,6 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdatePassword;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
@@ -99,7 +100,7 @@ public class PatientController {
                 .build();
     }
 
-    @GetMapping("/{patientId}/labResults")
+    @GetMapping("/{patientId}/test/res")
     @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
     public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
         return ApiResponse.<List<LabResultPatientResponse>>builder()
@@ -136,8 +137,8 @@ public class PatientController {
                 .build();
     }
 
-    @GetMapping("/me/labResults")
-    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
+    @GetMapping("/me/test/results")
+    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân bằng token")
     public ApiResponse<List<LabResultPatientResponse>> getLabResultsByToken() {
         return ApiResponse.<List<LabResultPatientResponse>>builder()
                 .success(true)
@@ -146,7 +147,7 @@ public class PatientController {
     }
 
     @GetMapping("/me/appointmentsCompleted")
-    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
+    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân bằng token")
     public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByToken() {
         return ApiResponse.<List<AppointmentPatientResponse>>builder()
                 .success(true)
@@ -154,4 +155,12 @@ public class PatientController {
                 .build();
     }
 
+    @PutMapping("/me/changePassword")
+    @Operation(summary = "Đổi mật khẩu của bệnh nhân bằng ")
+    public ApiResponse<Boolean> changePassword(@RequestBody @Valid PatientUpdatePassword request) {
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(patientService.changePatientPassword(request))
+                .build();
+    }
 }
