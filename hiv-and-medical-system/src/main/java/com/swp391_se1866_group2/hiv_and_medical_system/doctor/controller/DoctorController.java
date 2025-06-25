@@ -103,4 +103,23 @@ public class DoctorController {
                 .data(doctorService.updateDoctorProfileByManager(doctorId,request))
                 .build();
     }
+
+    @GetMapping("/count")
+    @Operation(summary = "Đếm xem hiện tại có bao nhiêu bác sĩ")
+    public ApiResponse<Long> countDoctors(){
+        return ApiResponse.<Long>builder()
+                .success(true)
+                .data(doctorService.countDoctor())
+                .build();
+    }
+
+    @GetMapping("/count-active")
+    @Operation(summary = "Đếm xem hiện tại có bao nhiêu bác sĩ có status active")
+    public ApiResponse<Long> countDoctorsActive(){
+        return ApiResponse.<Long>builder()
+                .success(true)
+                .data(doctorService.countDoctorActive())
+                .build();
+    }
+
 }
