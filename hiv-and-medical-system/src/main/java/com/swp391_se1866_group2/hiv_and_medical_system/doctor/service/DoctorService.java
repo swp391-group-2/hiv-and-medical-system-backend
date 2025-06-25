@@ -109,4 +109,12 @@ public class DoctorService {
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
 
+    public long countDoctor(){
+        return doctorRepository.count();
+    }
+
+    public long countDoctorActive(){
+        return doctorRepository.countAllByUserStatus(UserStatus.ACTIVE.name());
+    }
+
 }
