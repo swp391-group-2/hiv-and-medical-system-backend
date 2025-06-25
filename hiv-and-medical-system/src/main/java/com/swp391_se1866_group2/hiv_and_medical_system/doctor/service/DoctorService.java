@@ -6,6 +6,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateDTORequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
@@ -88,7 +89,7 @@ public class DoctorService {
     }
 
     public DoctorResponse updateDoctorProfile(String doctorId , DoctorUpdateRequest request) {
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException(ErrorCode.DOCTOR_NOT_EXISTED.getMessage()));
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
         doctorMapper.updateDoctor(request, doctor);
         return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
     }
@@ -97,6 +98,15 @@ public class DoctorService {
         return new ArrayList<>(doctorRepository.getTopDoctor(PageRequest.of(0, 4)).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED)));
     }
 
-
+    public DoctorResponse updateDoctorProfileByManager(String doctorId , DoctorUpdateDTORequest request) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+        doctorMapper.updateDoctorDTO(request, doctor);
+        if(request.isActive()){
+            doctor.getUser().setStatus(UserStatus.ACTIVE.name());
+        }else{
+            doctor.getUser().setStatus(UserStatus.INACTIVE.name());
+        }
+        return doctorMapper.toDoctorResponse(doctorRepository.save(doctor));
+    }
 
 }

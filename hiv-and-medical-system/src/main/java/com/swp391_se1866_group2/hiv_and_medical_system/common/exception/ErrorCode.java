@@ -55,6 +55,8 @@ public enum ErrorCode {
     BLOG_POST_NOT_EXISTED(1080, "Blog post not existed. ", HttpStatus.NOT_FOUND),
     BLOG_POST_EXISTED(1081, "Blog post already existed", HttpStatus.BAD_REQUEST),
 
+    IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST)
+    ,
 
 
     ;

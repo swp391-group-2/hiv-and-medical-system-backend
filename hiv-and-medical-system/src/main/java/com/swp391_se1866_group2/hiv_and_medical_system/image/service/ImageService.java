@@ -37,6 +37,9 @@ public class ImageService {
 
     public ImageResponse saveImage(MultipartFile file, String doctorId) {
         try {
+            if(file.isEmpty()){
+                throw new AppException(ErrorCode.IMAGE_WRONG_TYPE);
+            }
             Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("folder", "avatar"));
             Doctor doctor = doctorService.getDoctorById(doctorId);
             String imageUrl = uploadResult.get("secure_url").toString();
