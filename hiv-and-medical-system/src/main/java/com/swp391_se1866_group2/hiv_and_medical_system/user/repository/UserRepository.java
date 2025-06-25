@@ -20,11 +20,11 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findByRole(String role);
     User getUserByEmail(String email);
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'PATIENT' AND DATE(u.createdAt) BETWEEN :previousStart AND :previousEnd")
-    long countPatients(@Param("previousStart") LocalDate previousStart, @Param("previousEnd") LocalDate previousEnd);
+    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'PATIENT' AND DATE(u.createdAt) <= :milestone")
+    long countPatients(@Param("milestone") LocalDate milestone);
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'DOCTOR' AND DATE(u.createdAt) BETWEEN :startDate AND :endDate")
-    long countDoctors(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'DOCTOR' AND DATE(u.createdAt) <= :milestone")
+    long countDoctors(@Param("milestone") LocalDate milestone);
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'PATIENT' ")
     long countTotalPatients();

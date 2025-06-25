@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.dashboard.service;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.projection.MaxMinAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.response.*;
+import com.swp391_se1866_group2.hiv_and_medical_system.payment.repository.PaymentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,16 @@ public class DashBoardService {
 
     UserRepository userRepository;
     AppointmentRepository appointmentRepository;
+    PaymentRepository paymentRepository;
 
     private StatsResponse formatStats(String title, long currentValue, long previousValue){
-        String value = String.format("%,d", currentValue);
+        String value;
+        if (title.equalsIgnoreCase("doanh thu tháng")){
+            value =String.format("%,d", currentValue) + "₫";
+        }
+        else {
+            value = String.format("%,d", currentValue);
+        }
         double percentValue;
         if(previousValue == 0){
             percentValue = (currentValue ==0) ? 0 :100;
@@ -37,47 +45,75 @@ public class DashBoardService {
         return new StatsResponse(title, value, change, isGrowing);
     }
 
-    public StatsResponse getTotalPatients(LocalDate previousStart, LocalDate previousEnd){
-        long previousValue = userRepository.countPatients(previousStart, previousEnd);
+    public StatsResponse getTotalPatients(LocalDate milestone){
+        long previousValue;
         long currentValue = userRepository.countTotalPatients();
+
+        LocalDate today = LocalDate.now();
+        if(!milestone.isBefore(today)){
+            previousValue = currentValue;
+        }
+
+        else {
+            previousValue = userRepository.countPatients(milestone);
+        }
         return formatStats("Tổng khách hàng", currentValue, previousValue);
     }
 
-    public StatsResponse getTotalDoctors(LocalDate previousStart, LocalDate previousEnd){
-        long previousValue = userRepository.countDoctors(previousStart, previousEnd);
+    public StatsResponse getTotalDoctors(LocalDate milestone){
+        long previousValue;
         long currentValue = userRepository.countTotalDoctors();
+
+        LocalDate today = LocalDate.now();
+        if(!milestone.isBefore(today)){
+            previousValue = currentValue;
+        }
+
+        else {
+            previousValue = userRepository.countDoctors(milestone);
+        }
+
         return formatStats("Bác sĩ hoạt động", currentValue, previousValue);
     }
 
-    public StatsResponse getTotalTodayAppointment(LocalDate previousStart, LocalDate previousEnd){
-        long previousValue = appointmentRepository.countAppointments(previousStart, previousEnd);
+    public StatsResponse getTotalTodayAppointment(LocalDate milestone){
+        long previousValue;
         long currentValue = appointmentRepository.countTotalAppointments();
+
+        LocalDate today = LocalDate.now();
+        if(!milestone.isBefore(today)){
+            previousValue = currentValue;
+        }
+
+        else {
+            previousValue = appointmentRepository.countAppointments(milestone);
+        }
+
         return formatStats("Lịch hẹn hôm nay", currentValue, previousValue);
     }
 
-    public List<StatsResponse> getAllStatsByMilestone(String milestone) {
-        LocalDate now = LocalDate.now();
-        LocalDate previousStart;
-        LocalDate previousEnd = now.minusDays(1);
+    public StatsResponse getTotalRevenue(LocalDate milestone){
+        long previousValue;
+        long currentValue = paymentRepository.getTotalRevenue();
+        LocalDate today = LocalDate.now();
+        if(!milestone.isBefore(today)){
+            previousValue = currentValue;
+        }
 
-        if (milestone.equalsIgnoreCase("MONTH")) {
-            previousStart = now.minusMonths(1).withDayOfMonth(1);
-        }
-        else if (milestone.equalsIgnoreCase("YEAR")) {
-            previousStart = now.minusYears(1).withDayOfYear(1);
-        }
         else {
-            previousStart = now.minusWeeks(1).with(DayOfWeek.MONDAY);
+            previousValue = paymentRepository.getRevenue(milestone);
         }
 
-        return getAllStats(previousStart, previousEnd);
+        return formatStats("Doanh thu tháng", currentValue, previousValue);
     }
 
-    public List<StatsResponse> getAllStats(LocalDate previousStart, LocalDate previousEnd){
+
+    public List<StatsResponse> getAllStats(LocalDate milestone){
         return List.of(
-                getTotalPatients(previousStart, previousEnd),
-                getTotalDoctors(previousStart, previousEnd),
-                getTotalTodayAppointment(previousStart, previousEnd)
+                getTotalPatients(milestone),
+                getTotalDoctors(milestone),
+                getTotalTodayAppointment(milestone),
+                getTotalRevenue(milestone)
         );
     }
 

@@ -24,10 +24,10 @@ public class DashBoardController {
     DashBoardService dashBoardService;
 
     @GetMapping("/stats")
-    public ApiResponse <List<StatsResponse>> getStats(@RequestParam(defaultValue = "WEEK") String milestone){
+    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate milestone){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
-                .data(dashBoardService.getAllStatsByMilestone(milestone))
+                .data(dashBoardService.getAllStats(milestone))
                 .build();
 
     }
