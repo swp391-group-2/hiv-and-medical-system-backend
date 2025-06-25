@@ -93,4 +93,13 @@ public class DoctorController {
                 .data(doctorService.updateDoctorProfile(doctorId,request))
                 .build();
     }
+
+    @GetMapping("/count")
+    public ApiResponse<Long> countDoctors(){
+        return ApiResponse.<Long>builder()
+                .success(true)
+                .data(doctorService.count())
+                .build();
+    }
+
 }

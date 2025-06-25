@@ -97,6 +97,10 @@ public class DoctorService {
         return new ArrayList<>(doctorRepository.getTopDoctor(PageRequest.of(0, 4)).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED)));
     }
 
+    public long count(){
+        return doctorRepository.count();
+    }
+
 
 
 }
