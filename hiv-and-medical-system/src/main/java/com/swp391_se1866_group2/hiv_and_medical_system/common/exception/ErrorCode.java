@@ -49,10 +49,13 @@ public enum ErrorCode {
     UPLOAD_FAILED(1058, "Upload image failed", HttpStatus.INTERNAL_SERVER_ERROR),
     INPUT_STATUS_FAILED(1059, "Input status failed", HttpStatus.INTERNAL_SERVER_ERROR),
     PATIENT_PRESCRIPTION_NOT_EXISTED(1060, "Patient Prescription not existed", HttpStatus.NOT_FOUND),
-    PAYMENT_NOT_EXISTED(1070, "Payment not existed", HttpStatus.NOT_FOUND),
+    PAYMENT_NOT_EXISTED(1070, "Payment not existed. ", HttpStatus.NOT_FOUND),
     CANCELLATION_DEADLINE_EXCEEDED(1071, "Cancellation deadline exceeded", HttpStatus.CONFLICT),
     PASSWORD_NOT_MATCHES(1072,"Password not matches", HttpStatus.BAD_REQUEST),
-    ;
+    BLOG_POST_NOT_EXISTED(1080, "Blog post not existed. ", HttpStatus.NOT_FOUND),
+    BLOG_POST_EXISTED(1081, "Blog post already existed", HttpStatus.BAD_REQUEST),
+
+
 
     ;
 

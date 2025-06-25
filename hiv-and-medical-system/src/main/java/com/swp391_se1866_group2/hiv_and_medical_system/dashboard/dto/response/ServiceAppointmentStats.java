@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CancelledAppointmentResponse {
-    String value;
+public class ServiceAppointmentStats {
+    String service;
+    long count;
+    String percentage;
 }
