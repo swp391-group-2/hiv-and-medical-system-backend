@@ -54,6 +54,8 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHES(1072,"Password not matches", HttpStatus.BAD_REQUEST),
     BLOG_POST_NOT_EXISTED(1080, "Blog post not existed. ", HttpStatus.NOT_FOUND),
     BLOG_POST_EXISTED(1081, "Blog post already existed", HttpStatus.BAD_REQUEST),
+    ANONYMOUS_POST_NOT_EXISTED(1090, "Anonymous post not existed. ", HttpStatus.NOT_FOUND),
+
 
 
 

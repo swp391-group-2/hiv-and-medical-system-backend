@@ -143,14 +143,14 @@ public class DashBoardService {
         long consultationAppointments = appointmentRepository.countConsultationAppointments();
         long totalAppointments = appointmentRepository.countTotalAppointments();
 
-        String formatConsultationValue;
+       String formatConsultationValue;
         if (totalAppointments == 0){
-            formatConsultationValue = "0%";
+            formatConsultationValue = "0";
         }
 
         else {
             double consultationValue = ((double) consultationAppointments / totalAppointments) *100;
-            formatConsultationValue =  String.format("%.0f", consultationValue) + "%";
+            formatConsultationValue = String.format("%.0f", consultationValue);
         }
 
         return new ServiceAppointmentStats("CONSULTATION", consultationAppointments, formatConsultationValue);
@@ -162,12 +162,12 @@ public class DashBoardService {
 
         String formatScreeningValue;
         if (totalAppointments == 0){
-            formatScreeningValue = "0%";
+            formatScreeningValue = "0";
         }
 
         else {
             double screeningValue = ((double) screeningAppointments / totalAppointments) *100;
-            formatScreeningValue =  String.format("%.0f", screeningValue) + "%";
+            formatScreeningValue =  String.format("%.0f", screeningValue);
         }
 
         return new ServiceAppointmentStats("SCREENING", screeningAppointments, formatScreeningValue);
@@ -179,12 +179,12 @@ public class DashBoardService {
 
         String formatConfirmatoryValue;
         if (totalAppointments == 0){
-            formatConfirmatoryValue = "0%";
+            formatConfirmatoryValue = "0";
         }
 
         else {
             double confirmatoryValue = ((double) confirmatoryAppointments / totalAppointments) *100;
-            formatConfirmatoryValue =  String.format("%.0f", confirmatoryValue) + "%";
+            formatConfirmatoryValue =  String.format("%.0f", confirmatoryValue);
         }
 
         return new ServiceAppointmentStats("CONFIRMATORY", confirmatoryAppointments, formatConfirmatoryValue);

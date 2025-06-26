@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -36,4 +37,6 @@ public class BlogPost {
 
     @UpdateTimestamp
     LocalDate updatedAt;
+
+
 }
