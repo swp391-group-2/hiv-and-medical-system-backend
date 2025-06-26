@@ -20,6 +20,7 @@ public interface AnonymousPostMapper {
     @Mapping(source = "id", target = "commentId")
     @Mapping(source = "anonymousPost.id", target = "anonymousPostId")
     @Mapping(source = "doctor.id", target = "doctorId")
+    @Mapping(source = "patient.id", target = "patientId")
     CommentResponse toCommentResponse(Comment comment);
 
 }

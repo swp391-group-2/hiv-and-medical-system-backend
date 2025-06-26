@@ -54,12 +54,10 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHES(1072,"Password not matches", HttpStatus.BAD_REQUEST),
     BLOG_POST_NOT_EXISTED(1080, "Blog post not existed. ", HttpStatus.NOT_FOUND),
     BLOG_POST_EXISTED(1081, "Blog post already existed", HttpStatus.BAD_REQUEST),
+    IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST),
     ANONYMOUS_POST_NOT_EXISTED(1090, "Anonymous post not existed. ", HttpStatus.NOT_FOUND),
-
-
-    IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST)
-    ,
-
+    COMMENT_CREATOR_NOT_SPECIFIED(1091, "Doctor or patient must be specified as comment creator", HttpStatus.BAD_REQUEST),
+    PATIENT_NOT_POST_OWNER(1092, "Patient is not the owner of this post", HttpStatus.FORBIDDEN),
 
     ;
 

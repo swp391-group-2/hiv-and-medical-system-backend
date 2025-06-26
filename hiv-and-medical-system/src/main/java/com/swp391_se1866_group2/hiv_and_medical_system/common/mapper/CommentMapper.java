@@ -12,6 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface CommentMapper {
     @Mapping(source = "id", target = "commentId")
     @Mapping(source = "doctor.id", target = "doctorId")
+    @Mapping(source = "patient.id", target = "patientId")
     @Mapping(source = "anonymousPost.id", target = "anonymousPostId")
     CommentResponse toCommentResponse(Comment comment);
     Comment toComment(CommentCreationRequest commentCreationRequest);

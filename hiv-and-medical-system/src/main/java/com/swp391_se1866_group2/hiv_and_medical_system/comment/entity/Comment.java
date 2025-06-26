@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.comment.entity;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.entity.AnonymousPost;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -31,8 +32,11 @@ public class Comment {
     AnonymousPost anonymousPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id", nullable = false)
+    @JoinColumn(name = "doctor_id")
     Doctor doctor;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    Patient patient;
 
 }
