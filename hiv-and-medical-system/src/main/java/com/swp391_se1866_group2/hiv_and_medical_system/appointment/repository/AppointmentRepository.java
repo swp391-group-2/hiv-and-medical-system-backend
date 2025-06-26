@@ -22,8 +22,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     Optional<List<Appointment>> findByPatient(Patient patient);
 
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.createdAt) BETWEEN :startDate AND :endDate")
-    long countAppointments(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.createdAt) <= :milestone")
+    long countAppointments(@Param("milestone") LocalDate milestone);
 
     @Query("SELECT COUNT(a) FROM Appointment a ")
     long countTotalAppointments();

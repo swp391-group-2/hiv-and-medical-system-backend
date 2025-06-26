@@ -57,6 +57,8 @@ public enum ErrorCode {
     ANONYMOUS_POST_NOT_EXISTED(1090, "Anonymous post not existed. ", HttpStatus.NOT_FOUND),
 
 
+    IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST)
+    ,
 
 
     ;
