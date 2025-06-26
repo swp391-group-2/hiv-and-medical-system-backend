@@ -16,6 +16,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.Auth
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.ExchangeTokenResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.RefreshResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
@@ -28,9 +29,16 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -55,12 +63,55 @@ public class AuthenticationService {
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SINGER_KEY;
+    @NonFinal
+    @Value("${google.oauth2.client-id}")
+    private String clientId;
+    @NonFinal
+    @Value("${google.oauth2.client-secret}")
+    private String clientSecret;
+    @NonFinal
+    @Value("${google.oauth2.redirect-uri}")
+    private String redirectUri;
+
+
     public PatientResponse createPatientAccount (UserCreationRequest request, String role){
         User user = userRepository.getUserByEmail(request.getEmail());
         if(user != null){
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
         return patientService.createPatient(request, role);
+    }
+
+    public AuthenticationResponse outboundAuthenticate(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("code", code);
+        form.add("client_id", clientId);
+        form.add("client_secret", clientSecret);
+        form.add("redirect_uri", redirectUri);
+        form.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(form, headers);
+
+        ResponseEntity<ExchangeTokenResponse> response = restTemplate.postForEntity(
+                "https://oauth2.googleapis.com/token",
+                request,
+                ExchangeTokenResponse.class
+        );
+        ExchangeTokenResponse tokenResponse = response.getBody();
+
+        if (tokenResponse == null) {
+            throw new RuntimeException("Failed to exchange token");
+        }
+
+        return AuthenticationResponse.builder()
+                .accessToken(tokenResponse.getAccessToken())
+                .refreshToken(tokenResponse.getRefreshToken())
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
