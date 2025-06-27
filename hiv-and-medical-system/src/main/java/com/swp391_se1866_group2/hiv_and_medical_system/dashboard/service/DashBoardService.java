@@ -174,7 +174,7 @@ public class DashBoardService {
         long consultationAppointments = appointmentRepository.countConsultationAppointments();
         long totalAppointments = appointmentRepository.countTotalAppointments();
 
-        String formatConsultationValue;
+       String formatConsultationValue;
         if (totalAppointments == 0){
             formatConsultationValue = "0";
         }

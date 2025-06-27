@@ -77,7 +77,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctorById(String id){
-        return doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
     public DoctorResponse getDoctorByEmail(String email){
