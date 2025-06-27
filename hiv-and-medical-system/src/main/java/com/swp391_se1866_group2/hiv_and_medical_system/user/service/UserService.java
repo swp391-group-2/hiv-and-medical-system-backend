@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.UserStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.UserMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UpdateStatusRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
@@ -69,5 +70,24 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public boolean updateUserStatus(String userId, UpdateStatusRequest request){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if(request.isActive()){
+            user.setStatus(UserStatus.ACTIVE.name());
+        }else{
+            user.setStatus(UserStatus.INACTIVE.name());
+        }
+
+        userRepository.save(user);
+        return true;
+    }
+
+    public List<UserResponse> getAllUser (){
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
+    }
 
 }

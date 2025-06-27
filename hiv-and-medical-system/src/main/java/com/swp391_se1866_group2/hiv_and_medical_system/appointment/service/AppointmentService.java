@@ -1,10 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.*;
@@ -46,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -318,6 +316,29 @@ public class AppointmentService {
         });
         return response;
     }
+
+//    public List<AppointmentLabSampleResponse> getAllDoctorAppointmentsByBetweenDate(LocalDate startDate, LocalDate endDate) {
+//        DoctorResponse doctorResponse = doctorService.getDoctorProfileByToken();
+//
+//        List<ScheduleAppointmentResponse> appointments = appointmentRepository.findByScheduleSlot(startDate,endDate, doctorResponse.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+//        List<Appointment> filterAppointments =  appointments.stream()
+//                .filter(appointment -> {
+//                    ScheduleSlot slot = appointment.getScheduleSlot();
+//                    if (slot == null) return false;
+//                    return !slot.getSchedule().getDoctor().getId().equals(doctorResponse.getDoctorId());
+//                })
+//                .toList();
+//        return  filterAppointments.stream()
+//                .map(appointment -> {
+//                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
+//                    if(response.getLabSampleId() != null){
+//                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
+//                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+//                    }
+//                    return response;
+//                })
+//                .collect(Collectors.toList());
+//    }
 
 
 }
