@@ -57,7 +57,7 @@ public enum ErrorCode {
 
     IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST)
     ,
-
+    GET_GOOGLE_EMAIL_FAILED(1083, "Get google email failed", HttpStatus.NOT_FOUND),
 
     ;
 

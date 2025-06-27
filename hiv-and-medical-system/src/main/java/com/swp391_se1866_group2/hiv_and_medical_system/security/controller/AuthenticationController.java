@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.GoogleCodeRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
@@ -73,8 +74,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/outbound/authentication")
-    ApiResponse<AuthenticationResponse> outboundAuthenticate(@RequestParam("code") String code){
-        var result = authenticationService.outboundAuthenticate(code);
+    ApiResponse<AuthenticationResponse> outboundAuthenticate(@RequestBody GoogleCodeRequest code){
+        var result = authenticationService.outboundAuthenticate(code.getCode());
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(result)
                 .success(true)

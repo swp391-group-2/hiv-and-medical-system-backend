@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'DOCTOR' ")
     long countTotalDoctors();
 
+    Optional<User> findByEmailAndRole(String email, String role);
+
 }
