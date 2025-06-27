@@ -59,6 +59,7 @@ public enum ErrorCode {
     COMMENT_CREATOR_NOT_SPECIFIED(1091, "Doctor or patient must be specified as comment creator", HttpStatus.BAD_REQUEST),
     PATIENT_NOT_POST_OWNER(1092, "Patient is not the owner of this post", HttpStatus.FORBIDDEN),
     GET_GOOGLE_EMAIL_FAILED(1083, "Get google email failed", HttpStatus.NOT_FOUND),
+    CAN_NOT_CHOOSE_DOCTOR_AVAILABLE(1084, "Can not choose doctor available", HttpStatus.BAD_REQUEST),
 
     ;
 
