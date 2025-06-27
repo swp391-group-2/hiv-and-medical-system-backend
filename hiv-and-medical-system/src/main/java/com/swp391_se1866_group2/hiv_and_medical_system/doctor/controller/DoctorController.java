@@ -4,6 +4,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateDTORequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
@@ -119,6 +120,16 @@ public class DoctorController {
         return ApiResponse.<Long>builder()
                 .success(true)
                 .data(doctorService.countDoctorActive())
+                .build();
+    }
+
+    @GetMapping("/top-appointmentCount")
+    @Operation(summary = "Lấy các bác sĩ có nhiều người đăng kí khám cao nhất")
+    public ApiResponse<List<DoctorAppointmentResponse>> getTopDoctorsAppointment(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "13") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<List<DoctorAppointmentResponse>>builder()
+                .success(true)
+                .data(doctorService.getTopDoctorsAppointment(pageable))
                 .build();
     }
 
