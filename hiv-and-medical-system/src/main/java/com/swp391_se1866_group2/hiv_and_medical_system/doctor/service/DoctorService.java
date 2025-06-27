@@ -8,12 +8,12 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.DoctorMappe
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateDTORequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository.DoctorRepository;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
@@ -22,7 +22,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,6 +38,7 @@ public class DoctorService {
     DoctorRepository doctorRepository;
     UserService userService;
     DoctorMapper doctorMapper;
+    ScheduleSlotRepository scheduleSlotRepository;
 
     PasswordEncoder passwordEncoder;
 
@@ -115,6 +114,22 @@ public class DoctorService {
 
     public long countDoctorActive(){
         return doctorRepository.countAllByUserStatus(UserStatus.ACTIVE.name());
+    }
+
+    public List<DoctorAppointmentResponse> getTopDoctorsAppointment(Pageable pageable){
+        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getTopDoctorByAppointmentCount(pageable);
+
+        List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
+
+        doctors.forEach(doctorAppointment -> {
+            DoctorAppointmentResponse doctorAppointmentResponse = new DoctorAppointmentResponse();
+            doctorAppointmentResponse.setDoctor(doctorMapper.toDoctorResponse(doctorAppointment.getDoctor()));
+            doctorAppointmentResponse.setTotalAppointment(doctorAppointment.getTotalAppointment());
+            doctorAppointmentResponses.add(doctorAppointmentResponse);
+        });
+
+        return doctorAppointmentResponses;
+
     }
 
 }
