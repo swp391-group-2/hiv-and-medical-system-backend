@@ -1,10 +1,11 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.security.controller;
 
-import com.nimbusds.jose.JOSEException;
+import  com.nimbusds.jose.JOSEException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.GoogleCodeRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
@@ -17,10 +18,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -75,7 +73,13 @@ public class AuthenticationController {
                 .build();
     }
 
-
-
+    @PostMapping("/outbound/authentication")
+    ApiResponse<AuthenticationResponse> outboundAuthenticate(@RequestBody GoogleCodeRequest code){
+        var result = authenticationService.outboundAuthenticate(code.getCode());
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(result)
+                .success(true)
+                .build();
+    }
 
 }

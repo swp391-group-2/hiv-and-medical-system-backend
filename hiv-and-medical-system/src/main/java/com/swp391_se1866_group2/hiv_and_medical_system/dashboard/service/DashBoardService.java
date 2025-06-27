@@ -25,13 +25,8 @@ public class DashBoardService {
     PaymentRepository paymentRepository;
 
     private StatsResponse formatStats(String title, long currentValue, long previousValue){
-        String value;
-        if (title.equalsIgnoreCase("doanh thu tháng")){
-            value =String.format("%,d", currentValue) + "₫";
-        }
-        else {
-            value = String.format("%,d", currentValue);
-        }
+        String value = String.format("%,d", currentValue);
+
         double percentValue;
         if(previousValue == 0){
             percentValue = (currentValue ==0) ? 0 :100;
@@ -89,7 +84,7 @@ public class DashBoardService {
             previousValue = appointmentRepository.countAppointments(milestone);
         }
 
-        return formatStats("Lịch hẹn hôm nay", currentValue, previousValue);
+        return formatStats("Tổng lịch hẹn", currentValue, previousValue);
     }
 
     public StatsResponse getTotalRevenue(LocalDate milestone){
@@ -181,12 +176,12 @@ public class DashBoardService {
 
         String formatConsultationValue;
         if (totalAppointments == 0){
-            formatConsultationValue = "0%";
+            formatConsultationValue = "0";
         }
 
         else {
             double consultationValue = ((double) consultationAppointments / totalAppointments) *100;
-            formatConsultationValue =  String.format("%.0f", consultationValue) + "%";
+            formatConsultationValue = String.format("%.0f", consultationValue);
         }
 
         return new ServiceAppointmentStats("CONSULTATION", consultationAppointments, formatConsultationValue);
@@ -198,12 +193,12 @@ public class DashBoardService {
 
         String formatScreeningValue;
         if (totalAppointments == 0){
-            formatScreeningValue = "0%";
+            formatScreeningValue = "0";
         }
 
         else {
             double screeningValue = ((double) screeningAppointments / totalAppointments) *100;
-            formatScreeningValue =  String.format("%.0f", screeningValue) + "%";
+            formatScreeningValue =  String.format("%.0f", screeningValue);
         }
 
         return new ServiceAppointmentStats("SCREENING", screeningAppointments, formatScreeningValue);
@@ -215,12 +210,12 @@ public class DashBoardService {
 
         String formatConfirmatoryValue;
         if (totalAppointments == 0){
-            formatConfirmatoryValue = "0%";
+            formatConfirmatoryValue = "0";
         }
 
         else {
             double confirmatoryValue = ((double) confirmatoryAppointments / totalAppointments) *100;
-            formatConfirmatoryValue =  String.format("%.0f", confirmatoryValue) + "%";
+            formatConfirmatoryValue =  String.format("%.0f", confirmatoryValue);
         }
 
         return new ServiceAppointmentStats("CONFIRMATORY", confirmatoryAppointments, formatConfirmatoryValue);

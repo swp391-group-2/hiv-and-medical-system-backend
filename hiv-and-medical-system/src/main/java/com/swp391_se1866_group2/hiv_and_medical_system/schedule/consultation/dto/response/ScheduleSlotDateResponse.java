@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class ScheduleSlotDateResponse {
     int id;
     LocalDate date;
-    private Integer scheduleId;
+    Integer scheduleId;
     SlotResponse slot;
     String status;
 }

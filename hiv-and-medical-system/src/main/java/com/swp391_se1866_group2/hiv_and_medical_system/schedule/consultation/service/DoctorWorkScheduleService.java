@@ -132,6 +132,4 @@ public class DoctorWorkScheduleService {
         return doctorWorkScheduleRepository.findAll().stream().map(scheduleMapper::toDoctorWorkScheduleResponse).collect(Collectors.toList());
     }
 
-
-
 }
