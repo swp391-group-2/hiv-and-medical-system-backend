@@ -8,10 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleDTOResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotDateResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
@@ -103,11 +100,21 @@ public class DoctorWorkScheduleService {
 
         ScheduleDTOResponse scheduleDTOResponse = scheduleMapper.toScheduleDTOResponse(scheduleResponse);
 
-        scheduleDTOResponse.getScheduleSlots().forEach(
-                scheduleSlotDateResponse -> {
-                    scheduleSlotDateResponse.setDate(scheduleDTOResponse.getWorkDate());
-                }
-        );
+        if(scheduleDTOResponse != null){
+            ScheduleDTOResponse finalScheduleDTOResponse = scheduleDTOResponse;
+            scheduleDTOResponse.getScheduleSlots().forEach(
+                    scheduleSlotDateResponse -> {
+                        if(scheduleSlotDateResponse != null) {
+                            scheduleSlotDateResponse.setDate(finalScheduleDTOResponse.getWorkDate());
+                        }
+                    }
+            );
+        }else {
+            ScheduleDTOResponse scheduleDTOResponseTmp = new ScheduleDTOResponse();
+            scheduleDTOResponseTmp.setWorkDate(workDate);
+            scheduleDTOResponseTmp.setScheduleSlots(new HashSet<>());
+            return scheduleDTOResponseTmp;
+        }
 
         return scheduleDTOResponse;
     }
