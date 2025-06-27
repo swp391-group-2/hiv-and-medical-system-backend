@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -115,4 +117,14 @@ public class AppointmentController {
                 .data(appointmentService.cancelAppointment(appointmentId))
                 .build();
     }
+
+
+//    @Operation(summary = "Lấy danh sách lịch appointment của từng bác sĩ ")
+//    @GetMapping("/doctors/me/appointments")
+//    public ApiResponse<List<AppointmentLabSampleResponse>> getDoctorAppointment(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
+//                .data(appointmentService.getAllDoctorAppointmentsByStatus())
+//                .success(true)
+//                .build();
+//    }
 }

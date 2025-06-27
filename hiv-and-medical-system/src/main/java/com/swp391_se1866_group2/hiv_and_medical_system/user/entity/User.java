@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AuthProvider;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
@@ -44,4 +45,7 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonManagedReference("user-doctor")
     Doctor doctor;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    AuthProvider authProvider;
 }

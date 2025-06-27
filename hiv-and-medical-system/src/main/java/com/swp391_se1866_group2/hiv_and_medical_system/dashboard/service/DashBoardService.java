@@ -25,13 +25,8 @@ public class DashBoardService {
     PaymentRepository paymentRepository;
 
     private StatsResponse formatStats(String title, long currentValue, long previousValue){
-        String value;
-        if (title.equalsIgnoreCase("doanh thu tháng")){
-            value =String.format("%,d", currentValue) + "₫";
-        }
-        else {
-            value = String.format("%,d", currentValue);
-        }
+        String value = String.format("%,d", currentValue);
+
         double percentValue;
         if(previousValue == 0){
             percentValue = (currentValue ==0) ? 0 :100;
@@ -89,7 +84,7 @@ public class DashBoardService {
             previousValue = appointmentRepository.countAppointments(milestone);
         }
 
-        return formatStats("Lịch hẹn hôm nay", currentValue, previousValue);
+        return formatStats("Tổng lịch hẹn", currentValue, previousValue);
     }
 
     public StatsResponse getTotalRevenue(LocalDate milestone){

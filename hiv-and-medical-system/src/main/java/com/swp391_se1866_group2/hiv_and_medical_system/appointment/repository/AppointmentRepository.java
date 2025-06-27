@@ -1,5 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.ScheduleAppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.dashboard.dto.projection.MaxMinAppointmentResponse;
@@ -54,5 +56,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Transactional
     @Query("UPDATE Appointment a SET a.appointmentCode = :code WHERE a.id = :id")
     void updateAppointmentCode (@Param("id") int id, @Param("code") String code);
+
+
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.ScheduleAppointmentResponse(d.workDate, a.status, a.patient.user.fullName, s) FROM Appointment a LEFT JOIN a.scheduleSlot s LEFT JOIN s.schedule d WHERE (d.workDate between :startDate and :endDate) and d.doctor.id = :doctorId ")
+    Optional<List<ScheduleAppointmentResponse>>findByScheduleSlot (@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,@Param("doctorId") String doctorId);
+
+
 
 }
