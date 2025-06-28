@@ -108,10 +108,20 @@ public class DoctorWorkScheduleController {
 
     @GetMapping("/{doctorId}/schedules/week")
     @Operation(summary = "Lấy lịch làm việc bác sĩ theo doctorId và trong tuần đó tùy ngày nhập vào")
-    public ApiResponse<List<ScheduleResponse>> getDoctorSchedulesByDoctorId(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+    public ApiResponse<List<ScheduleResponse>> getDoctorSchedulesByDoctorId(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date){
         return ApiResponse.<List<ScheduleResponse>>builder()
                 .success(true)
                 .data(scheduleService.getWeekDWScheduleByDoctorIdAndDate(doctorId , date))
+                .build();
+    }
+
+
+    @PostMapping("/{doctorId}/schedules/generate")
+    @Operation(summary = "Tạo lịch làm việc cho bác sĩ nhiều ngày 1 lần và có thể nhiều slot khác nhau")
+    public ApiResponse<List<DoctorWorkScheduleResponse>> generateDoctorSchedule(@PathVariable("doctorId") String doctorId, @RequestBody @Valid List<ScheduleCreationRequest> request){
+        return ApiResponse.<List<DoctorWorkScheduleResponse>>builder()
+                .success(true)
+                .data(scheduleService.generateDoctorSchedule(doctorId, request))
                 .build();
     }
 }

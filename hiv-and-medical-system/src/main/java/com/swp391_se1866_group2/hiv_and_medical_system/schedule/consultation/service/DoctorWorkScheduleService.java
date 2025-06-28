@@ -152,4 +152,17 @@ public class DoctorWorkScheduleService {
     }
 
 
+    public List<DoctorWorkScheduleResponse> generateDoctorSchedule (String doctorId , List<ScheduleCreationRequest> request){
+        List<DoctorWorkScheduleResponse> doctorWorkScheduleResponses = new ArrayList<>();
+
+        if(request!= null){
+            request.forEach(scheduleCreationRequest -> {
+                doctorWorkScheduleResponses.add(createDoctorSchedule(doctorId, scheduleCreationRequest));
+            });
+        }
+        return doctorWorkScheduleResponses;
+    }
+
+
+
 }
