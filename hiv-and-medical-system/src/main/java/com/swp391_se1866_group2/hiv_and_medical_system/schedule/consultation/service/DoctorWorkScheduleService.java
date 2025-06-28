@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -139,8 +140,10 @@ public class DoctorWorkScheduleService {
         return doctorWorkScheduleRepository.findAll().stream().map(scheduleMapper::toDoctorWorkScheduleResponse).collect(Collectors.toList());
     }
 
-    public List<ScheduleResponse> getDWScheduleByDoctorIdAndBetweenDate (String doctorId, LocalDate startTime, LocalDate endTime) {
+    public List<ScheduleResponse> getWeekDWScheduleByDoctorIdAndDate (String doctorId, LocalDate date) {
         DoctorResponse doctor = doctorService.getDoctorResponseById(doctorId);
+        LocalDate startTime = date.with(DayOfWeek.MONDAY);
+        LocalDate endTime = date.with(DayOfWeek.SUNDAY);
         if(startTime == null && endTime == null) {
             throw new AppException(ErrorCode.DATE_INPUT_INVALID);
         }
