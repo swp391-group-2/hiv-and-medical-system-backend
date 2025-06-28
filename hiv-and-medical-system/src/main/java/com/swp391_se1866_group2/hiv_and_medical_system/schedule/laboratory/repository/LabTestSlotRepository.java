@@ -3,6 +3,8 @@ package com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.repo
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.entity.Slot;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -14,6 +16,7 @@ public interface LabTestSlotRepository extends JpaRepository<LabTestSlot, Intege
 
     List<LabTestSlot> findAllByDate(LocalDate date);
 
-    LabTestSlot findBySlotId(Integer slotId);
+    @Query("SELECT l FROM LabTestSlot l WHERE l.id = :labTestSlotId")
+    LabTestSlot findByLabTestSlotId(@Param("labTestSlotId") int labTestSlotId);
 
 }
