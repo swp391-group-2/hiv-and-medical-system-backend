@@ -60,14 +60,10 @@ public class StripeService {
         LabTestSlot labTestSlot = labTestSlotRepo.findByLabTestSlotId(request.getLabTestSlotId());
         if(service.getServiceType().equals(ServiceType.CONSULTATION) && scheduleSlot == null && labTestSlot != null){
             Page<ScheduleSlot> scheduleSlotTmp = scheduleSlotRepo.chooseDoctorBySlotId(labTestSlot.getSlot().getId(), PageRequest.of(0,1));
-            System.out.println("bbbbbbbbbbbbbbbbbbbbbbb" + scheduleSlotTmp.getContent().getFirst().getId() + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             if(scheduleSlotTmp.getContent().getFirst() == null){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
             request.setScheduleSlotId(scheduleSlotTmp.getContent().getFirst().getId());
-            System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-            System.out.println(request.getLabTestSlotId());
-            System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
         }
 
         String price = String.valueOf(service.getPrice());
