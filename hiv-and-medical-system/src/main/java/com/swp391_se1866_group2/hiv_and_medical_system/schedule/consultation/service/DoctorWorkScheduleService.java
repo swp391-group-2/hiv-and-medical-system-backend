@@ -139,4 +139,14 @@ public class DoctorWorkScheduleService {
         return doctorWorkScheduleRepository.findAll().stream().map(scheduleMapper::toDoctorWorkScheduleResponse).collect(Collectors.toList());
     }
 
+    public List<ScheduleResponse> getDWScheduleByDoctorIdAndBetweenDate (String doctorId, LocalDate startTime, LocalDate endTime) {
+        DoctorResponse doctor = doctorService.getDoctorResponseById(doctorId);
+        if(startTime == null && endTime == null) {
+            throw new AppException(ErrorCode.DATE_INPUT_INVALID);
+        }
+        List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
+        return listDWSchedule.stream().map(scheduleMapper::toScheduleResponse).collect(Collectors.toList());
+    }
+
+
 }

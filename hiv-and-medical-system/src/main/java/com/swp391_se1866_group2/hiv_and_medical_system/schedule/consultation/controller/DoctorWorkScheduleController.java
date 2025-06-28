@@ -106,5 +106,12 @@ public class DoctorWorkScheduleController {
     }
 
 
-
+    @GetMapping("/{doctorId}/schedules/date-range")
+    @Operation(summary = "Lấy lịch làm việc bác sĩ theo doctorId và trong khoảng thời gian chỉ định")
+    public ApiResponse<List<ScheduleResponse>> getDoctorSchedulesByDoctorId(@PathVariable("doctorId") String doctorId, @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+        return ApiResponse.<List<ScheduleResponse>>builder()
+                .success(true)
+                .data(scheduleService.getDWScheduleByDoctorIdAndBetweenDate(doctorId , startDate, endDate))
+                .build();
+    }
 }
