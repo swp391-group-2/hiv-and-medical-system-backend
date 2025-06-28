@@ -106,5 +106,12 @@ public class DoctorWorkScheduleController {
     }
 
 
-
+    @GetMapping("/{doctorId}/schedules/week")
+    @Operation(summary = "Lấy lịch làm việc bác sĩ theo doctorId và trong tuần đó tùy ngày nhập vào")
+    public ApiResponse<List<ScheduleResponse>> getDoctorSchedulesByDoctorId(@PathVariable("doctorId") String doctorId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ApiResponse.<List<ScheduleResponse>>builder()
+                .success(true)
+                .data(scheduleService.getWeekDWScheduleByDoctorIdAndDate(doctorId , date))
+                .build();
+    }
 }
