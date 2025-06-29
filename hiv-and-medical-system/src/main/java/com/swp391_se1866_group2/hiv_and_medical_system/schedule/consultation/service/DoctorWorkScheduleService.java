@@ -8,10 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleDTOResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.ScheduleSlotDateResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
@@ -23,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -103,11 +101,21 @@ public class DoctorWorkScheduleService {
 
         ScheduleDTOResponse scheduleDTOResponse = scheduleMapper.toScheduleDTOResponse(scheduleResponse);
 
-        scheduleDTOResponse.getScheduleSlots().forEach(
-                scheduleSlotDateResponse -> {
-                    scheduleSlotDateResponse.setDate(scheduleDTOResponse.getWorkDate());
-                }
-        );
+        if(scheduleDTOResponse != null){
+            ScheduleDTOResponse finalScheduleDTOResponse = scheduleDTOResponse;
+            scheduleDTOResponse.getScheduleSlots().forEach(
+                    scheduleSlotDateResponse -> {
+                        if(scheduleSlotDateResponse != null) {
+                            scheduleSlotDateResponse.setDate(finalScheduleDTOResponse.getWorkDate());
+                        }
+                    }
+            );
+        }else {
+            ScheduleDTOResponse scheduleDTOResponseTmp = new ScheduleDTOResponse();
+            scheduleDTOResponseTmp.setWorkDate(workDate);
+            scheduleDTOResponseTmp.setScheduleSlots(new HashSet<>());
+            return scheduleDTOResponseTmp;
+        }
 
         return scheduleDTOResponse;
     }
@@ -131,5 +139,30 @@ public class DoctorWorkScheduleService {
     public List<DoctorWorkScheduleResponse> getAllDoctorWorkSchedule () {
         return doctorWorkScheduleRepository.findAll().stream().map(scheduleMapper::toDoctorWorkScheduleResponse).collect(Collectors.toList());
     }
+
+    public List<ScheduleResponse> getWeekDWScheduleByDoctorIdAndDate (String doctorId, LocalDate date) {
+        DoctorResponse doctor = doctorService.getDoctorResponseById(doctorId);
+        LocalDate startTime = date.with(DayOfWeek.MONDAY);
+        LocalDate endTime = date.with(DayOfWeek.SUNDAY);
+        if(startTime == null && endTime == null) {
+            throw new AppException(ErrorCode.DATE_INPUT_INVALID);
+        }
+        List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
+        return listDWSchedule.stream().map(scheduleMapper::toScheduleResponse).collect(Collectors.toList());
+    }
+
+
+    public List<DoctorWorkScheduleResponse> generateDoctorSchedule (String doctorId , List<ScheduleCreationRequest> request){
+        List<DoctorWorkScheduleResponse> doctorWorkScheduleResponses = new ArrayList<>();
+
+        if(request!= null){
+            request.forEach(scheduleCreationRequest -> {
+                doctorWorkScheduleResponses.add(createDoctorSchedule(doctorId, scheduleCreationRequest));
+            });
+        }
+        return doctorWorkScheduleResponses;
+    }
+
+
 
 }

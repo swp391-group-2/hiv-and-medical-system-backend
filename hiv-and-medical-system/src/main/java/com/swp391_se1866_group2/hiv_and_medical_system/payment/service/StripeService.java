@@ -7,8 +7,10 @@ import com.stripe.param.checkout.SessionCreateParams;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.LabTestStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.PaymentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.dto.PaymentRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.entity.Payment;
 import com.swp391_se1866_group2.hiv_and_medical_system.payment.repository.PaymentRepository;
@@ -16,15 +18,23 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.ent
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.repository.LabTestSlotRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.service.LabTestSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.repository.ServiceRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,6 +44,7 @@ public class StripeService {
     final  ServiceRepository serviceRepository;
     final ScheduleSlotRepository scheduleSlotRepo;
     final LabTestSlotRepository labTestSlotRepo;
+    final LabTestSlotService labTestSlotService;
 
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
@@ -45,6 +56,14 @@ public class StripeService {
             if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE.name())){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
+        }
+        LabTestSlot labTestSlot = labTestSlotRepo.findByLabTestSlotId(request.getLabTestSlotId());
+        if(service.getServiceType().equals(ServiceType.CONSULTATION) && scheduleSlot == null && labTestSlot != null){
+            Page<ScheduleSlot> scheduleSlotTmp = scheduleSlotRepo.chooseDoctorBySlotId(labTestSlot.getSlot().getId(), PageRequest.of(0,1));
+            if(scheduleSlotTmp.getContent().getFirst() == null){
+                throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
+            }
+            request.setScheduleSlotId(scheduleSlotTmp.getContent().getFirst().getId());
         }
 
         String price = String.valueOf(service.getPrice());
