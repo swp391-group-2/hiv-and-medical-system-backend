@@ -1,6 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.request.BlogPostCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.request.BlogPostUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse;
@@ -27,10 +29,12 @@ import java.util.List;
 @Tag(name = "Blog API", description = "Quản lý blog")
 public class BlogPostController {
     BlogPostService blogPostService;
+    ObjectMapper objectMapper;
 
     @PostMapping
     @Operation(summary = "Thêm blog mới")
-    public ApiResponse<BlogPostResponse> createBlog(@RequestBody @Valid BlogPostCreationRequest request, @RequestParam MultipartFile file){
+    public ApiResponse<BlogPostResponse> createBlog(@RequestParam("data") String jsonData, @RequestParam("file") MultipartFile file) throws JsonProcessingException {
+        BlogPostCreationRequest request = objectMapper.readValue(jsonData, BlogPostCreationRequest.class);
         return ApiResponse.<BlogPostResponse>builder()
                 .success(true)
                 .data(blogPostService.createBlog(request, file))
@@ -67,9 +71,10 @@ public class BlogPostController {
 
     @PutMapping("/{blogId}")
     @Operation(summary = "Cập nhật blog")
-    public ApiResponse<BlogPostResponse> updateBlog(@PathVariable int blogId, @RequestBody BlogPostUpdateRequest request){
+    public ApiResponse<BlogPostResponse> updateBlog(@PathVariable int blogId, @RequestParam("data") String jsonData, @RequestParam(value = "file",  required = false)  MultipartFile file) throws JsonProcessingException {
+        BlogPostUpdateRequest request = objectMapper.readValue(jsonData, BlogPostUpdateRequest.class);
         return ApiResponse.<BlogPostResponse>builder()
-                .data(blogPostService.updateBlog(blogId,request))
+                .data(blogPostService.updateBlog(blogId,request, file))
                 .success(true)
                 .build();
     }
