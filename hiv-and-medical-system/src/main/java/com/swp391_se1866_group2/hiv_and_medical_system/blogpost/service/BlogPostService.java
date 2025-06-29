@@ -43,14 +43,16 @@ public class BlogPostService {
         return blogPostMapper.toBlogPostResponse(blogPostRepository.save(blogPost));
     }
 
-    public List<BlogPostResponse> getAllBlogs(Pageable pageable){
-        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getAllBlogPosts(pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
-        return slicedBlog.getContent();
-    }
+    public List<BlogPostResponse> getAllBlogs(Pageable pageable, String title){
+        Slice<BlogPostResponse> slicedBlog;
+        if (title == null){
+            slicedBlog = blogPostRepository.getAllBlogPosts(pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        }
+        else {
+            slicedBlog = blogPostRepository.searchByTitle(title, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        }
 
-    public List<BlogPostResponse> searchBlogByTitle(String title, Pageable pageable) {
-        Slice<BlogPostResponse> slice = blogPostRepository.searchByTitle(title, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
-        return slice.getContent();
+        return slicedBlog.getContent();
     }
 
     public BlogPostResponse getBlogById(int blogId) {
