@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,10 +30,10 @@ public class BlogPostController {
 
     @PostMapping
     @Operation(summary = "Thêm blog mới")
-    public ApiResponse<BlogPostResponse> createBlog(@RequestBody @Valid BlogPostCreationRequest request){
+    public ApiResponse<BlogPostResponse> createBlog(@RequestBody @Valid BlogPostCreationRequest request, @RequestParam MultipartFile file){
         return ApiResponse.<BlogPostResponse>builder()
                 .success(true)
-                .data(blogPostService.createBlog(request))
+                .data(blogPostService.createBlog(request, file))
                 .build();
     }
 
