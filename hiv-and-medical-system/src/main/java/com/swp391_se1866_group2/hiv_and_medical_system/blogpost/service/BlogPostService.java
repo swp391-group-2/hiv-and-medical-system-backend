@@ -56,9 +56,8 @@ public class BlogPostService {
     }
 
     public BlogPostResponse getBlogById(int blogId) {
-        BlogPost blogPost = blogPostRepository.findById(blogId)
+        return  blogPostRepository.searchById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
-        return blogPostMapper.toBlogPostResponse(blogPost);
     }
 
     public BlogPostResponse updateBlog(int blogId, BlogPostUpdateRequest request, MultipartFile image) {
