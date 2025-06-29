@@ -16,7 +16,6 @@ import com.swp391_se1866_group2.hiv_and_medical_system.slot.service.SlotService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -148,7 +147,29 @@ public class DoctorWorkScheduleService {
             throw new AppException(ErrorCode.DATE_INPUT_INVALID);
         }
         List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
-        return listDWSchedule.stream().map(scheduleMapper::toScheduleResponse).collect(Collectors.toList());
+        List<ScheduleResponse> scheduleResponseList = new  ArrayList<>();
+
+        AtomicBoolean isEqualDate = new AtomicBoolean(false);
+
+        for (LocalDate dateTmp = startTime ; !dateTmp.isAfter(endTime); dateTmp = dateTmp.plusDays(1)) {
+            LocalDate finalDateTmp = dateTmp;
+            isEqualDate.set(false);
+            listDWSchedule.forEach(schedule -> {
+                if(schedule.getWorkDate().equals(finalDateTmp)){
+                    scheduleResponseList.add(scheduleMapper.toScheduleResponse(schedule));
+                    isEqualDate.set(true);
+                }
+            });
+            if(!isEqualDate.get()) {
+                ScheduleResponse scheduleResponse = new ScheduleResponse();
+                scheduleResponse.setWorkDate(dateTmp);
+                scheduleResponse.setScheduleSlots(new HashSet<>());
+                scheduleResponseList.add(scheduleResponse);
+            }
+        }
+
+        return scheduleResponseList;
+
     }
 
 
