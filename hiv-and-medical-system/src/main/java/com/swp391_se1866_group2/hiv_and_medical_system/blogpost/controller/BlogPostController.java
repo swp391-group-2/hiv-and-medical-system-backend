@@ -43,11 +43,11 @@ public class BlogPostController {
 
     @GetMapping
     @Operation(summary = "Lấy danh sách blog theo phân trang")
-    public ApiResponse<List<BlogPostResponse>> getAllBlogs(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+    public ApiResponse<List<BlogPostResponse>> getAllBlogs(@RequestParam(required = false, defaultValue = "") String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
         return ApiResponse.<List<BlogPostResponse>>builder()
                 .success(true)
-                .data(blogPostService.getAllBlogs(pageable))
+                .data(blogPostService.getAllBlogs(pageable, title))
                 .build();
     }
 
@@ -56,16 +56,6 @@ public class BlogPostController {
     public ApiResponse<BlogPostResponse> getBlogById(@PathVariable int blogId) {
         return ApiResponse.<BlogPostResponse>builder()
                 .data(blogPostService.getBlogById(blogId))
-                .success(true)
-                .build();
-    }
-
-    @GetMapping("/search")
-    @Operation(summary = "Search blog theo title")
-    public ApiResponse<List<BlogPostResponse>> searchBlogByTitle(@RequestParam String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
-        return ApiResponse.<List<BlogPostResponse>>builder()
-                .data(blogPostService.searchBlogByTitle(title, pageable))
                 .success(true)
                 .build();
     }
