@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -39,5 +41,7 @@ public class BlogPost {
     @UpdateTimestamp
     LocalDate updatedAt;
 
+    @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Image> image;
 
 }

@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.image.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity.BlogPost;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ImageMapper;
@@ -58,4 +59,28 @@ public class ImageService {
             throw new AppException(ErrorCode.UPLOAD_FAILED);
         }
     }
+
+
+    public BlogPost saveBlogPostImage(MultipartFile file, BlogPost blogPost) {
+        try {
+            if(file.isEmpty()){
+                throw new AppException(ErrorCode.IMAGE_WRONG_TYPE);
+            }
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("folder", "avatar"));
+            String imageUrl = uploadResult.get("secure_url").toString();
+            Image image = new Image();
+            image.setUrl(imageUrl);
+            image.setActive(true);
+            if(blogPost != null && blogPost.getImage() != null){
+                blogPost.getImage().forEach(img -> img.setActive(false));
+                image.setBlogPost(blogPost);
+                blogPost.getImage().add(image);
+            }
+            return blogPost;
+        } catch (IOException exception){
+            log.error(exception.getMessage());
+            throw new AppException(ErrorCode.UPLOAD_FAILED);
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.image.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity.BlogPost;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,4 +22,8 @@ public class Image {
     @ManyToOne
     @JsonIgnore
     Doctor doctor;
+
+    @ManyToOne
+    @JsonIgnore
+    BlogPost blogPost;
 }
