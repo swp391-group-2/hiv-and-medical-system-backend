@@ -67,9 +67,9 @@ public class BlogPostController {
 
     @PutMapping("/{blogId}")
     @Operation(summary = "Cập nhật blog")
-    public ApiResponse<BlogPostResponse> updateBlog(@PathVariable int blogId, @RequestBody BlogPostUpdateRequest request){
+    public ApiResponse<BlogPostResponse> updateBlog(@PathVariable int blogId, @RequestBody BlogPostUpdateRequest request, @RequestParam MultipartFile file){
         return ApiResponse.<BlogPostResponse>builder()
-                .data(blogPostService.updateBlog(blogId,request))
+                .data(blogPostService.updateBlog(blogId,request, file))
                 .success(true)
                 .build();
     }

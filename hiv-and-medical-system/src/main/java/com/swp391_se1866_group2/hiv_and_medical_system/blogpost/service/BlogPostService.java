@@ -35,7 +35,9 @@ public class BlogPostService {
         }
 
         BlogPost blogPost = blogPostMapper.toBlogPost(request);
-        blogPost = imageService.saveBlogPostImage(image ,blogPost);
+        if(image != null){
+            blogPost = imageService.saveBlogPostImage(image ,blogPost);
+        }
         return blogPostMapper.toBlogPostResponse(blogPostRepository.save(blogPost));
     }
 
@@ -55,11 +57,14 @@ public class BlogPostService {
         return blogPostMapper.toBlogPostResponse(blogPost);
     }
 
-    public BlogPostResponse updateBlog(int blogId, BlogPostUpdateRequest request) {
+    public BlogPostResponse updateBlog(int blogId, BlogPostUpdateRequest request, MultipartFile image) {
         BlogPost blogPost = blogPostRepository.findById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
 
         blogPostMapper.updateBlogPost(blogPost, request);
+        if(image != null){
+            blogPost = imageService.saveBlogPostImage(image,blogPost);
+        }
         return blogPostMapper.toBlogPostResponse(blogPostRepository.save(blogPost));
     }
 }
