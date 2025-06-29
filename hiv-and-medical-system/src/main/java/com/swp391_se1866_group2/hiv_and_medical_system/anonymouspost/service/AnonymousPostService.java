@@ -7,7 +7,9 @@ import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.repository.
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AnonymousPostMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +28,11 @@ public class AnonymousPostService {
     AnonymousPostRepository anonymousPostRepository;
     AnonymousPostMapper anonymousPostMapper;
     PatientService patientService;
+    PatientRepository patientRepository;
 
     public AnonymousPostResponse createAnonymousPost(AnonymousPostCreationRequest request){
+        Patient patient = patientService.getPatientResponseByToken();
         AnonymousPost anonymousPost = anonymousPostMapper.toAnonymousPost(request);
-        Patient patient = patientService.getPatientById(request.getPatientId());
         anonymousPost.setPatient(patient);
         return anonymousPostMapper.toAnonymousPostResponse(anonymousPostRepository.save(anonymousPost));
     }

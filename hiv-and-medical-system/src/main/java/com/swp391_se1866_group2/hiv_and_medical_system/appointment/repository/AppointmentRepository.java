@@ -51,7 +51,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Query("SELECT COUNT(a) FROM Appointment a JOIN a.service s WHERE s.serviceType = 'CONFIRMATORY'")
     long countConfirmatoryAppointments();
 
-
     @Modifying
     @Transactional
     @Query("UPDATE Appointment a SET a.appointmentCode = :code WHERE a.id = :id")
