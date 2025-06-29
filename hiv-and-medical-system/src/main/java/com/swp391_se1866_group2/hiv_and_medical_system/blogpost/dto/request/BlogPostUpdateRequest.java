@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class BlogPostUpdateRequest {
+    String title;
     String snippet;
     String content;
 }

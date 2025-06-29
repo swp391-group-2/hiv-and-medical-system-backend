@@ -15,11 +15,11 @@ import java.util.Optional;
 public interface BlogPostRepository extends JpaRepository<BlogPost, Integer> {
     boolean existsByTitle(String title);
 
-    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id, b.title, b.author, b.snippet, b.content) FROM BlogPost b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))")
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id, b.title, b.author, b.snippet, b.content, b.createdAt) FROM BlogPost b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     Optional<BlogPostResponse> findByTitle(@Param("title") String title);
 
     @Query("""
         SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(
-            b.id, b.author, b.title, b.snippet, b.content) FROM BlogPost b""")
+            b.id, b.author, b.title, b.snippet, b.content, b.createdAt) FROM BlogPost b""")
     Optional<Slice<BlogPostResponse>> getAllBlogPosts(Pageable pageable);
 }
