@@ -16,6 +16,5 @@ import java.time.LocalDate;
 public class CommentCreationRequest {
     String content;
     String doctorId;
-    String patientId;
     int anonymousPostId;
 }

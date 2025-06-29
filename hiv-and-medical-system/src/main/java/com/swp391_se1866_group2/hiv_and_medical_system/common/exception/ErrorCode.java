@@ -56,7 +56,6 @@ public enum ErrorCode {
     BLOG_POST_EXISTED(1081, "Blog post already existed", HttpStatus.BAD_REQUEST),
     IMAGE_WRONG_TYPE(1082, "Image wrong type", HttpStatus.BAD_REQUEST),
     ANONYMOUS_POST_NOT_EXISTED(1090, "Anonymous post not existed. ", HttpStatus.NOT_FOUND),
-    COMMENT_CREATOR_NOT_SPECIFIED(1091, "Doctor or patient must be specified as comment creator", HttpStatus.BAD_REQUEST),
     PATIENT_NOT_POST_OWNER(1092, "Patient is not the owner of this post", HttpStatus.FORBIDDEN),
     GET_GOOGLE_EMAIL_FAILED(1083, "Get google email failed", HttpStatus.NOT_FOUND),
 

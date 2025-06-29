@@ -43,16 +43,12 @@ public class CommentService {
             comment.setDoctor(doctor);
         }
 
-        if (request.getPatientId() !=null){
-            Patient patient = patientService.getPatientById(request.getPatientId());
+        if (request.getDoctorId() == null){
+            Patient patient = patientService.getPatientResponseByToken();
             if (!anonymousPost.getPatient().getId().equals(patient.getId())){
                 throw new AppException(ErrorCode.PATIENT_NOT_POST_OWNER);
             }
             comment.setPatient(patient);
-        }
-
-        if (request.getPatientId() == null && request.getDoctorId() == null){
-            throw new AppException(ErrorCode.COMMENT_CREATOR_NOT_SPECIFIED);
         }
 
         return commentMapper.toCommentResponse(commentRepository.save(comment));
