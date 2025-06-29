@@ -80,8 +80,8 @@ public class ImageService {
             }else{
                 image.setBlogPost(blogPost);
                 List<Image> images = new ArrayList<>();
-                images.add(image);
                 blogPost.setImage(images);
+                blogPost.getImage().add(image);
             }
             return blogPost;
         } catch (IOException exception){
