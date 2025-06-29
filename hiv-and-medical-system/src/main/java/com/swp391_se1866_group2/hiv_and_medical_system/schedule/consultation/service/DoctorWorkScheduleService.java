@@ -143,9 +143,6 @@ public class DoctorWorkScheduleService {
         DoctorResponse doctor = doctorService.getDoctorResponseById(doctorId);
         LocalDate startTime = date.with(DayOfWeek.MONDAY);
         LocalDate endTime = date.with(DayOfWeek.SUNDAY);
-        if(startTime == null && endTime == null) {
-            throw new AppException(ErrorCode.DATE_INPUT_INVALID);
-        }
         List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
         List<ScheduleResponse> scheduleResponseList = new  ArrayList<>();
 
@@ -178,7 +175,9 @@ public class DoctorWorkScheduleService {
 
         if(request!= null){
             request.forEach(scheduleCreationRequest -> {
-                doctorWorkScheduleResponses.add(createDoctorSchedule(doctorId, scheduleCreationRequest));
+                if(scheduleCreationRequest.getSlotId() != null && !scheduleCreationRequest.getSlotId().isEmpty()){
+                    doctorWorkScheduleResponses.add(createDoctorSchedule(doctorId, scheduleCreationRequest));
+                }
             });
         }
         return doctorWorkScheduleResponses;

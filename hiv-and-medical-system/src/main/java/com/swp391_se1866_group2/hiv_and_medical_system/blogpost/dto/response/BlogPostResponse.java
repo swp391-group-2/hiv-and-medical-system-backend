@@ -20,5 +20,5 @@ public class BlogPostResponse {
     String snippet;
     String content;
     LocalDate createdAt;
-
+    String urlImage;
 }
