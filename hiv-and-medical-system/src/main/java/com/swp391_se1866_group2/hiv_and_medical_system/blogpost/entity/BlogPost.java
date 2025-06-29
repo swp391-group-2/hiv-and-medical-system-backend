@@ -33,6 +33,7 @@ public class BlogPost {
     String content;
 
     @CreationTimestamp
+    @Column(updatable = false)
     LocalDate createdAt;
 
     @UpdateTimestamp

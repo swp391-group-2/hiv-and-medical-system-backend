@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,4 +19,6 @@ public class BlogPostResponse {
     String title;
     String snippet;
     String content;
+    LocalDate createdAt;
+
 }
