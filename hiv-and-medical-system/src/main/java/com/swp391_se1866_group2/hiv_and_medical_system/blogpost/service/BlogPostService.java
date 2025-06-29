@@ -62,7 +62,7 @@ public class BlogPostService {
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
 
         blogPostMapper.updateBlogPost(blogPost, request);
-        if(image != null){
+        if(image != null && image.isEmpty()){
             blogPost = imageService.saveBlogPostImage(image,blogPost);
         }
         return blogPostMapper.toBlogPostResponse(blogPostRepository.save(blogPost));

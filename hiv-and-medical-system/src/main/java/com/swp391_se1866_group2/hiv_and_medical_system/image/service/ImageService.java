@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -75,6 +77,11 @@ public class ImageService {
                 blogPost.getImage().forEach(img -> img.setActive(false));
                 image.setBlogPost(blogPost);
                 blogPost.getImage().add(image);
+            }else{
+                image.setBlogPost(blogPost);
+                List<Image> images = new ArrayList<>();
+                images.add(image);
+                blogPost.setImage(images);
             }
             return blogPost;
         } catch (IOException exception){
