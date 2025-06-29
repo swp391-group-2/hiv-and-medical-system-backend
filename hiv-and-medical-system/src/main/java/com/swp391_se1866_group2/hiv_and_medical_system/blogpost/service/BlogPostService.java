@@ -48,9 +48,9 @@ public class BlogPostService {
         return slicedBlog.getContent();
     }
 
-    public BlogPostResponse getBlogByTitle(String title) {
-        return blogPostRepository.findByTitle(title)
-                .orElseThrow(()-> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+    public List<BlogPostResponse> searchBlogByTitle(String title, Pageable pageable) {
+        Slice<BlogPostResponse> slice = blogPostRepository.searchByTitle(title, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        return slice.getContent();
     }
 
     public BlogPostResponse getBlogById(int blogId) {

@@ -60,11 +60,12 @@ public class BlogPostController {
                 .build();
     }
 
-    @GetMapping("/title/{title}")
-    @Operation(summary = "Lấy blog theo title")
-    public ApiResponse<BlogPostResponse> getBlogByTitle(@PathVariable String title) {
-        return ApiResponse.<BlogPostResponse>builder()
-                .data(blogPostService.getBlogByTitle(title))
+    @GetMapping("/search")
+    @Operation(summary = "Search blog theo title")
+    public ApiResponse<List<BlogPostResponse>> searchBlogByTitle(@RequestParam String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
+        return ApiResponse.<List<BlogPostResponse>>builder()
+                .data(blogPostService.searchBlogByTitle(title, pageable))
                 .success(true)
                 .build();
     }
@@ -78,4 +79,7 @@ public class BlogPostController {
                 .success(true)
                 .build();
     }
+
+
+
 }
