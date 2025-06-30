@@ -12,5 +12,5 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CancelledAppointmentResponse {
-    double cancelledAppointment;
+    String value;
 }

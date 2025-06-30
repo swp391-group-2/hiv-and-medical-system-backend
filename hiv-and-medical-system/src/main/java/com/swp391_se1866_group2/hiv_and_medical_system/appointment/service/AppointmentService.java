@@ -1,10 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentPatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.*;
@@ -46,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +102,7 @@ public class AppointmentService {
         }
         appointment.setStatus(AppointmentStatus.SCHEDULED);
         Appointment appointmentSaved = appointmentRepository.save(appointment);
-        String appointmentCode = String.format("App%06d", appointmentSaved.getId());
+        String appointmentCode = String.format("APP%06d", appointmentSaved.getId());
         appointmentRepository.updateAppointmentCode(appointmentSaved.getId(), appointmentCode);
         appointmentSaved.setAppointmentCode(appointmentCode);
         return appointmentMapper.toAppointmentBasicResponse(appointmentSaved);
@@ -257,7 +255,7 @@ public class AppointmentService {
 
     public List<AppointmentCreationResponse> getAllAppointmentByPatientId(String patientId) {
         Patient patient = patientService.getPatientById(patientId);
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
         return appointments.stream()
                 .map(appointmentMapper::toAppointmentBasicResponse)
                 .collect(Collectors.toList());
@@ -283,7 +281,7 @@ public class AppointmentService {
 
     public List<AppointmentPatientResponse> getAllAppointmentCompletedByPatientId(String patientId) {
         Patient patient = patientService.getPatientById(patientId);
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
         List<AppointmentPatientResponse> appPatient = appointments.stream()
                 .map(appointmentMapper::toAppointmentPatientResponse)
                 .toList();
@@ -295,6 +293,58 @@ public class AppointmentService {
         });
         return response;
     }
+
+    public List<AppointmentCreationResponse> getAllAppointmentByToken() {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            return new ArrayList<AppointmentCreationResponse>();
+        }
+        return appointments.stream()
+                .map(appointmentMapper::toAppointmentBasicResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<AppointmentPatientResponse> getAllAppointmentCompletedByToken() {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            return new ArrayList<AppointmentPatientResponse>();
+        }
+        List<AppointmentPatientResponse> appPatient = appointments.stream()
+                .map(appointmentMapper::toAppointmentPatientResponse)
+                .toList();
+        List<AppointmentPatientResponse> response = new ArrayList<>();
+        appPatient.forEach(appointment -> {
+            if(appointment.getStatus().equals(AppointmentStatus.COMPLETED) && appointment.getServiceType().equals(ServiceType.CONSULTATION.name())){
+                response.add(appointment);
+            }
+        });
+        return response;
+    }
+
+//    public List<AppointmentLabSampleResponse> getAllDoctorAppointmentsByBetweenDate(LocalDate startDate, LocalDate endDate) {
+//        DoctorResponse doctorResponse = doctorService.getDoctorProfileByToken();
+//
+//        List<ScheduleAppointmentResponse> appointments = appointmentRepository.findByScheduleSlot(startDate,endDate, doctorResponse.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+//        List<Appointment> filterAppointments =  appointments.stream()
+//                .filter(appointment -> {
+//                    ScheduleSlot slot = appointment.getScheduleSlot();
+//                    if (slot == null) return false;
+//                    return !slot.getSchedule().getDoctor().getId().equals(doctorResponse.getDoctorId());
+//                })
+//                .toList();
+//        return  filterAppointments.stream()
+//                .map(appointment -> {
+//                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
+//                    if(response.getLabSampleId() != null){
+//                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
+//                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
+//                    }
+//                    return response;
+//                })
+//                .collect(Collectors.toList());
+//    }
 
 
 }

@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.common.mapper;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorCreationRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateDTORequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.request.DoctorUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
@@ -22,5 +23,8 @@ public interface DoctorMapper {
     Doctor toDoctor(DoctorCreationRequest request);
     @Mapping(source = "fullName", target = "user.fullName")
     void updateDoctor(DoctorUpdateRequest request, @MappingTarget Doctor doctor);
+
+    @Mapping(source = "fullName", target = "user.fullName")
+    void updateDoctorDTO(DoctorUpdateDTORequest request, @MappingTarget Doctor doctor);
 
 }

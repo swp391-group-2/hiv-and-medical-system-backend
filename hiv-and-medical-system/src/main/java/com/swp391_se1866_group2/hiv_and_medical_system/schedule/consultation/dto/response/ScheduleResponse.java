@@ -11,7 +11,6 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleResponse {
-    int id;
     LocalDate workDate;
     Set<ScheduleSlotResponse> scheduleSlots;
 }

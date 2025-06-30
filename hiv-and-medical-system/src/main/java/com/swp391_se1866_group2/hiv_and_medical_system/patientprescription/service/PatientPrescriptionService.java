@@ -11,6 +11,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medicat
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.repository.MedicationRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.request.PaPrescriptionCreation;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.dto.response.PaPrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patientprescription.entity.PatientPrescription;
@@ -38,6 +39,7 @@ public class PatientPrescriptionService {
     PatientPrescriptionItemService prescriptionItemService;
     AppointmentRepository appointmentRepository;
     PatientRepository patientRepository;
+    PatientService patientService;
     PrescriptionRepository prescriptionRepository;
     MedicationRepository medicationRepository;
     private final PatientPrescriptionItemRepository patientPrescriptionItemRepository;
@@ -74,9 +76,9 @@ public class PatientPrescriptionService {
     public PaPrescriptionResponse getPatientPrescriptionByPatientId (String patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
         if(appointments == null || appointments.isEmpty()){
-            throw new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED);
+            return new PaPrescriptionResponse();
         }
         List<PaPrescriptionResponse> prescriptionResponses = appointments.stream()
                 .map(appointment -> patientPrescriptionMapper.toPaPrescriptionResponse(appointment.getPatientPrescription()))
@@ -93,6 +95,29 @@ public class PatientPrescriptionService {
         return response[0];
 
     }
+
+    public PaPrescriptionResponse getPatientPrescriptionByToken () {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            return new PaPrescriptionResponse();
+        }
+        List<PaPrescriptionResponse> prescriptionResponses = appointments.stream()
+                .map(appointment -> patientPrescriptionMapper.toPaPrescriptionResponse(appointment.getPatientPrescription()))
+                .toList();
+
+        final PaPrescriptionResponse[] response = new PaPrescriptionResponse[1];
+
+        prescriptionResponses.forEach(paPrescriptionResponse -> {
+            if(paPrescriptionResponse != null){
+                response[0] = paPrescriptionResponse ;
+            }
+        });
+
+        return response[0];
+
+    }
+
 
 
 }

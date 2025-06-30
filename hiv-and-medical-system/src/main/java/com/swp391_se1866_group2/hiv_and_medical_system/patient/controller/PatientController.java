@@ -5,8 +5,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.service.AppointmentService;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultPatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.dto.response.LabResultResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.service.LabTestService;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdatePassword;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.request.PatientUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
@@ -98,16 +100,16 @@ public class PatientController {
                 .build();
     }
 
-    @GetMapping("/{patientId}/labResult")
+    @GetMapping("/{patientId}/test/res")
     @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân")
-    public ApiResponse<List<LabResultResponse>> getLabResultsByPatient(@PathVariable String patientId) {
-        return ApiResponse.<List<LabResultResponse>>builder()
+    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByPatient(@PathVariable String patientId) {
+        return ApiResponse.<List<LabResultPatientResponse>>builder()
                 .success(true)
                 .data(labTestService.getLabResultByPatientId(patientId))
                 .build();
     }
 
-    @GetMapping("/{patientId}/prescriptions/completed")
+    @GetMapping("/{patientId}/appointmentsCompleted")
     @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân")
     public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByPatient(@PathVariable String patientId) {
         return ApiResponse.<List<AppointmentPatientResponse>>builder()
@@ -116,4 +118,49 @@ public class PatientController {
                 .build();
     }
 
+
+    @GetMapping("/me/appointments")
+    @Operation(summary = "Lấy danh sách lịch đăng kí khám và xét nghiệm bằng token")
+    public ApiResponse<List<AppointmentCreationResponse>> getAppointmentsByToken() {
+        return ApiResponse.<List<AppointmentCreationResponse>>builder()
+                .success(true)
+                .data(appointmentService.getAllAppointmentByToken())
+                .build();
+    }
+
+    @GetMapping("/me/prescriptions")
+    @Operation(summary = "Lấy đơn thuốc của bệnh nhân by token")
+    public ApiResponse<PaPrescriptionResponse> getPrescriptionsByToken() {
+        return ApiResponse.<PaPrescriptionResponse>builder()
+                .success(true)
+                .data(patientPrescriptionService.getPatientPrescriptionByToken())
+                .build();
+    }
+
+    @GetMapping("/me/test/results")
+    @Operation(summary = "Lấy danh sách các kết quả xét nghiệm của bệnh nhân bằng token")
+    public ApiResponse<List<LabResultPatientResponse>> getLabResultsByToken() {
+        return ApiResponse.<List<LabResultPatientResponse>>builder()
+                .success(true)
+                .data(labTestService.getLabResultByToken())
+                .build();
+    }
+
+    @GetMapping("/me/appointmentsCompleted")
+    @Operation(summary = "Lấy danh sách các đơn thuốc của bệnh nhân bằng token")
+    public ApiResponse<List<AppointmentPatientResponse>> getPrescriptionsCompletedByToken() {
+        return ApiResponse.<List<AppointmentPatientResponse>>builder()
+                .success(true)
+                .data(appointmentService.getAllAppointmentCompletedByToken())
+                .build();
+    }
+
+    @PutMapping("/me/changePassword")
+    @Operation(summary = "Đổi mật khẩu của bệnh nhân bằng ")
+    public ApiResponse<Boolean> changePassword(@RequestBody @Valid PatientUpdatePassword request) {
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(patientService.changePatientPassword(request))
+                .build();
+    }
 }

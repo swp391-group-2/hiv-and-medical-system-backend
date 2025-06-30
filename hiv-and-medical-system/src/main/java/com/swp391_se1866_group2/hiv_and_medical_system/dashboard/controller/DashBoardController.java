@@ -24,10 +24,10 @@ public class DashBoardController {
     DashBoardService dashBoardService;
 
     @GetMapping("/stats")
-    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate milestone){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
-                .data(dashBoardService.getAllStats(startDate, endDate, LocalDate.now()))
+                .data(dashBoardService.getAllStats(milestone))
                 .build();
 
     }
@@ -67,6 +67,15 @@ public class DashBoardController {
                 .build();
 
     }
+
+    @GetMapping("/service-type-stats")
+    public ApiResponse <List<ServiceAppointmentStats>> getAllServiceAppointmentStats(){
+        return ApiResponse.<List<ServiceAppointmentStats>>builder()
+                .success(true)
+                .data(dashBoardService.getAllServiceAppointmentStats())
+                .build();
+    }
+
 
 
 }
