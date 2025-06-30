@@ -296,7 +296,10 @@ public class AppointmentService {
 
     public List<AppointmentCreationResponse> getAllAppointmentByToken() {
         Patient patient = patientService.getPatientResponseByToken();
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            return new ArrayList<AppointmentCreationResponse>();
+        }
         return appointments.stream()
                 .map(appointmentMapper::toAppointmentBasicResponse)
                 .collect(Collectors.toList());
@@ -304,7 +307,10 @@ public class AppointmentService {
 
     public List<AppointmentPatientResponse> getAllAppointmentCompletedByToken() {
         Patient patient = patientService.getPatientResponseByToken();
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
+        if(appointments == null || appointments.isEmpty()){
+            return new ArrayList<AppointmentPatientResponse>();
+        }
         List<AppointmentPatientResponse> appPatient = appointments.stream()
                 .map(appointmentMapper::toAppointmentPatientResponse)
                 .toList();
