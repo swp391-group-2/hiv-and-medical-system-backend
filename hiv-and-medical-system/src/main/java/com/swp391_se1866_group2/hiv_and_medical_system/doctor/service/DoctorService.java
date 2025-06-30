@@ -83,6 +83,13 @@ public class DoctorService {
         return doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
+    public Doctor getDoctorResponseByEmail(String email) {
+        DoctorResponse doctorResponse = doctorRepository.findDoctorByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+        return doctorRepository.findById(doctorResponse.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+
+    }
+
+
     public Doctor getDoctorEntityByEmail(String email){
         return doctorRepository.findDoctorEntityByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }

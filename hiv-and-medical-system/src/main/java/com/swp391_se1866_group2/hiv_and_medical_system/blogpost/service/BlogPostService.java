@@ -9,6 +9,9 @@ import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.repository.BlogP
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.BlogPostMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository.DoctorRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class BlogPostService {
     BlogPostMapper blogPostMapper;
     BlogPostRepository blogPostRepository;
     ImageService imageService;
+    DoctorService doctorService;
 
     public BlogPostResponse createBlog(BlogPostCreationRequest request, MultipartFile image) {
         if(blogPostRepository.existsByTitle(request.getTitle())){
@@ -37,6 +41,9 @@ public class BlogPostService {
         }
 
         BlogPost blogPost = blogPostMapper.toBlogPost(request);
+        Doctor doctor = doctorService.getDoctorById(request.getDoctorId());
+        blogPost.setDoctor(doctor);
+
         if(image != null){
             blogPost = imageService.saveBlogPostImage(image ,blogPost);
         }
@@ -56,11 +63,14 @@ public class BlogPostService {
     }
 
     public List<BlogPostResponse> getAllBlogsByDoctorId(Pageable pageable, String doctorId){
-        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getAllBlogPostsByDoctorId(doctorId, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getBlogsByDoctorId(doctorId, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+
         return slicedBlog.getContent();
+
     }
 
-    public BlogPostResponse getBlogById(int blogId) {
+
+        public BlogPostResponse getBlogById(int blogId) {
         return  blogPostRepository.searchById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
     }

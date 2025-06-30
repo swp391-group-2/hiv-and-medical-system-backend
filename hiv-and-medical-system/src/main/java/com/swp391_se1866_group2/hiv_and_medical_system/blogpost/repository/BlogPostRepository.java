@@ -15,20 +15,18 @@ import java.util.Optional;
 public interface BlogPostRepository extends JpaRepository<BlogPost, Integer> {
     boolean existsByTitle(String title);
 
-    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url) FROM BlogPost b JOIN b.image img WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')) AND img.isActive= true AND img.blogPost.id = b.id")
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url, b.doctor.id) FROM BlogPost b JOIN b.image img WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')) AND img.isActive= true AND img.blogPost.id = b.id")
     Optional<Slice<BlogPostResponse>> searchByTitle(@Param("title") String title, Pageable pageable);
 
     @Query("""
         SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(
-            b.id, b.author, b.title, b.snippet, b.content, b.createdAt, (SELECT i.url FROM Image i WHERE i.blogPost.id = b.id AND i.isActive = true)) FROM BlogPost b""")
+            b.id, b.author, b.title, b.snippet, b.content, b.createdAt, (SELECT i.url FROM Image i WHERE i.blogPost.id = b.id AND i.isActive = true), b.doctor.id) FROM BlogPost b""")
     Optional<Slice<BlogPostResponse>> getAllBlogPosts(Pageable pageable);
 
-    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url) FROM BlogPost b JOIN b.image img WHERE b.id = :id AND img.isActive= true AND img.blogPost.id = b.id")
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url, b.doctor.id) FROM BlogPost b JOIN b.image img WHERE b.id = :id AND img.isActive= true AND img.blogPost.id = b.id")
     Optional<BlogPostResponse> searchById(@Param("id") int id);
 
-    @Query("""
-        SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(
-            b.id, b.author, b.title, b.snippet, b.content, b.createdAt, (SELECT i.url FROM Image i WHERE i.blogPost.id = b.id AND i.isActive = true)) FROM BlogPost b WHERE b.doctor.id = :doctorId""")
-    Optional<Slice<BlogPostResponse>> getAllBlogPostsByDoctorId(@Param("doctorId") String doctorId, Pageable pageable);
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url, b.doctor.id) FROM BlogPost b JOIN b.image img WHERE b.doctor.id = :doctorId AND img.isActive= true AND img.blogPost.id = b.id")
+    Optional<Slice<BlogPostResponse>> getBlogsByDoctorId(@Param("doctorId") String doctorId, Pageable pageable);
 
 }

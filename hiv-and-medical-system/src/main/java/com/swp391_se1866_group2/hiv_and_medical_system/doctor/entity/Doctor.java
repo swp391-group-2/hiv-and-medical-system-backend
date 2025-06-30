@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity.BlogPost;
 import com.swp391_se1866_group2.hiv_and_medical_system.comment.entity.Comment;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
@@ -40,4 +41,7 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comment> comments;
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BlogPost> blogPosts;
 }
