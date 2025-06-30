@@ -60,6 +60,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.ScheduleAppointmentResponse(d.workDate, a.status, a.patient.user.fullName, s) FROM Appointment a LEFT JOIN a.scheduleSlot s LEFT JOIN s.schedule d WHERE (d.workDate between :startDate and :endDate) and d.doctor.id = :doctorId ")
     Optional<List<ScheduleAppointmentResponse>>findByScheduleSlot (@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,@Param("doctorId") String doctorId);
 
+    @Query("SELECT a FROM Appointment a JOIN FETCH a.patient p WHERE a.patient = :patient ")
+    List<Appointment> findAppointmentByPatient(@Param("patient") Patient patient);
 
 
 }

@@ -167,9 +167,9 @@ public class LabTestService {
 
     public List<LabResultPatientResponse> getLabResultByToken(){
         Patient patient = patientService.getPatientResponseByToken();
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+        List<Appointment> appointments = appointmentRepository.findAppointmentByPatient(patient);
         if(appointments == null || appointments.isEmpty()) {
-            return null;
+            return new ArrayList<LabResultPatientResponse>();
         }
         List<LabResultPatientResponse> labResults = new ArrayList<>();
         appointments.forEach(appointment -> {
