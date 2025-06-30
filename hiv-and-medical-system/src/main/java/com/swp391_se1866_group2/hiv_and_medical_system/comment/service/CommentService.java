@@ -58,7 +58,11 @@ public class CommentService {
 
     public List<CommentResponse> getAllComments() {
         return commentRepository.findAll().stream()
-                .map(commentMapper::toCommentResponse)
+                .map(comment -> {
+                    CommentResponse commentResponse = commentMapper.toCommentResponse(comment);
+                    commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(comment.getDoctor().getId()));
+                    return commentResponse;
+                })
                 .collect(Collectors.toList());
     }
 
