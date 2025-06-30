@@ -55,6 +55,11 @@ public class BlogPostService {
         return slicedBlog.getContent();
     }
 
+    public List<BlogPostResponse> getAllBlogsByDoctorId(Pageable pageable, String doctorId){
+        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getAllBlogPostsByDoctorId(doctorId, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        return slicedBlog.getContent();
+    }
+
     public BlogPostResponse getBlogById(int blogId) {
         return  blogPostRepository.searchById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
@@ -70,4 +75,6 @@ public class BlogPostService {
         }
         return blogPostMapper.toBlogPostResponse(blogPostRepository.save(blogPost));
     }
+
+
 }
