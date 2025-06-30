@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class AnonymousPostResponse {
     int age;
     String title;
     String content;
-    LocalDate createdAt;
+    LocalDateTime createdAt;
     String patientId;
     List<CommentResponse> comments;
 }

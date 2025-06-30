@@ -16,5 +16,6 @@ public interface DoctorWorkScheduleRepository extends JpaRepository<DoctorWorkSc
     List<DoctorWorkSchedule> findAllByDoctorId(String doctorId);
     List<DoctorWorkSchedule> findAllByWorkDateBetweenAndDoctorId(LocalDate start, LocalDate end, String doctorId);
     Optional<DoctorWorkSchedule> findByWorkDate(LocalDate workDate);
+    DoctorWorkSchedule findByWorkDateAndDoctorId(LocalDate workDate, String doctorId);
 
 }

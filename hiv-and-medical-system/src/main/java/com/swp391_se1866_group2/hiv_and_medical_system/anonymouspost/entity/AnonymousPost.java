@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -39,10 +40,10 @@ public class AnonymousPost {
     String content;
 
     @CreationTimestamp
-    LocalDate createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-    LocalDate updatedAt;
+    LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)

@@ -51,7 +51,9 @@ public class CommentService {
             comment.setPatient(patient);
         }
 
-        return commentMapper.toCommentResponse(commentRepository.save(comment));
+        CommentResponse commentResponse = commentMapper.toCommentResponse(commentRepository.save(comment));
+        commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(request.getDoctorId()));
+        return commentResponse;
     }
 
     public List<CommentResponse> getAllComments() {

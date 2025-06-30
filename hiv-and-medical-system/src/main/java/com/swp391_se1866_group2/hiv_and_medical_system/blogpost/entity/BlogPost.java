@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
@@ -46,6 +47,7 @@ public class BlogPost {
     List<Image> image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id", nullable = false)
+    @JoinColumn(name = "doctor_id")
+    @JsonIgnore
     Doctor doctor;
 }

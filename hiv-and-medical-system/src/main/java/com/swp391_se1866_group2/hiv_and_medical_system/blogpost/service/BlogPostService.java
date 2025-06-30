@@ -53,17 +53,17 @@ public class BlogPostService {
     public List<BlogPostResponse> getAllBlogs(Pageable pageable, String title){
         Slice<BlogPostResponse> slicedBlog;
         if (title == null){
-            slicedBlog = blogPostRepository.getAllBlogPosts(pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+            slicedBlog = blogPostRepository.getAllBlogPosts(pageable).get();
         }
         else {
-            slicedBlog = blogPostRepository.searchByTitle(title, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+            slicedBlog = blogPostRepository.searchByTitle(title, pageable).get();
         }
 
         return slicedBlog.getContent();
     }
 
     public List<BlogPostResponse> getAllBlogsByDoctorId(Pageable pageable, String doctorId){
-        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getBlogsByDoctorId(doctorId, pageable).orElseThrow(() -> new AppException(ErrorCode.BLOG_POST_NOT_EXISTED));
+        Slice<BlogPostResponse> slicedBlog = blogPostRepository.getBlogsByDoctorId(doctorId, pageable).get();
 
         return slicedBlog.getContent();
 

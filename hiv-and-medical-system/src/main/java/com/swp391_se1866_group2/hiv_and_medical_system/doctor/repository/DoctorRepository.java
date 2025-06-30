@@ -59,4 +59,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
 
     long countAllByUserStatus(String status);
 
+    @Query("""
+        SELECT i.url FROM Image i WHERE i.doctor.id = :doctorId AND i.isActive = true
+""")
+    String getDocImageUrlByDoctorId(@Param("doctorId") String doctorId);
+
 }

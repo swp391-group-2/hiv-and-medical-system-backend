@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,7 +26,7 @@ public class Comment {
     String content;
 
     @CreationTimestamp
-    LocalDate createdAt;
+    LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "anonymous_post_id", nullable = false)
