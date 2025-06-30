@@ -21,4 +21,6 @@ public class BlogPostResponse {
     String content;
     LocalDate createdAt;
     String urlImage;
+    String doctorId;
+
 }

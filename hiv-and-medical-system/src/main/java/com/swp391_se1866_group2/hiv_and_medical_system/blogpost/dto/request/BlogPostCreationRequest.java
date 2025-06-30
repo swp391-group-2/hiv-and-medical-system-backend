@@ -16,4 +16,6 @@ public class BlogPostCreationRequest {
     String title;
     String content;
     String snippet;
+    String doctorId;
+
 }

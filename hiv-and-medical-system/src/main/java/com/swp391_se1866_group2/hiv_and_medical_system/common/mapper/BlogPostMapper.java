@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface BlogPostMapper {
     @Mapping(source = "id", target = "blogId")
+    @Mapping(source = "doctor.id", target = "doctorId")
     BlogPostResponse toBlogPostResponse(BlogPost blogPost);
     BlogPost toBlogPost(BlogPostCreationRequest blogPostRequest);
 
