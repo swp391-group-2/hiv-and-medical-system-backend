@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.blogpost.entity;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import jakarta.persistence.*;
@@ -44,4 +45,7 @@ public class BlogPost {
     @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Image> image;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    Doctor doctor;
 }

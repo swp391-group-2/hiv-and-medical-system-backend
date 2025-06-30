@@ -51,6 +51,16 @@ public class BlogPostController {
                 .build();
     }
 
+    @GetMapping("/doctor/{doctorId}")
+    @Operation(summary = "Lấy blog theo doctor id")
+    public ApiResponse<List<BlogPostResponse>> getAllBlogsByDoctorId(@PathVariable String doctorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
+        return ApiResponse.<List<BlogPostResponse>>builder()
+                .data(blogPostService.getAllBlogsByDoctorId(pageable, doctorId))
+                .success(true)
+                .build();
+    }
+
     @GetMapping("/{blogId}")
     @Operation(summary = "Lấy blog theo id")
     public ApiResponse<BlogPostResponse> getBlogById(@PathVariable int blogId) {

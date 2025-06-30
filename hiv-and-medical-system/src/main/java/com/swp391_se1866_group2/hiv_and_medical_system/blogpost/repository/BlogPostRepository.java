@@ -26,4 +26,9 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Integer> {
     @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(b.id,  b.author, b.title, b.snippet, b.content, b.createdAt,img.url) FROM BlogPost b JOIN b.image img WHERE b.id = :id AND img.isActive= true AND img.blogPost.id = b.id")
     Optional<BlogPostResponse> searchById(@Param("id") int id);
 
+    @Query("""
+        SELECT new com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.response.BlogPostResponse(
+            b.id, b.author, b.title, b.snippet, b.content, b.createdAt, (SELECT i.url FROM Image i WHERE i.blogPost.id = b.id AND i.isActive = true)) FROM BlogPost b WHERE b.doctor.id = :doctorId""")
+    Optional<Slice<BlogPostResponse>> getAllBlogPostsByDoctorId(@Param("doctorId") String doctorId, Pageable pageable);
+
 }
