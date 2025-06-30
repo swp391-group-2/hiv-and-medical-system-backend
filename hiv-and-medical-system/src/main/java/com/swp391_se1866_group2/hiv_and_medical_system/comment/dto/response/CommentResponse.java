@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,6 +20,6 @@ public class CommentResponse {
     String doctorId;
     String patientId;
     String content;
-    LocalDate createdAt;
-
+    LocalDateTime createdAt;
+    String doctorImageUrl;
 }

@@ -184,5 +184,27 @@ public class DoctorWorkScheduleService {
     }
 
 
+    public DoctorWorkScheduleResponse generateDoctorSchedule (String doctorId , ScheduleCreationRequest request) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
+            throw new AppException(ErrorCode.WORK_DATE_EXISTED);
+        }
+        DoctorWorkSchedule schedule = new DoctorWorkSchedule();
+        schedule.setDoctor(doctor);
+        schedule.setWorkDate(request.getWorkDate());
+        List<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
+                .map(slotId -> {
+                    ScheduleSlot scheduleSlot = new ScheduleSlot();
+                    scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                    scheduleSlot.setSchedule(schedule);
+                    return scheduleSlot;
+                })
+                .collect(Collectors.toList());
+        schedule.setScheduleSlots(scheduleSlots);
+        DoctorWorkSchedule doctorWorkSchedule = doctorWorkScheduleRepository.save(schedule);
+        return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
+    }
+
+
 
 }

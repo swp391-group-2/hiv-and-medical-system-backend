@@ -139,4 +139,8 @@ public class DoctorService {
 
     }
 
+    public String getDoctorImageUrl (String doctorId){
+        return doctorRepository.getDocImageUrlByDoctorId(doctorId);
+    }
+
 }
