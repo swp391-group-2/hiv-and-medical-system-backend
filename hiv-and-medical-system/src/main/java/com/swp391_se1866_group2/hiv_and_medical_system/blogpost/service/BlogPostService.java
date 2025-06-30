@@ -9,11 +9,15 @@ import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.repository.BlogP
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.BlogPostMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.repository.DoctorRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.service.ImageService;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.repository.UserRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
@@ -34,14 +38,19 @@ public class BlogPostService {
     BlogPostRepository blogPostRepository;
     ImageService imageService;
     DoctorService doctorService;
+    UserRepository userRepository;
+    DoctorRepository doctorRepository;
 
     public BlogPostResponse createBlog(BlogPostCreationRequest request, MultipartFile image) {
         if(blogPostRepository.existsByTitle(request.getTitle())){
             throw new AppException(ErrorCode.BLOG_POST_EXISTED);
         }
 
+        User user = userRepository.findById(request.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
         BlogPost blogPost = blogPostMapper.toBlogPost(request);
-        Doctor doctor = doctorService.getDoctorById(request.getDoctorId());
+        DoctorResponse doctorResponse = doctorService.getDoctorByEmail(user.getEmail());
+        Doctor doctor = doctorRepository.findById(doctorResponse.getDoctorId()).get();
         blogPost.setDoctor(doctor);
 
         if(image != null){
