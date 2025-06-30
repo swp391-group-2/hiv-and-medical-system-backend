@@ -21,4 +21,6 @@ public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Inte
     @Query("SELECT sch FROM ScheduleSlot sch JOIN sch.slot sl WHERE sl.id = :slotId AND sch.status = 'AVAILABLE' ")
     Page<ScheduleSlot> chooseDoctorBySlotId(@Param("slotId") int slotId, Pageable pageable);
 
+//    @Query("SELECT ")
+//    ScheduleSlot getScheduleSlotByDoctorIdAndSlotId(@Param("doctorId") int doctorId, @Param("slotId") int slotId);
 }
