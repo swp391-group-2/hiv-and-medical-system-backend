@@ -7,6 +7,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.repository.
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AnonymousPostMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ public class AnonymousPostService {
     AnonymousPostRepository anonymousPostRepository;
     AnonymousPostMapper anonymousPostMapper;
     PatientService patientService;
+    DoctorService doctorService;
     PatientRepository patientRepository;
 
     public AnonymousPostResponse createAnonymousPost(AnonymousPostCreationRequest request){
@@ -42,9 +45,18 @@ public class AnonymousPostService {
     }
 
     public List<AnonymousPostResponse> getAllAnonymousPosts() {
-        return anonymousPostRepository.findAll().stream()
-                .map(anonymousPostMapper::toAnonymousPostResponse)
-                .collect(Collectors.toList());
+        List<AnonymousPostResponse> anonymousPostResponseList = new ArrayList<>();
+        anonymousPostRepository.findAll().forEach(anonymousPost -> {
+
+            AnonymousPostResponse anonymousPostResponse = anonymousPostMapper.toAnonymousPostResponse(anonymousPost);
+            anonymousPostResponse.getComments().forEach(commentResponse -> {
+                commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
+            });
+
+            anonymousPostResponseList.add(anonymousPostResponse);
+        });
+
+        return anonymousPostResponseList;
     }
 
 
