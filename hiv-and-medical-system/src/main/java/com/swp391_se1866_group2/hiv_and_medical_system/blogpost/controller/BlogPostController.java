@@ -47,7 +47,7 @@ public class BlogPostController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
         return ApiResponse.<List<BlogPostResponse>>builder()
                 .success(true)
-                .data(blogPostService.getAllBlogs(pageable, title))
+                .data(blogPostService.getAllBlogs(pageable, title.trim()))
                 .build();
     }
 
