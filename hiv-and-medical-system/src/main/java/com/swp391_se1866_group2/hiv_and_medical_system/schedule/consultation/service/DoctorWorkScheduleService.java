@@ -12,6 +12,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.DoctorWorkSchedule;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.service.SlotService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DoctorWorkScheduleService {
     DoctorWorkScheduleRepository doctorWorkScheduleRepository;
-
+    ScheduleSlotRepository scheduleSlotRepository;
     SlotService slotService;
     DoctorService doctorService;
     ScheduleMapper scheduleMapper;
@@ -184,20 +185,27 @@ public class DoctorWorkScheduleService {
     }
 
 
-    public DoctorWorkScheduleResponse generateDoctorSchedule (String doctorId , ScheduleCreationRequest request) {
+    public DoctorWorkScheduleResponse generateDoctorScheduleCustom (String doctorId , ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
-        if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
-            throw new AppException(ErrorCode.WORK_DATE_EXISTED);
-        }
         DoctorWorkSchedule schedule = new DoctorWorkSchedule();
+        if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
+            schedule = doctorWorkScheduleRepository.findByWorkDateAndDoctorId(request.getWorkDate(), doctorId);
+        }
         schedule.setDoctor(doctor);
         schedule.setWorkDate(request.getWorkDate());
+        DoctorWorkSchedule finalSchedule = schedule;
         List<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
                 .map(slotId -> {
-                    ScheduleSlot scheduleSlot = new ScheduleSlot();
-                    scheduleSlot.setSlot(slotService.getSlotById(slotId));
-                    scheduleSlot.setSchedule(schedule);
-                    return scheduleSlot;
+                    ScheduleSlot scheduleSlot = scheduleSlotRepository.findScheduleSlotBySlotIdAndDoctorWorkScheduleId(slotId, finalSchedule.getId());
+                    if(scheduleSlot != null){
+                        return scheduleSlot;
+
+                    }else{
+                        scheduleSlot = new ScheduleSlot();
+                        scheduleSlot.setSlot(slotService.getSlotById(slotId));
+                        scheduleSlot.setSchedule(finalSchedule);
+                        return scheduleSlot;
+                    }
                 })
                 .collect(Collectors.toList());
         schedule.setScheduleSlots(scheduleSlots);
