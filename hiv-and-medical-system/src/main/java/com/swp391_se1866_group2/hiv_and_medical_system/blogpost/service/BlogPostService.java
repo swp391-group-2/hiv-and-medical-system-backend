@@ -45,12 +45,8 @@ public class BlogPostService {
         if(blogPostRepository.existsByTitle(request.getTitle())){
             throw new AppException(ErrorCode.BLOG_POST_EXISTED);
         }
-
-        User user = userRepository.findById(request.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         BlogPost blogPost = blogPostMapper.toBlogPost(request);
-        DoctorResponse doctorResponse = doctorService.getDoctorByEmail(user.getEmail());
-        Doctor doctor = doctorRepository.findById(doctorResponse.getDoctorId()).get();
+        Doctor doctor = doctorRepository.findById(request.getDoctorId()).get();
         blogPost.setDoctor(doctor);
 
         if(image != null){
