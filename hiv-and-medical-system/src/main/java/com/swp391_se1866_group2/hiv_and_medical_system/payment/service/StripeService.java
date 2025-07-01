@@ -59,7 +59,7 @@ public class StripeService {
         }
         LabTestSlot labTestSlot = labTestSlotRepo.findByLabTestSlotId(request.getLabTestSlotId());
         if(service.getServiceType().equals(ServiceType.CONSULTATION) && scheduleSlot == null && labTestSlot != null){
-            Page<ScheduleSlot> scheduleSlotTmp = scheduleSlotRepo.chooseDoctorBySlotId(labTestSlot.getSlot().getId(), PageRequest.of(0,1));
+            Page<ScheduleSlot> scheduleSlotTmp = scheduleSlotRepo.chooseDoctorBySlotId(labTestSlot.getSlot().getId(), labTestSlot.getDate() , PageRequest.of(0,1));
             if(scheduleSlotTmp.getContent().getFirst() == null){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
