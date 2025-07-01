@@ -53,7 +53,7 @@ public class BlogPostController {
 
     @GetMapping("/doctor")
     @Operation(summary = "Lấy danh sách blog theo doctor id")
-    public ApiResponse<List<BlogPostResponse>> getAllBlogsByDoctorId(@RequestParam String doctorId,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+    public ApiResponse<List<BlogPostResponse>> getAllBlogsByDoctorId(@PathVariable String doctorId,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("b.title"));
         return ApiResponse.<List<BlogPostResponse>>builder()
                 .success(true)
