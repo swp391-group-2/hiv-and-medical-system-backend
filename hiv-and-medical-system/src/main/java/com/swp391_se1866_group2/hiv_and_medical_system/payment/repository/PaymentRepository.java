@@ -16,7 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.status = 'PAID'")
     long getTotalRevenue();
 
-    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.status = 'PAID' AND DATE(p.succeededAt) <= :milestone")
-    long getRevenue(@Param("milestone") LocalDate milestone);
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.status = 'PAID' AND DATE(p.succeededAt) BETWEEN :startDate AND :endDate")
+    long getRevenue(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 }

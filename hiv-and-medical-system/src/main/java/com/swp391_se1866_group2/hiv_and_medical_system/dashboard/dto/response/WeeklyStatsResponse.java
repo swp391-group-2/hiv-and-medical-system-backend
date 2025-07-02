@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class StatsResponse {
-    String title;
-    String value;
-    String change;
-    boolean isGrowing;
-
+public class WeeklyStatsResponse {
+    String weekRange;
+    List<StatsResponse> stats;
 }
