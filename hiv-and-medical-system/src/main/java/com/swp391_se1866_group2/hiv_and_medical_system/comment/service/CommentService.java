@@ -13,9 +13,13 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.service.AuthenticationService;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,14 +60,9 @@ public class CommentService {
         return commentResponse;
     }
 
-    public List<CommentResponse> getAllComments() {
-        return commentRepository.findAll().stream()
-                .map(comment -> {
-                    CommentResponse commentResponse = commentMapper.toCommentResponse(comment);
-                    commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(comment.getDoctor().getId()));
-                    return commentResponse;
-                })
-                .collect(Collectors.toList());
+    public List<CommentResponse> getAllComments(int anonymousPostId, Pageable pageable) {
+        Slice<CommentResponse> slice = commentRepository.getAllComments(anonymousPostId,pageable).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
+        return slice.getContent();
     }
 
 }

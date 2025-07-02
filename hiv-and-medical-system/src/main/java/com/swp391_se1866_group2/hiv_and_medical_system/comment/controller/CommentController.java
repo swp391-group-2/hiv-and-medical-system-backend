@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +30,21 @@ public class CommentController {
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse<List<CommentResponse>> getAllComments() {
+    @GetMapping("/{anonymousPostId}/createdAt")
+    public ApiResponse<List<CommentResponse>> getAllCommentsByDate(@PathVariable int anonymousPostId ,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return ApiResponse.<List<CommentResponse>>builder()
                 .success(true)
-                .data(commentService.getAllComments())
+                .data(commentService.getAllComments(anonymousPostId,pageable))
+                .build();
+    }
+
+    @GetMapping("/{anonymousPostId}/content")
+    public ApiResponse<List<CommentResponse>> getAllCommentsByContent(@PathVariable int anonymousPostId,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("content"));
+        return ApiResponse.<List<CommentResponse>>builder()
+                .success(true)
+                .data(commentService.getAllComments(anonymousPostId,pageable))
                 .build();
     }
 }
