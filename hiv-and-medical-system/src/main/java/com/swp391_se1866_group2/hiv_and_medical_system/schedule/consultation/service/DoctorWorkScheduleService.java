@@ -22,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -102,14 +100,19 @@ public class DoctorWorkScheduleService {
         ScheduleDTOResponse scheduleDTOResponse = scheduleMapper.toScheduleDTOResponse(scheduleResponse);
 
         if(scheduleDTOResponse != null){
-            ScheduleDTOResponse finalScheduleDTOResponse = scheduleDTOResponse;
             scheduleDTOResponse.getScheduleSlots().forEach(
                     scheduleSlotDateResponse -> {
                         if(scheduleSlotDateResponse != null) {
-                            scheduleSlotDateResponse.setDate(finalScheduleDTOResponse.getWorkDate());
+                            scheduleSlotDateResponse.setDate(scheduleDTOResponse.getWorkDate());
                         }
                     }
             );
+            List<ScheduleSlotDateResponse> scheduleSlots = scheduleDTOResponse.getScheduleSlots()
+                    .stream()
+                    .sorted(Comparator.comparing(scheduleSlotDateResponse -> scheduleSlotDateResponse.getSlot().getSlotNumber()))
+                    .toList();
+            scheduleDTOResponse.setScheduleSlots(new LinkedHashSet<>(scheduleSlots));
+            System.out.println(scheduleDTOResponse.getScheduleSlots());
         }else {
             ScheduleDTOResponse scheduleDTOResponseTmp = new ScheduleDTOResponse();
             scheduleDTOResponseTmp.setWorkDate(workDate);
@@ -154,9 +157,13 @@ public class DoctorWorkScheduleService {
             isEqualDate.set(false);
             listDWSchedule.forEach(schedule -> {
                 if(schedule.getWorkDate().equals(finalDateTmp)){
+                    List<ScheduleSlot> sortedSchedule = schedule.getScheduleSlots().stream().sorted(Comparator.comparing(ScheduleSlot::getId)).toList();
+                    schedule.getScheduleSlots().clear();
+                    schedule.getScheduleSlots().addAll(sortedSchedule);
                     scheduleResponseList.add(scheduleMapper.toScheduleResponse(schedule));
                     isEqualDate.set(true);
                 }
+
             });
             if(!isEqualDate.get()) {
                 ScheduleResponse scheduleResponse = new ScheduleResponse();
@@ -177,7 +184,7 @@ public class DoctorWorkScheduleService {
         if(request!= null){
             request.forEach(scheduleCreationRequest -> {
                 if(scheduleCreationRequest.getSlotId() != null && !scheduleCreationRequest.getSlotId().isEmpty()){
-                    doctorWorkScheduleResponses.add(createDoctorSchedule(doctorId, scheduleCreationRequest));
+                    doctorWorkScheduleResponses.add(generateDoctorScheduleCustom(doctorId, scheduleCreationRequest));
                 }
             });
         }
@@ -187,12 +194,13 @@ public class DoctorWorkScheduleService {
 
     public DoctorWorkScheduleResponse generateDoctorScheduleCustom (String doctorId , ScheduleCreationRequest request) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
-        DoctorWorkSchedule schedule = new DoctorWorkSchedule();
-        if(doctorWorkScheduleRepository.existsByWorkDateAndDoctorId(request.getWorkDate(), doctorId)){
-            schedule = doctorWorkScheduleRepository.findByWorkDateAndDoctorId(request.getWorkDate(), doctorId);
+        DoctorWorkSchedule schedule = doctorWorkScheduleRepository.findByWorkDateAndDoctorId(request.getWorkDate(), doctorId);
+        if(schedule == null){
+            schedule = new DoctorWorkSchedule();
+            schedule.setDoctor(doctor);
+            schedule.setWorkDate(request.getWorkDate());
+            schedule = doctorWorkScheduleRepository.save(schedule);
         }
-        schedule.setDoctor(doctor);
-        schedule.setWorkDate(request.getWorkDate());
         DoctorWorkSchedule finalSchedule = schedule;
         List<ScheduleSlot> scheduleSlots = request.getSlotId().stream()
                 .map(slotId -> {
@@ -204,11 +212,11 @@ public class DoctorWorkScheduleService {
                         scheduleSlot = new ScheduleSlot();
                         scheduleSlot.setSlot(slotService.getSlotById(slotId));
                         scheduleSlot.setSchedule(finalSchedule);
+                        finalSchedule.getScheduleSlots().add(scheduleSlot);
                         return scheduleSlot;
                     }
                 })
-                .collect(Collectors.toList());
-        schedule.setScheduleSlots(scheduleSlots);
+                .toList();
         DoctorWorkSchedule doctorWorkSchedule = doctorWorkScheduleRepository.save(schedule);
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
     }

@@ -20,6 +20,6 @@ public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Inte
     @Query("SELECT sch FROM ScheduleSlot sch JOIN sch.slot sl WHERE sl.id = :slotId AND sch.status = 'AVAILABLE' AND sch.schedule.workDate = :workDate ")
     Page<ScheduleSlot> chooseDoctorBySlotId(@Param("slotId") int slotId, @Param("workDate")LocalDate workDate, Pageable pageable);
 
-    @Query("SELECT ScheduleSlot from ScheduleSlot ss JOIN ss.schedule s JOIN ss.slot sl WHERE s.id = :doctorWorkScheduleId AND sl.id = :slotId ")
+    @Query("SELECT ss from ScheduleSlot ss JOIN ss.schedule s JOIN ss.slot sl WHERE s.id = :doctorWorkScheduleId AND sl.id = :slotId ")
     ScheduleSlot findScheduleSlotBySlotIdAndDoctorWorkScheduleId(@Param("slotId") int slotId, @Param("doctorWorkScheduleId") int doctorWorkScheduleId);
 }
