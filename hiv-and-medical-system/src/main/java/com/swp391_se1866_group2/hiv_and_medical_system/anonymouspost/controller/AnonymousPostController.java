@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +31,16 @@ public class AnonymousPostController {
     }
 
     @GetMapping
-    public ApiResponse<List<AnonymousPostResponse>> getAllAnonymousPosts() {
+    public ApiResponse<List<AnonymousPostResponse>> getAllAnonymousPosts(@RequestParam(name = "title", defaultValue = "") String title, @RequestParam(defaultValue = "desc") String sortOrder, @RequestParam(name = "sortBy", defaultValue = "created_at") String sortBy , @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable;
+        if(sortOrder.equalsIgnoreCase("desc")){
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        }else{
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        }
         return ApiResponse.<List<AnonymousPostResponse>>builder()
                 .success(true)
-                .data(anonymousPostService.getAllAnonymousPosts())
+                .data(anonymousPostService.getAllAnonymousPosts(pageable, title))
                 .build();
     }
 

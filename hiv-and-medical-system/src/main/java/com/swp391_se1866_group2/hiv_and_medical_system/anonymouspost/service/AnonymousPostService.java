@@ -15,6 +15,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientSe
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +45,10 @@ public class AnonymousPostService {
         return anonymousPostRepository.findById(anonymousPostId).orElseThrow(() -> new AppException(ErrorCode.ANONYMOUS_POST_NOT_EXISTED));
     }
 
-    public List<AnonymousPostResponse> getAllAnonymousPosts() {
+    public List<AnonymousPostResponse> getAllAnonymousPosts(Pageable pageable, String title) {
+        title = '%' + title.trim() + '%';
         List<AnonymousPostResponse> anonymousPostResponseList = new ArrayList<>();
-        anonymousPostRepository.findAll().forEach(anonymousPost -> {
+        anonymousPostRepository.getAll(pageable, title).forEach(anonymousPost -> {
 
             AnonymousPostResponse anonymousPostResponse = anonymousPostMapper.toAnonymousPostResponse(anonymousPost);
             anonymousPostResponse.getComments().forEach(commentResponse -> {
