@@ -18,6 +18,7 @@ public class CommentResponse {
     int commentId;
     int anonymousPostId;
     String doctorId;
+    String doctorName;
     String patientId;
     String content;
     LocalDateTime createdAt;
