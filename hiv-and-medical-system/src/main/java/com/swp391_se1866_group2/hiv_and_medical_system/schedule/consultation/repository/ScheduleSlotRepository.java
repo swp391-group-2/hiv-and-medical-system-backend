@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Integer> {
     ScheduleSlot findScheduleSlotById(int id);
@@ -22,4 +24,8 @@ public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Inte
 
     @Query("SELECT ss from ScheduleSlot ss JOIN ss.schedule s JOIN ss.slot sl WHERE s.id = :doctorWorkScheduleId AND sl.id = :slotId ")
     ScheduleSlot findScheduleSlotBySlotIdAndDoctorWorkScheduleId(@Param("slotId") int slotId, @Param("doctorWorkScheduleId") int doctorWorkScheduleId);
+
+    @Query("SELECT ss FROM ScheduleSlot ss JOIN ss.schedule sch WHERE ss.status = :status AND sch.workDate <= :date")
+    List<ScheduleSlot> findAllByStatusAndDateBefore( @Param("status")ScheduleSlotStatus status, @Param("date") LocalDate date);
+
 }

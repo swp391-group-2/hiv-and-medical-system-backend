@@ -26,5 +26,6 @@ public class ScheduleSlot {
     DoctorWorkSchedule schedule;
     @ManyToOne(fetch = FetchType.LAZY)
     Slot slot;
-    String status = ScheduleSlotStatus.AVAILABLE.name();
+    @Enumerated(EnumType.STRING)
+    ScheduleSlotStatus status = ScheduleSlotStatus.AVAILABLE;
 }
