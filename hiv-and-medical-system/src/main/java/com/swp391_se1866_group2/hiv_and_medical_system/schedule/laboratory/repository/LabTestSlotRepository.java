@@ -19,4 +19,6 @@ public interface LabTestSlotRepository extends JpaRepository<LabTestSlot, Intege
     @Query("SELECT l FROM LabTestSlot l WHERE l.id = :labTestSlotId")
     LabTestSlot findByLabTestSlotId(@Param("labTestSlotId") int labTestSlotId);
 
+    @Query("SELECT l FROM LabTestSlot l WHERE l.date <= :date AND l.status != 'EXPIRED' ")
+    List<LabTestSlot> findAllLabTestSlotExpiredByDate(@Param("date") LocalDate date);
 }

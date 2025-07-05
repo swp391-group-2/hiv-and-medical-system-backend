@@ -84,10 +84,10 @@ public class AppointmentService {
                 .build();
         if(service.getServiceType().equals(ServiceType.CONSULTATION)){
             ScheduleSlot scheduleSlot = scheduleSlotService.getScheduleSlotById(request.getScheduleSlotId());
-            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE.name())){
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE)){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
-            scheduleSlot.setStatus(ScheduleSlotStatus.UNAVAILABLE.name());
+            scheduleSlot.setStatus(ScheduleSlotStatus.UNAVAILABLE);
             appointment.setScheduleSlot(scheduleSlot);
         }else {
             LabTestSlot labTestSlot = labTestSlotService.getLabTestSlotById(request.getLabTestSlotId());
@@ -273,7 +273,7 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.CANCELLED);
 
         if(appointment.getScheduleSlot() != null){
-            appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.AVAILABLE.name());
+            appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.AVAILABLE);
         }
 
         return true;

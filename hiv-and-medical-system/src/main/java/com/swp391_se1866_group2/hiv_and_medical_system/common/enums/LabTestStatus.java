@@ -6,7 +6,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 
 public enum LabTestStatus {
     AVAILABLE,
-    FULL;
+    FULL,
+    EXPIRED;
 
     @JsonCreator
     public static ServiceType from(String value) {
