@@ -6,7 +6,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 
 public enum ScheduleSlotStatus {
     AVAILABLE,
-    UNAVAILABLE;
+    UNAVAILABLE,
+    BLOCKED,
+    EXPIRED
+    ;
     @JsonCreator
     public static ServiceType from(String value) {
         try {

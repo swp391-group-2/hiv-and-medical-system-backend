@@ -30,7 +30,7 @@ public class ScheduleSlotService {
     public ScheduleSlotResponse updateScheduleSlotStatus (int id) {
         ScheduleSlot scheduleSlot = scheduleSlotRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorCode.SCHEDULE_NOT_EXISTED.getMessage()));
-        scheduleSlot.setStatus(ScheduleSlotStatus.UNAVAILABLE.name());
+        scheduleSlot.setStatus(ScheduleSlotStatus.UNAVAILABLE);
         return scheduleMapper.toScheduleSlotResponse(scheduleSlotRepository.save(scheduleSlot)) ;
     }
 
