@@ -26,14 +26,14 @@ public class ScheduleSlotExpireService {
     public void expireScheduleSlots() {
         LocalDateTime today = LocalDateTime.now();
         log.info("ScheduleSlotExpireService run at: {}, thread: {}", LocalDateTime.now(), Thread.currentThread().getName());
-        scheduleSlotRepository.findAllByStatusAndDateBefore(ScheduleSlotStatus.AVAILABLE, today.toLocalDate())
-                .forEach(scheduleSlot -> {
+        List<ScheduleSlot> scheduleSlots = scheduleSlotRepository.findAllByStatusAndDateBefore(ScheduleSlotStatus.AVAILABLE, today.toLocalDate());
+        scheduleSlots.forEach(scheduleSlot -> {
                     if(scheduleSlot.getSchedule().getWorkDate().isBefore(today.toLocalDate())) {
                         scheduleSlot.setStatus(ScheduleSlotStatus.EXPIRED);
                     } else if(scheduleSlot.getSchedule().getWorkDate().equals(today.toLocalDate()) && scheduleSlot.getSlot().getStartTime().isBefore(today.toLocalTime())) {
                         scheduleSlot.setStatus(ScheduleSlotStatus.EXPIRED);
                     }
-                    scheduleSlotRepository.save(scheduleSlot);
                 });
+        scheduleSlotRepository.saveAll(scheduleSlots);
     }
 }

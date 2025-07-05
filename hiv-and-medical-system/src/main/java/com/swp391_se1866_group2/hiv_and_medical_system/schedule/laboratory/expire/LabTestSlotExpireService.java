@@ -27,15 +27,15 @@ public class LabTestSlotExpireService {
     public void expiredLabTestSlot(){
         LocalDateTime today = LocalDateTime.now();
         log.info("LabTestSlotExpireService run at: {}, thread: {}", LocalDateTime.now(), Thread.currentThread().getName());
-        labTestSlotRepository.findAllLabTestSlotExpiredByDate(today.toLocalDate())
-                .forEach(labTestSlot -> {
+        List<LabTestSlot> labTestSlots = labTestSlotRepository.findAllLabTestSlotExpiredByDate(today.toLocalDate());
+        labTestSlots.forEach(labTestSlot -> {
                     if(labTestSlot.getDate().isBefore(today.toLocalDate())){
                         labTestSlot.setStatus(LabTestStatus.EXPIRED);
                     }else if(labTestSlot.getDate().equals(today.toLocalDate()) &&
                             labTestSlot.getSlot().getStartTime().isBefore(today.toLocalTime())){
                         labTestSlot.setStatus(LabTestStatus.EXPIRED);
                     }
-                    labTestSlotRepository.save(labTestSlot);
                  });
+        labTestSlotRepository.saveAll(labTestSlots);
     }
 }
