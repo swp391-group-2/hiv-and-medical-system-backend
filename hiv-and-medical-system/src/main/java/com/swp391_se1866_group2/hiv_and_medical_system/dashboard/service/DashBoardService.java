@@ -30,7 +30,7 @@ public class DashBoardService {
  
         double percentValue;
         if(previousValue == 0){
-            percentValue = 0;
+            percentValue = (currentValue ==0) ? 0 :100;
         }
         else{
             percentValue = ((double) (currentValue-previousValue) / previousValue) *100;
