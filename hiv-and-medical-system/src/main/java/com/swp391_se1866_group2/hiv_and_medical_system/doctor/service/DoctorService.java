@@ -75,6 +75,13 @@ public class DoctorService {
         return doctorRepository.findDoctorByToken(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }
 
+    public Doctor getDoctorResponseByToken(){
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        DoctorResponse doctorResponse = doctorRepository.findDoctorByToken(email).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+        return doctorRepository.findById(doctorResponse.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
+    }
+
     public Doctor getDoctorById(String id){
         return doctorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_EXISTED));
     }

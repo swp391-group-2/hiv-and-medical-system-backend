@@ -21,17 +21,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DashBoardService {
-
     UserRepository userRepository;
     AppointmentRepository appointmentRepository;
     PaymentRepository paymentRepository;
 
     private StatsResponse formatStats(String title, long currentValue, long previousValue){
         String value = String.format("%,d", currentValue);
-
+ 
         double percentValue;
         if(previousValue == 0){
-            percentValue = (currentValue ==0) ? 0 :100;
+            percentValue = 0;
         }
         else{
             percentValue = ((double) (currentValue-previousValue) / previousValue) *100;
@@ -46,12 +45,6 @@ public class DashBoardService {
         long previousValue = userRepository.countPatients(startDate,endDate);
         long currentValue = userRepository.countTotalPatients();
         return formatStats("Tổng khách hàng", currentValue, previousValue);
-    }
-
-    public StatsResponse getTotalDoctors(LocalDate startDate, LocalDate endDate){
-        long previousValue = userRepository.countDoctors(startDate,endDate);
-        long currentValue = userRepository.countTotalDoctors();
-        return formatStats("Bác sĩ hoạt động", currentValue, previousValue);
     }
 
     public StatsResponse getTotalTodayAppointment(LocalDate startDate, LocalDate endDate){
@@ -69,7 +62,6 @@ public class DashBoardService {
     public List<StatsResponse> getAllStats(LocalDate startDate, LocalDate endDate){
         return List.of(
                 getTotalPatients(startDate, endDate),
-                getTotalDoctors(startDate, endDate),
                 getTotalTodayAppointment(startDate, endDate),
                 getTotalRevenue(startDate, endDate)
         );
@@ -78,18 +70,35 @@ public class DashBoardService {
     public List<WeeklyStatsResponse> getAllStatsWeekly(LocalDate startDate, LocalDate endDate ){
         List<WeeklyStatsResponse> weeklyStats = new ArrayList<>();
         long weeks = ChronoUnit.WEEKS.between(startDate, endDate) +1;
+        LocalDate startWeek = startDate;
+
+        long previousPatient = 0;
+        long previousAppointment = 0;
+        long previousRevenue = 0;
 
         for(int i =0; i<weeks; i++){
-            LocalDate startWeek = startDate.plusWeeks(i);
             LocalDate endWeek = startWeek.plusDays(6);
-
             if(endWeek.isAfter(endDate)){
                 endWeek = endDate;
             }
 
+            long patientCount = userRepository.countPatients(startWeek, endWeek);
+            long appointmentCount = appointmentRepository.countAppointments(startWeek, endWeek);
+            long revenueCount = paymentRepository.getRevenue(startWeek, endWeek);
+
+            List<StatsResponse> stats = List.of(
+                    formatStats("Tổng khách hàng", patientCount, previousPatient),
+                    formatStats("Tổng lịch hẹn", appointmentCount, previousAppointment),
+                    formatStats("Doanh thu tuần", revenueCount, previousRevenue)
+            );
+
             String weekRange = startWeek.toString() + " -> " + endWeek.toString();
-            List<StatsResponse> stats = getAllStats(startWeek, endWeek);
             weeklyStats.add(new WeeklyStatsResponse(weekRange, stats));
+
+            previousPatient = patientCount;
+            previousAppointment = appointmentCount;
+            previousRevenue = revenueCount;
+            startWeek = startWeek.plusWeeks(1);
         }
 
         return weeklyStats;
@@ -211,7 +220,6 @@ public class DashBoardService {
                 getConfirmatoryAppointments()
         );
     }
-
 
 
 }
