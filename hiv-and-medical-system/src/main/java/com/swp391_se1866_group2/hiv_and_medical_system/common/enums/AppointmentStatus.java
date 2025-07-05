@@ -11,6 +11,7 @@ public enum AppointmentStatus {
     LAB_COMPLETED,
     COMPLETED,
     CANCELLED,
+    EXPIRED,
     ;
 
     @JsonCreator
