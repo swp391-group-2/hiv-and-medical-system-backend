@@ -25,6 +25,7 @@ public class AppointmentExpireService {
     @Scheduled(fixedRate = 600000)
     public void expireAppointments() {
         LocalDateTime today = LocalDateTime.now();
+        log.info("AppointmentExpireService run at: {}, thread: {}", LocalDateTime.now(), Thread.currentThread().getName());
         List<Appointment> appointmentsConsult = appointmentRepository.findAllAppointmentsConsultCheckExpire(today.toLocalDate(), AppointmentStatus.SCHEDULED);
 
         appointmentsConsult
