@@ -15,6 +15,5 @@ import java.time.LocalDate;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CommentCreationRequest {
     String content;
-    String doctorId;
     int anonymousPostId;
 }
