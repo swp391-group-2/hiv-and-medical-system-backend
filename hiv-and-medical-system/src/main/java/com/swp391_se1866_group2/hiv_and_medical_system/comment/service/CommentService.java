@@ -10,6 +10,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.CommentMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
@@ -62,8 +63,10 @@ public class CommentService {
         }
 
         CommentResponse commentResponse = commentMapper.toCommentResponse(commentRepository.save(comment));
+        DoctorResponse doctorResponse = doctorService.getDoctorResponseById(commentResponse.getDoctorId());
 
         if (commentResponse.getDoctorId() !=null){
+            commentResponse.setDoctorName(doctorResponse.getFullName());
             commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
         }
         return commentResponse;

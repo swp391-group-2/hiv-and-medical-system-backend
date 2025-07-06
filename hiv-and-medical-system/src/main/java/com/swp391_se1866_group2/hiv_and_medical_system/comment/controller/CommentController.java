@@ -22,7 +22,7 @@ import java.util.List;
 public class CommentController {
     CommentService commentService;
 
-    @PostMapping
+    @PostMapping("/me")
     public ApiResponse<CommentResponse> createComment(@RequestBody @Valid CommentCreationRequest request){
         return ApiResponse.<CommentResponse>builder()
                 .success(true)
