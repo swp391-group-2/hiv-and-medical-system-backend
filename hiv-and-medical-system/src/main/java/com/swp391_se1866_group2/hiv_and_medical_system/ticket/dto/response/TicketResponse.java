@@ -14,5 +14,6 @@ public class TicketResponse {
     int id;
     int count;
     TicketType ticketType;
-    Patient patientId;
+    String patientId;
+    String serviceName;
 }
