@@ -1,0 +1,60 @@
+package com.swp391_se1866_group2.hiv_and_medical_system.ticket.service;
+
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TicketType;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.dto.response.TicketResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.entity.Ticket;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.repository.TicketRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class TicketService {
+    PatientRepository patientRepository;
+    TicketRepository ticketRepository;
+    public TicketResponse createTicket(String patientId, TicketType ticketType) {
+        Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
+        if (ticket == null) {
+            ticket = Ticket.builder()
+                    .count(1)
+                    .ticketType(ticketType)
+                    .patient(patientRepository.findById(patientId).get())
+                    .build();
+        }else{
+            ticket.setCount(ticket.getCount() + 1);
+        }
+        ticket = ticketRepository.save(ticket);
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .count(ticket.getCount())
+                .ticketType(ticketType)
+                .build();
+    }
+
+    public TicketResponse getTicketByTypeAndPatientId(String patientId, TicketType ticketType) {
+        Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
+        if(ticket == null){
+            ticket = Ticket.builder()
+                    .count(0)
+                    .ticketType(ticketType)
+                    .patient(patientRepository.findById(patientId).get())
+                    .build();
+            ticket = ticketRepository.save(ticket);
+
+        }
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .count(0)
+                .ticketType(ticketType)
+                .patientId(patientRepository.findById(patientId).get())
+                .build();
+    }
+
+
+}
