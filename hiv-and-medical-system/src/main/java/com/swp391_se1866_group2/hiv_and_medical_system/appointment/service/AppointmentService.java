@@ -38,6 +38,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.servi
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
 import com.swp391_se1866_group2.hiv_and_medical_system.ticket.entity.Ticket;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.repository.TicketRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.ticket.service.TicketService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,7 @@ public class AppointmentService {
     LabResultRepository labResultRepository;
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
+    TicketRepository ticketRepository;
     LabTestSlotService labTestSlotService;
     ScheduleSlotService scheduleSlotService;
     LabTestService labTestService;
@@ -343,6 +345,21 @@ public class AppointmentService {
             }
         });
         return response;
+    }
+
+    public boolean createAppointmentByTicket(AppointmentCreationRequest request) {
+        Patient patient = patientService.getPatientById(request.getPatientId());
+        ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
+        String ticketType = String.valueOf(service.getServiceType());
+        Ticket ticket = ticketService.getTicketByTypeAndPatientId(patient.getId(), TicketType.valueOf(ticketType));
+        if(ticket.getCount() > 0) {
+            ticket.setCount(ticket.getCount() - 1);
+            ticketRepository.save(ticket);
+            createAppointment(request);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 //    public List<AppointmentLabSampleResponse> getAllDoctorAppointmentsByBetweenDate(LocalDate startDate, LocalDate endDate) {
