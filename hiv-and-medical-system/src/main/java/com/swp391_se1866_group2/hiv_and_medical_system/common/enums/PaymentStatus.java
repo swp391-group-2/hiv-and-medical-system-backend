@@ -9,11 +9,11 @@ public enum PaymentStatus {
     PAID,
     FAILED;
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static PaymentStatus from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return PaymentStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.PAYMENT_NOT_EXISTED);
         }
     }
 }

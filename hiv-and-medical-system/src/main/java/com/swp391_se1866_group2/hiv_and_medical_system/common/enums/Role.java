@@ -14,11 +14,11 @@ public enum Role {
 
     LAB_TECHNICIAN;
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static Role from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return Role.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
     }
 }

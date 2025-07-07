@@ -9,11 +9,11 @@ public enum ParameterType {
     NUMERIC,
     TEXT;
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static ParameterType from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return ParameterType.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.LAB_TEST_PARAMETER_NOT_EXISTED);
         }
     }
 
