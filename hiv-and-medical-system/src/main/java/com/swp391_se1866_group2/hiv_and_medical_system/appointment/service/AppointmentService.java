@@ -173,6 +173,12 @@ public class AppointmentService {
         if (appointment.getLabSample() != null) {
             throw new AppException(ErrorCode.ALREADY_CHECKED_IN);
         }
+        if(appointment.getScheduleSlot() != null &&
+                appointment.getService().getServiceType().equals(ServiceType.CONSULTATION)){
+            ScheduleSlot scheduleSlot = appointment.getScheduleSlot();
+            scheduleSlot.setStatus(ScheduleSlotStatus.CHECKED_IN);
+            scheduleSlotRepository.save(scheduleSlot);
+        }
         LabSample sample = labSampleMapper.toLabSample(request);
         sample.setStatus(LabSampleStatus.COLLECTED);
         LabTestParameter labTestParameter;
