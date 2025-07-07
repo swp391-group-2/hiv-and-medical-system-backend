@@ -24,10 +24,19 @@ public class DashBoardController {
     DashBoardService dashBoardService;
 
     @GetMapping("/stats")
-    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate milestone){
+    public ApiResponse <List<StatsResponse>> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate ){
         return ApiResponse.<List<StatsResponse>>builder()
                 .success(true)
-                .data(dashBoardService.getAllStats(milestone))
+                .data(dashBoardService.getAllStats(startDate, endDate))
+                .build();
+
+    }
+
+    @GetMapping("/stats/weekly")
+    public ApiResponse <List<WeeklyStatsResponse>> getStatsWeekly(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate ){
+        return ApiResponse.<List<WeeklyStatsResponse>>builder()
+                .success(true)
+                .data(dashBoardService.getAllStatsWeekly(startDate, endDate))
                 .build();
 
     }

@@ -6,13 +6,16 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 
 public enum ScheduleSlotStatus {
     AVAILABLE,
-    UNAVAILABLE;
+    UNAVAILABLE,
+    BLOCKED,
+    EXPIRED
+    ;
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static ScheduleSlotStatus from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return ScheduleSlotStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_EXISTED);
         }
     }
 }

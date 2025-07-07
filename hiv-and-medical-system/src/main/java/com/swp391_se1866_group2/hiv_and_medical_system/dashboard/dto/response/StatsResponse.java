@@ -17,5 +17,4 @@ public class StatsResponse {
     String change;
     boolean isGrowing;
 
-
 }

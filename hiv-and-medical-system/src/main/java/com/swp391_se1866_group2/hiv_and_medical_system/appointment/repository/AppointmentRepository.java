@@ -24,8 +24,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     Optional<List<Appointment>> findByPatient(Patient patient);
 
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.createdAt) <= :milestone")
-    long countAppointments(@Param("milestone") LocalDate milestone);
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.createdAt) BETWEEN :startDate AND :endDate")
+    long countAppointments(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Query("SELECT COUNT(a) FROM Appointment a ")
     long countTotalAppointments();
@@ -63,5 +63,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Query("SELECT a FROM Appointment a JOIN FETCH a.patient p WHERE a.patient = :patient ")
     List<Appointment> findAppointmentByPatient(@Param("patient") Patient patient);
 
+    @Query("SELECT a FROM Appointment a WHERE a.status = :status AND a.scheduleSlot.schedule.workDate <= :date  ")
+    List<Appointment> findAllAppointmentsConsultCheckExpire(@Param("date") LocalDate date, @Param("status") AppointmentStatus status);
 
+    @Query("SELECT a FROM Appointment a WHERE a.status = :status AND a.labTestSlot.date <= :date ")
+    List<Appointment> findAllAppointmentsTestCheckExpire(@Param("date") LocalDate date, @Param("status") AppointmentStatus status);
+
+    @Query("SELECT a FROM Appointment a JOIN a.scheduleSlot ss WHERE ss.id = :scheduleSlotId ")
+    Appointment findAppointmentByScheduleSlotId(@Param("scheduleSlotId") int scheduleSlotId);
 }

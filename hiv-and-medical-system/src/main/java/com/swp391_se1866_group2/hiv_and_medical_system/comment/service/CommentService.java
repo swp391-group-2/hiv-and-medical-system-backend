@@ -6,16 +6,23 @@ import com.swp391_se1866_group2.hiv_and_medical_system.comment.dto.request.Comme
 import com.swp391_se1866_group2.hiv_and_medical_system.comment.dto.response.CommentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.comment.entity.Comment;
 import com.swp391_se1866_group2.hiv_and_medical_system.comment.repository.CommentRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.CommentMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.service.AuthenticationService;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,18 +39,22 @@ public class CommentService {
     DoctorService doctorService;
     AnonymousPostService anonymousPostService;
     PatientService patientService;
+    UserService userService;
 
     public CommentResponse createComment(CommentCreationRequest request){
         Comment comment = commentMapper.toComment(request);
         AnonymousPost anonymousPost = anonymousPostService.getAnonymousPostById(request.getAnonymousPostId());
         comment.setAnonymousPost(anonymousPost);
 
-        if(request.getDoctorId() !=null){
-            Doctor doctor = doctorService.getDoctorById(request.getDoctorId());
+        User user = userService.getUserResponseByToken();
+        String role = user.getRole();
+
+        if(role.equals("DOCTOR")){
+            Doctor doctor = doctorService.getDoctorResponseByToken();
             comment.setDoctor(doctor);
         }
 
-        if (request.getDoctorId() == null){
+        if (role.equals("PATIENT")){
             Patient patient = patientService.getPatientResponseByToken();
             if (!anonymousPost.getPatient().getId().equals(patient.getId())){
                 throw new AppException(ErrorCode.PATIENT_NOT_POST_OWNER);
@@ -52,18 +63,18 @@ public class CommentService {
         }
 
         CommentResponse commentResponse = commentMapper.toCommentResponse(commentRepository.save(comment));
-        commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(request.getDoctorId()));
+        DoctorResponse doctorResponse = doctorService.getDoctorResponseById(commentResponse.getDoctorId());
+
+        if (commentResponse.getDoctorId() !=null){
+            commentResponse.setDoctorName(doctorResponse.getFullName());
+            commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
+        }
         return commentResponse;
     }
 
-    public List<CommentResponse> getAllComments() {
-        return commentRepository.findAll().stream()
-                .map(comment -> {
-                    CommentResponse commentResponse = commentMapper.toCommentResponse(comment);
-                    commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(comment.getDoctor().getId()));
-                    return commentResponse;
-                })
-                .collect(Collectors.toList());
+    public List<CommentResponse> getAllComments(int anonymousPostId, Pageable pageable) {
+        Slice<CommentResponse> slice = commentRepository.getAllComments(anonymousPostId,pageable).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
+        return slice.getContent();
     }
 
 }

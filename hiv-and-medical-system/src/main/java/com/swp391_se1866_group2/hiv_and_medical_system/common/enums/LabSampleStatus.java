@@ -11,11 +11,11 @@ public enum LabSampleStatus {
     REJECTED;
 
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static LabSampleStatus from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return LabSampleStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.LAB_SAMPLE_NOT_EXISTED);
         }
     }
 

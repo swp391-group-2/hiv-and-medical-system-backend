@@ -6,14 +6,15 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCod
 
 public enum LabTestStatus {
     AVAILABLE,
-    FULL;
+    FULL,
+    EXPIRED;
 
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static LabTestStatus from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return LabTestStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.LAB_TEST_NOT_EXISTED);
         }
     }
 }
