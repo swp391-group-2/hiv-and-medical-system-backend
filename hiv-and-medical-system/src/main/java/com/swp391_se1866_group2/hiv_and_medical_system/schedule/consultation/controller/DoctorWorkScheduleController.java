@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.controller;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleBlockRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.DoctorWorkScheduleResponse;
@@ -125,14 +126,21 @@ public class DoctorWorkScheduleController {
                 .build();
     }
 
-    @PostMapping("/schedules/block")
+    @PostMapping("/schedules/available/block")
     @Operation(summary = "Update tất cả các status này thành blocked")
-    public ApiResponse<Boolean> blockSchdeduleSlotByManager (@RequestBody List<Integer> request){
+    public ApiResponse<Boolean> blockScheduleSlotAvaiByManager (@RequestBody List<Integer> request){
         return ApiResponse.<Boolean>builder()
                 .success(true)
                 .data(scheduleService.blockScheduleSlotByManager(request))
                 .build();
     }
 
-
+    @PostMapping("/schedules/unavailable/block")
+    @Operation(summary = "Update schedule thành blocked và xử lý logic")
+    public ApiResponse<Boolean> blockScheduleSlotUnAvaiByManager(@RequestBody ScheduleBlockRequest request){
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(scheduleService.blockScheduleSlotUnAvaiByManager(request))
+                .build();
+    }
 }

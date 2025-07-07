@@ -31,11 +31,14 @@ import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.expire.ScheduleSlotExpireService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.ScheduleSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.service.LabTestSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.entity.Ticket;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.service.TicketService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -67,6 +70,7 @@ public class AppointmentService {
     PatientService patientService;
     ServiceService serviceService;
     DoctorService doctorService;
+    TicketService ticketService;
     PatientPrescriptionMapper patientPrescriptionMapper;
     PrescriptionMapper prescriptionMapper;
     LabTestMapper labTestMapper;
@@ -272,9 +276,27 @@ public class AppointmentService {
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
 
+        Patient patient = patientService.getPatientById(appointment.getPatient().getId());
+        String ticketType = String.valueOf(appointment.getService().getServiceType());
+        ticketService.createTicket(patient.getId(), TicketType.valueOf(ticketType));
+
+        LocalDateTime timeNow = LocalDateTime.now();
+
         if(appointment.getScheduleSlot() != null){
+            ScheduleSlot scheduleSlot = appointment.getScheduleSlot();
             appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.AVAILABLE);
+            if(scheduleSlot.getSchedule().getWorkDate().isBefore(timeNow.toLocalDate())){
+                appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.EXPIRED);
+            }else if(scheduleSlot.getSchedule().getWorkDate().equals(timeNow.toLocalDate()) &&
+                    scheduleSlot.getSlot().getStartTime().isBefore(timeNow.toLocalTime())){
+                appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.EXPIRED);
+            }
         }
+
+        if(appointment.getLabTestSlot() != null){
+            appointment.getLabTestSlot().setBookedCount(appointment.getLabTestSlot().getBookedCount() - 1);
+        }
+        appointmentRepository.save(appointment);
 
         return true;
     }
