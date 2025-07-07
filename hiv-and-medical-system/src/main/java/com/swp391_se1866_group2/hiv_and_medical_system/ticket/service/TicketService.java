@@ -43,7 +43,7 @@ public class TicketService {
                 .build();
     }
 
-    public TicketResponse getTicketByTypeAndPatientId(String patientId, TicketType ticketType) {
+    public TicketResponse getTicketResponseByTypeAndPatientId(String patientId, TicketType ticketType) {
         Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
         if(ticket == null){
             ticket = Ticket.builder()
@@ -66,9 +66,9 @@ public class TicketService {
     public List<TicketResponse> getListTicketByPatientId(String patientId) {
         List<TicketResponse> ticketResponses = new ArrayList<>();
 
-        ticketResponses.add(getTicketByTypeAndPatientId(patientId,TicketType.SCREENING));
-        ticketResponses.add(getTicketByTypeAndPatientId(patientId, TicketType.CONFIRMATORY));
-        ticketResponses.add(getTicketByTypeAndPatientId(patientId, TicketType.CONSULTATION));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patientId,TicketType.SCREENING));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patientId, TicketType.CONFIRMATORY));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patientId, TicketType.CONSULTATION));
 
         return ticketResponses;
     }
@@ -98,13 +98,27 @@ public class TicketService {
         Patient patient = patientService.getPatientResponseByToken();
         List<TicketResponse> ticketResponses = new ArrayList<>();
 
-        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(),TicketType.SCREENING));
-        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(), TicketType.CONFIRMATORY));
-        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(), TicketType.CONSULTATION));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patient.getId(),TicketType.SCREENING));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patient.getId(), TicketType.CONFIRMATORY));
+        ticketResponses.add(getTicketResponseByTypeAndPatientId(patient.getId(), TicketType.CONSULTATION));
 
         return ticketResponses;
     }
 
+
+    public Ticket getTicketByTypeAndPatientId(String patientId, TicketType ticketType) {
+        Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
+        if(ticket == null){
+            ticket = Ticket.builder()
+                    .count(0)
+                    .ticketType(ticketType)
+                    .patient(patientRepository.findById(patientId).get())
+                    .build();
+            ticket = ticketRepository.save(ticket);
+
+        }
+        return ticket;
+    }
 
 
 }

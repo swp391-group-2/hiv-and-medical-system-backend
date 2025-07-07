@@ -118,13 +118,12 @@ public class AppointmentController {
                 .build();
     }
 
-
-//    @Operation(summary = "Lấy danh sách lịch appointment của từng bác sĩ ")
-//    @GetMapping("/doctors/me/appointments")
-//    public ApiResponse<List<AppointmentLabSampleResponse>> getDoctorAppointment(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-//        return ApiResponse.<List<AppointmentLabSampleResponse>>builder()
-//                .data(appointmentService.getAllDoctorAppointmentsByStatus())
-//                .success(true)
-//                .build();
-//    }
+    @Operation(summary = "Thanh toán bằng ticket")
+    @PostMapping("/appointments/tickets/exchange")
+    public ApiResponse<Boolean> createAppointmentByTicket (@RequestBody AppointmentCreationRequest request){
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(appointmentService.createAppointmentByTicket(request))
+                .build();
+    }
 }

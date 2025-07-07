@@ -17,4 +17,9 @@ public interface PatientRepository extends JpaRepository<Patient, String> {
 
     @Query(value = "SELECT NEXT VALUE FOR code", nativeQuery = true)
     Long getNextPatientCodeSequence();
+
+
+    @Query("SELECT p FROM Appointment a JOIN a.patient p JOIN a.scheduleSlot ss WHERE ss.id = :scheduleSlotId ")
+    Patient findPatientByScheduleSlotId(@Param("scheduleSlotId") int scheduleSlotId);
+
 }

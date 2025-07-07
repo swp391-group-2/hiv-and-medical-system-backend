@@ -26,7 +26,7 @@ public class TicketController {
                 .build();
     }
 
-    @GetMapping("/me/tickets")
+    @GetMapping("/me/tickets/status")
     public ApiResponse<TicketResponse> getAllTicketsByStatusAndToken (@RequestParam String status){
         return ApiResponse.<TicketResponse>builder()
                 .success(true)
@@ -42,11 +42,11 @@ public class TicketController {
                 .build();
     }
 
-    @GetMapping("/{patientId}/tickets")
+    @GetMapping("/{patientId}/tickets/status")
     public ApiResponse<TicketResponse> getTicketByPatientIdAndStatus (@PathVariable("patientId") String patientId, @RequestParam String status){
         return ApiResponse.<TicketResponse>builder()
                 .success(true)
-                .data(ticketService.getTicketByTypeAndPatientId(patientId, TicketType.valueOf(status.toUpperCase())))
+                .data(ticketService.getTicketResponseByTypeAndPatientId(patientId, TicketType.valueOf(status.toUpperCase())))
                 .build();
     }
 
