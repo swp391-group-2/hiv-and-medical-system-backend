@@ -1,7 +1,9 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.ticket.service;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TicketType;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
 import com.swp391_se1866_group2.hiv_and_medical_system.ticket.dto.response.TicketResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.ticket.entity.Ticket;
 import com.swp391_se1866_group2.hiv_and_medical_system.ticket.repository.TicketRepository;
@@ -20,6 +22,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TicketService {
     PatientRepository patientRepository;
+    PatientService patientService;
     TicketRepository ticketRepository;
     public TicketResponse createTicket(String patientId, TicketType ticketType) {
         Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
@@ -69,6 +72,39 @@ public class TicketService {
 
         return ticketResponses;
     }
+
+    public TicketResponse getTicketByTypeAndPatientToken(TicketType ticketType) {
+        Patient patient = patientService.getPatientResponseByToken();
+        Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patient.getId(), ticketType);
+        if(ticket == null){
+            ticket = Ticket.builder()
+                    .count(0)
+                    .ticketType(ticketType)
+                    .patient(patient)
+                    .build();
+            ticket = ticketRepository.save(ticket);
+
+        }
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .count(0)
+                .ticketType(ticketType)
+                .patientId(patient)
+                .build();
+    }
+
+
+    public List<TicketResponse> getListTicketByPatientToken() {
+        Patient patient = patientService.getPatientResponseByToken();
+        List<TicketResponse> ticketResponses = new ArrayList<>();
+
+        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(),TicketType.SCREENING));
+        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(), TicketType.CONFIRMATORY));
+        ticketResponses.add(getTicketByTypeAndPatientId(patient.getId(), TicketType.CONSULTATION));
+
+        return ticketResponses;
+    }
+
 
 
 }
