@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.patient.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.entity.AnonymousPost;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.entity.Ticket;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,4 +41,7 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     List<AnonymousPost> anonymousPosts;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Ticket> tickets;
 }
