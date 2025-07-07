@@ -32,8 +32,10 @@ import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Presc
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.expire.ScheduleSlotExpireService;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service.ScheduleSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.entity.LabTestSlot;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.repository.LabTestSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.laboratory.service.LabTestSlotService;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
@@ -43,6 +45,8 @@ import com.swp391_se1866_group2.hiv_and_medical_system.ticket.service.TicketServ
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +69,8 @@ public class AppointmentService {
     LabTestRepository labTestRepository;
     LabTestParameterRepository labTestParameterRepository;
     TicketRepository ticketRepository;
+    LabTestSlotRepository labTestSlotRepository;
+    ScheduleSlotRepository scheduleSlotRepository;
     LabTestSlotService labTestSlotService;
     ScheduleSlotService scheduleSlotService;
     LabTestService labTestService;
@@ -349,7 +355,24 @@ public class AppointmentService {
 
     public boolean createAppointmentByTicket(AppointmentCreationRequest request) {
         Patient patient = patientService.getPatientById(request.getPatientId());
+
         ServiceEntity service = serviceService.getServiceEntityById(request.getServiceId());
+
+        ScheduleSlot scheduleSlot = scheduleSlotRepository.findScheduleSlotById(request.getScheduleSlotId());
+        if(scheduleSlot != null){
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE)){
+                throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
+            }
+        }
+        LabTestSlot labTestSlot = labTestSlotRepository.findByLabTestSlotId(request.getLabTestSlotId());
+        if(service.getServiceType().equals(ServiceType.CONSULTATION) && scheduleSlot == null && labTestSlot != null){
+            Page<ScheduleSlot> scheduleSlotTmp = scheduleSlotRepository.chooseDoctorBySlotId(labTestSlot.getSlot().getId(), labTestSlot.getDate() , PageRequest.of(0,1));
+            if(scheduleSlotTmp.getContent().getFirst() == null){
+                throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
+            }
+            request.setScheduleSlotId(scheduleSlotTmp.getContent().getFirst().getId());
+        }
+
         String ticketType = String.valueOf(service.getServiceType());
         Ticket ticket = ticketService.getTicketByTypeAndPatientId(patient.getId(), TicketType.valueOf(ticketType));
         if(ticket.getCount() > 0) {
@@ -361,29 +384,6 @@ public class AppointmentService {
             return false;
         }
     }
-
-//    public List<AppointmentLabSampleResponse> getAllDoctorAppointmentsByBetweenDate(LocalDate startDate, LocalDate endDate) {
-//        DoctorResponse doctorResponse = doctorService.getDoctorProfileByToken();
-//
-//        List<ScheduleAppointmentResponse> appointments = appointmentRepository.findByScheduleSlot(startDate,endDate, doctorResponse.getDoctorId()).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
-//        List<Appointment> filterAppointments =  appointments.stream()
-//                .filter(appointment -> {
-//                    ScheduleSlot slot = appointment.getScheduleSlot();
-//                    if (slot == null) return false;
-//                    return !slot.getSchedule().getDoctor().getId().equals(doctorResponse.getDoctorId());
-//                })
-//                .toList();
-//        return  filterAppointments.stream()
-//                .map(appointment -> {
-//                    AppointmentLabSampleResponse response = appointmentMapper.toAppointmentLabResponse(appointment);
-//                    if(response.getLabSampleId() != null){
-//                        LabResult labResult = labResultRepository.findByLabSampleId(response.getLabSampleId());
-//                        response.setLabResult(labTestMapper.toLabResultResponse(labResult));
-//                    }
-//                    return response;
-//                })
-//                .collect(Collectors.toList());
-//    }
 
 
 }

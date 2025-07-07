@@ -53,7 +53,7 @@ public class StripeService {
         ServiceEntity service = serviceRepository.findById(request.getServiceId()).orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_EXISTED));
         ScheduleSlot scheduleSlot = scheduleSlotRepo.findScheduleSlotById(request.getScheduleSlotId());
         if(scheduleSlot != null){
-            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE.name())){
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE)){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
         }
