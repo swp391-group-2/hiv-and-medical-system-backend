@@ -60,7 +60,7 @@ public enum ErrorCode {
     GET_GOOGLE_EMAIL_FAILED(1083, "Get google email failed", HttpStatus.NOT_FOUND),
     CAN_NOT_CHOOSE_DOCTOR_AVAILABLE(1084, "Can not choose doctor available", HttpStatus.BAD_REQUEST),
     COMMENT_NOT_EXISTED(1100, "Comment not existed. ", HttpStatus.NOT_FOUND),
-
+    TICKET_TYPE_NOT_EXISTED(1101, "Ticket type not existed", HttpStatus.NOT_FOUND),
 
     ;
 

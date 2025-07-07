@@ -29,7 +29,6 @@ public class DoctorWorkSchedule {
     int id;
     @Column(nullable = false)
     LocalDate workDate;
-    String status = "available";
     @CreationTimestamp
     @Column(updatable = false)
     LocalDateTime createdAt;
