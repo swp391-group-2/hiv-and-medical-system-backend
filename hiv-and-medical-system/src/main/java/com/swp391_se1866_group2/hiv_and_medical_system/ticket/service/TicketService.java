@@ -11,6 +11,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -54,6 +57,17 @@ public class TicketService {
                 .ticketType(ticketType)
                 .patientId(patientRepository.findById(patientId).get())
                 .build();
+    }
+
+
+    public List<TicketResponse> getListTicketByPatientId(String patientId) {
+        List<TicketResponse> ticketResponses = new ArrayList<>();
+
+        ticketResponses.add(getTicketByTypeAndPatientId(patientId,TicketType.SCREENING));
+        ticketResponses.add(getTicketByTypeAndPatientId(patientId, TicketType.CONFIRMATORY));
+        ticketResponses.add(getTicketByTypeAndPatientId(patientId, TicketType.CONSULTATION));
+
+        return ticketResponses;
     }
 
 
