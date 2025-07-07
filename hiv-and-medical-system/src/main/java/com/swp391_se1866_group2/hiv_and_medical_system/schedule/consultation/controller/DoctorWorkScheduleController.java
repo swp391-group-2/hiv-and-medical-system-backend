@@ -124,4 +124,15 @@ public class DoctorWorkScheduleController {
                 .data(scheduleService.generateDoctorSchedule(doctorId, request))
                 .build();
     }
+
+    @PostMapping("/schedules/block")
+    @Operation(summary = "Update tất cả các status này thành blocked")
+    public ApiResponse<Boolean> blockSchdeduleSlotByManager (@RequestBody List<Integer> request){
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(scheduleService.blockScheduleSlotByManager(request))
+                .build();
+    }
+
+
 }

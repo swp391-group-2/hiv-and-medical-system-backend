@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ScheduleMapper;
@@ -221,6 +222,17 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
     }
 
+    public boolean blockScheduleSlotByManager (List<Integer> scheduleSlotIDs){
+        List<ScheduleSlot> scheduleSlots = scheduleSlotRepository.findAllById(scheduleSlotIDs);
 
+        scheduleSlots.forEach(scheduleSlot -> {
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.AVAILABLE)){
+                scheduleSlot.setStatus(ScheduleSlotStatus.BLOCKED);
+            }
+        });
+
+        scheduleSlotRepository.saveAll(scheduleSlots);
+        return true;
+    }
 
 }
