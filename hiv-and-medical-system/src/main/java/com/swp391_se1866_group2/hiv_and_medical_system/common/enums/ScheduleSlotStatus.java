@@ -10,6 +10,7 @@ public enum ScheduleSlotStatus {
     BLOCKED,
     EXPIRED,
     CHECKED_IN,
+    EXPIRED_NO_CHECKED_IN,
     ;
     @JsonCreator
     public static ScheduleSlotStatus from(String value) {

@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointment;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.entity.ScheduleSlot;
@@ -27,5 +28,8 @@ public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Inte
 
     @Query("SELECT ss FROM ScheduleSlot ss JOIN ss.schedule sch WHERE ss.status = :status AND sch.workDate <= :date")
     List<ScheduleSlot> findAllByStatusAndDateBefore( @Param("status")ScheduleSlotStatus status, @Param("date") LocalDate date);
+
+    @Query("SELECT ss FROM Appointment a JOIN a.scheduleSlot ss JOIN ss.schedule sch WHERE ss.status = :status AND a.status = :appointmentStatus AND sch.workDate <= :date")
+    List<ScheduleSlot> findAllByStatusAndAppoiStatusAndDateBefore(@Param("status")ScheduleSlotStatus status, @Param("appointmentStatus")AppointmentStatus appointmentStatus, @Param("date") LocalDate date);
 
 }
