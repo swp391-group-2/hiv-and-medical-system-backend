@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.controller;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentBlockRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentCreationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.AppointmentLabSampleResponse;
@@ -124,6 +125,15 @@ public class AppointmentController {
         return ApiResponse.<Boolean>builder()
                 .success(true)
                 .data(appointmentService.createAppointmentByTicket(request))
+                .build();
+    }
+
+    @Operation(summary = "Hủy lịch appointment với tư cách là manager ")
+    @PutMapping("/appointments/{appointmentId}/cancel-by-manager")
+    public ApiResponse<Boolean> cancelAppointmentByManager(@RequestBody AppointmentBlockRequest request) {
+        return ApiResponse.<Boolean>builder()
+                .success(true)
+                .data(appointmentService.cancelAppointmentByManager(request))
                 .build();
     }
 }
