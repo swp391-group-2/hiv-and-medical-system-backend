@@ -1,11 +1,19 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.repository.AppointmentRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.AppointmentStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ScheduleSlotStatus;
+import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TicketType;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.ScheduleMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.entity.Doctor;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
+import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleBlockRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.request.ScheduleUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.dto.response.*;
@@ -14,6 +22,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.ent
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.DoctorWorkScheduleRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.schedule.consultation.repository.ScheduleSlotRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.slot.service.SlotService;
+import com.swp391_se1866_group2.hiv_and_medical_system.ticket.service.TicketService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,8 +42,11 @@ import java.util.stream.Collectors;
 public class DoctorWorkScheduleService {
     DoctorWorkScheduleRepository doctorWorkScheduleRepository;
     ScheduleSlotRepository scheduleSlotRepository;
+    AppointmentRepository appointmentRepository;
+    PatientRepository patientRepository;
     SlotService slotService;
     DoctorService doctorService;
+    TicketService ticketService;
     ScheduleMapper scheduleMapper;
 
     //    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') ")
@@ -221,6 +233,31 @@ public class DoctorWorkScheduleService {
         return scheduleMapper.toDoctorWorkScheduleResponse(doctorWorkSchedule);
     }
 
+    public boolean blockScheduleSlotByManager (List<Integer> scheduleSlotIDs){
+        List<ScheduleSlot> scheduleSlots = scheduleSlotRepository.findAllById(scheduleSlotIDs);
 
+        scheduleSlots.forEach(scheduleSlot -> {
+            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.AVAILABLE)){
+                scheduleSlot.setStatus(ScheduleSlotStatus.BLOCKED);
+            }
+        });
+
+        scheduleSlotRepository.saveAll(scheduleSlots);
+        return true;
+    }
+
+    public boolean blockScheduleSlotUnAvaiByManager(ScheduleBlockRequest request){
+        ScheduleSlot scheduleSlot = scheduleSlotRepository.findById(request.getId()).orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_SLOT_NOT_EXISTED));
+
+        if(request.isContinuity()){
+            Patient patient = patientRepository.findPatientByScheduleSlotId(scheduleSlot.getId());
+            ticketService.createTicket(patient.getId(), TicketType.CONSULTATION);
+        }
+        Appointment appointment = appointmentRepository.findAppointmentByScheduleSlotId(scheduleSlot.getId());
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        scheduleSlot.setStatus(ScheduleSlotStatus.BLOCKED);
+        scheduleSlotRepository.save(scheduleSlot);
+        return true;
+    }
 
 }

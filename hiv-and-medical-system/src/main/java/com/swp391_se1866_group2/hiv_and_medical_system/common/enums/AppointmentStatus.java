@@ -15,11 +15,11 @@ public enum AppointmentStatus {
     ;
 
     @JsonCreator
-    public static ServiceType from(String value) {
+    public static AppointmentStatus from(String value) {
         try {
-            return ServiceType.valueOf(value.toUpperCase());
+            return AppointmentStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED);
         }
     }
 
