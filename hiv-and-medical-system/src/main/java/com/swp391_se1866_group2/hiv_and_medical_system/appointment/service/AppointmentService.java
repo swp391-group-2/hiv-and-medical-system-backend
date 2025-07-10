@@ -1,5 +1,6 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.appointment.service;
 
+import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentBlockRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.request.AppointmentCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.dto.response.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.appointment.entity.Appointment;
@@ -173,6 +174,12 @@ public class AppointmentService {
         if (appointment.getLabSample() != null) {
             throw new AppException(ErrorCode.ALREADY_CHECKED_IN);
         }
+        if(appointment.getScheduleSlot() != null &&
+                appointment.getService().getServiceType().equals(ServiceType.CONSULTATION)){
+            ScheduleSlot scheduleSlot = appointment.getScheduleSlot();
+            scheduleSlot.setStatus(ScheduleSlotStatus.CHECKED_IN);
+            scheduleSlotRepository.save(scheduleSlot);
+        }
         LabSample sample = labSampleMapper.toLabSample(request);
         sample.setStatus(LabSampleStatus.COLLECTED);
         LabTestParameter labTestParameter;
@@ -290,7 +297,7 @@ public class AppointmentService {
 
         LocalDateTime timeNow = LocalDateTime.now();
 
-        if(appointment.getScheduleSlot() != null){
+        if(appointment.getService().getServiceType().equals(ServiceType.CONSULTATION) && appointment.getScheduleSlot() != null){
             ScheduleSlot scheduleSlot = appointment.getScheduleSlot();
             appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.AVAILABLE);
             if(scheduleSlot.getSchedule().getWorkDate().isBefore(timeNow.toLocalDate())){
@@ -299,9 +306,7 @@ public class AppointmentService {
                     scheduleSlot.getSlot().getStartTime().isBefore(timeNow.toLocalTime())){
                 appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.EXPIRED);
             }
-        }
-
-        if(appointment.getLabTestSlot() != null){
+        } else{
             appointment.getLabTestSlot().setBookedCount(appointment.getLabTestSlot().getBookedCount() - 1);
         }
         appointmentRepository.save(appointment);
@@ -383,6 +388,27 @@ public class AppointmentService {
         }else{
             return false;
         }
+    }
+
+    public boolean cancelAppointmentByManager (AppointmentBlockRequest request){
+        Appointment appointment = appointmentRepository.findById(request.getId()).orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_EXISTED));
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        if(request.isContinuity()){
+            Patient patient = patientService.getPatientById(appointment.getPatient().getId());
+            String ticketType = String.valueOf(appointment.getService().getServiceType());
+            ticketService.createTicket(patient.getId(), TicketType.valueOf(ticketType));
+        }
+
+        if(appointment.getService().getServiceType().equals(ServiceType.CONSULTATION) && appointment.getScheduleSlot() != null){
+            appointment.getScheduleSlot().setStatus(ScheduleSlotStatus.BLOCKED);
+        }else{
+            appointment.getLabTestSlot().setBookedCount(appointment.getLabTestSlot().getBookedCount() - 1);
+        }
+
+        appointmentRepository.save(appointment);
+
+        return true;
     }
 
 
