@@ -131,34 +131,26 @@ public class DoctorService {
     }
 
     public List<DoctorAppointmentResponse> getTopDoctorsAppointment(String name, Pageable pageable){
-        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getTopDoctorByAppointmentCount(name, pageable);
 
-        List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
+        name = "%" + name.trim() + "%";
 
-        doctors.forEach(doctorAppointment -> {
-            DoctorAppointmentResponse doctorAppointmentResponse = new DoctorAppointmentResponse();
-            doctorAppointmentResponse.setDoctor(doctorMapper.toDoctorResponse(doctorAppointment.getDoctor()));
-            doctorAppointmentResponse.setTotalAppointment(doctorAppointment.getTotalAppointment());
-            doctorAppointmentResponses.add(doctorAppointmentResponse);
-        });
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCount(name, pageable);
 
-        return doctorAppointmentResponses;
+        if(doctors == null){
+            return new ArrayList<>();
+        }
 
+        return doctors.getContent();
     }
 
     public List<DoctorAppointmentResponse> getDoctorsAppointment(String name, Pageable pageable){
-        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getDoctorByAppointmentCount(name, pageable);
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCount(name, pageable);
 
-        List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
+        if(doctors == null){
+            return new ArrayList<>();
+        }
 
-        doctors.forEach(doctorAppointment -> {
-            DoctorAppointmentResponse doctorAppointmentResponse = new DoctorAppointmentResponse();
-            doctorAppointmentResponse.setDoctor(doctorMapper.toDoctorResponse(doctorAppointment.getDoctor()));
-            doctorAppointmentResponse.setTotalAppointment(doctorAppointment.getTotalAppointment());
-            doctorAppointmentResponses.add(doctorAppointmentResponse);
-        });
-
-        return doctorAppointmentResponses;
+        return doctors.getContent();
 
     }
 
