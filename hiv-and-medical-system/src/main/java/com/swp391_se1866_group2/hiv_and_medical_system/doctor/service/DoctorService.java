@@ -130,8 +130,8 @@ public class DoctorService {
         return doctorRepository.countAllByUserStatus(UserStatus.ACTIVE.name());
     }
 
-    public List<DoctorAppointmentResponse> getTopDoctorsAppointment(Pageable pageable){
-        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getTopDoctorByAppointmentCount(pageable);
+    public List<DoctorAppointmentResponse> getTopDoctorsAppointment(String name, Pageable pageable){
+        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getTopDoctorByAppointmentCount(name, pageable);
 
         List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
 
@@ -148,6 +148,14 @@ public class DoctorService {
 
     public String getDoctorImageUrl (String doctorId){
         return doctorRepository.getDocImageUrlByDoctorId(doctorId);
+    }
+
+    public List<DoctorResponse> getDoctorByName(String name) {
+        List<DoctorResponse> listDoctor = doctorRepository.findDoctorByName(name);
+        if (listDoctor.isEmpty()) {
+            throw new AppException(ErrorCode.DOCTOR_NOT_EXISTED);
+        }
+        return listDoctor;
     }
 
 }
