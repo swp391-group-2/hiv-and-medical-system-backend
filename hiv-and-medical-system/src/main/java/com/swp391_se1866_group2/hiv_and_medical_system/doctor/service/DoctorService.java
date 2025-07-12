@@ -146,6 +146,22 @@ public class DoctorService {
 
     }
 
+    public List<DoctorAppointmentResponse> getDoctorsAppointment(String name, Pageable pageable){
+        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getDoctorByAppointmentCount(name, pageable);
+
+        List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
+
+        doctors.forEach(doctorAppointment -> {
+            DoctorAppointmentResponse doctorAppointmentResponse = new DoctorAppointmentResponse();
+            doctorAppointmentResponse.setDoctor(doctorMapper.toDoctorResponse(doctorAppointment.getDoctor()));
+            doctorAppointmentResponse.setTotalAppointment(doctorAppointment.getTotalAppointment());
+            doctorAppointmentResponses.add(doctorAppointmentResponse);
+        });
+
+        return doctorAppointmentResponses;
+
+    }
+
     public String getDoctorImageUrl (String doctorId){
         return doctorRepository.getDocImageUrlByDoctorId(doctorId);
     }

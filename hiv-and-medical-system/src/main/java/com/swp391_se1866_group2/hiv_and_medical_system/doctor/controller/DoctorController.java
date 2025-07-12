@@ -39,15 +39,12 @@ public class DoctorController {
     }
 
     @GetMapping()
-    @Operation(summary = "Lấy danh sách bác sĩ")
-    public ApiResponse<List<DoctorResponse>> getDoctors(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "13") int size
-    ){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("u.fullName"));
-        return ApiResponse.<List<DoctorResponse>>builder()
+    @Operation(summary = "Lấy danh sách bác sĩ và tổng lịch hẹn")
+    public ApiResponse<List<DoctorAppointmentResponse>> getDoctorsAppointment(@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "13") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<List<DoctorAppointmentResponse>>builder()
                 .success(true)
-                .data(doctorService.getAllDoctor(pageable))
+                .data(doctorService.getDoctorsAppointment(name, pageable))
                 .build();
     }
 

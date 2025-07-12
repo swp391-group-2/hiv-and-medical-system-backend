@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.dto.request
 import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.dto.response.AnonymousPostResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.entity.AnonymousPost;
 import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.repository.AnonymousPostRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.comment.dto.response.CommentResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AnonymousPostMapper;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,13 @@ public class AnonymousPostService {
 
     public AnonymousPost getAnonymousPostById(int anonymousPostId){
         return anonymousPostRepository.findById(anonymousPostId).orElseThrow(() -> new AppException(ErrorCode.ANONYMOUS_POST_NOT_EXISTED));
+    }
+
+    public List<AnonymousPostResponse> getAllMyAnonymousPosts(String title, Pageable pageable) {
+        String patientId = patientService.getPatientResponseByToken().getId();
+        Slice<AnonymousPostResponse> slice = anonymousPostRepository.getAllMyAnonymousPosts(patientId, title, pageable)
+                .orElseThrow(() -> new AppException(ErrorCode.ANONYMOUS_POST_NOT_EXISTED));
+        return slice.getContent();
     }
 
     public List<AnonymousPostResponse> getAllAnonymousPosts(Pageable pageable, String title) {
