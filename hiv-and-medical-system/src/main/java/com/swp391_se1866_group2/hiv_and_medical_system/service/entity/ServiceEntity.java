@@ -2,10 +2,13 @@ package com.swp391_se1866_group2.hiv_and_medical_system.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
+import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.lab.test.entity.LabTest;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -27,4 +30,8 @@ public class ServiceEntity {
     @OneToOne(mappedBy = "service", fetch = FetchType.LAZY)
     @JsonIgnore
     private LabTest labTest;
+
+    @OneToMany(mappedBy = "serviceEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Image> image;
+
 }

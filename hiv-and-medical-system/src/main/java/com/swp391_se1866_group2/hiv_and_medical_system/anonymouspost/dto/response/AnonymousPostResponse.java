@@ -18,9 +18,6 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class AnonymousPostResponse {
     int anonymousPostId;
-    String nickName;
-    String gender;
-    int age;
     String title;
     String content;
     LocalDateTime createdAt;

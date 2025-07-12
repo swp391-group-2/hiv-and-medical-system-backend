@@ -1,6 +1,7 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.service.dto.response;
 
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.ServiceType;
+import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,4 +15,5 @@ public class ServiceResponse {
     String name;
     Long price;
     ServiceType serviceType;
+    String imageUrl;
 }

@@ -12,9 +12,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class AnonymousPostCreationRequest {
-    String nickName;
-    String gender;
-    int age;
     String title;
     String content;
 }
