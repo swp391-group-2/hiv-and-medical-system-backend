@@ -55,6 +55,14 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
             SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse (d.id, u.id, u.email, u.fullName, u.status, u.code, d.licenseNumber, d.specialization, (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true)) FROM Doctor d JOIN d.user u WHERE u.email = :email""")
     Optional<Doctor> findDoctorEntityByUserEmail(@Param("email") String email);
 
+    @Query("""
+        SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse (
+            d.id, u.id, u.email, u.fullName, u.status, u.code, d.specialization, d.licenseNumber,
+            (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true)
+        )
+        FROM Doctor d JOIN d.user u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))""")
+    List<DoctorResponse> findDoctorByName(@Param("name") String name);
+
     long count();
 
     long countAllByUserStatus(String status);

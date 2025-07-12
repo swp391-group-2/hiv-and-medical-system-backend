@@ -19,8 +19,7 @@ public class PaymentController {
     StripeService stripeService;
 
     @PostMapping("/create-session")
-    public ApiResponse<String> createSession(@RequestBody PaymentRequest req)
-            throws StripeException {
+    public ApiResponse<String> createSession(@RequestBody PaymentRequest req) throws StripeException {
         String checkoutUrl = stripeService.createCheckoutSession(req);
 
         return ApiResponse.<String>builder()
