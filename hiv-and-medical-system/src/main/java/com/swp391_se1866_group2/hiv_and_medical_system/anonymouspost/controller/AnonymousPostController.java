@@ -44,4 +44,13 @@ public class AnonymousPostController {
                 .build();
     }
 
+    @GetMapping("/my")
+    public ApiResponse<List<AnonymousPostResponse>> getAllMyAnonymousPosts(@RequestParam(required = false) String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ApiResponse.<List<AnonymousPostResponse>>builder()
+                .success(true)
+                .data(anonymousPostService.getAllMyAnonymousPosts(title, pageable))
+                .build();
+    }
+
 }
