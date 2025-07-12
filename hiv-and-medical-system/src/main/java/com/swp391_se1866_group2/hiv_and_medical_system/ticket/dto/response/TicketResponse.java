@@ -16,4 +16,5 @@ public class TicketResponse {
     TicketType ticketType;
     String patientId;
     String serviceName;
+    String imageUrl;
 }
