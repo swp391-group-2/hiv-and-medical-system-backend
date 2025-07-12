@@ -224,7 +224,7 @@ public class AuthenticationService {
                 .claim("id", user.getId())
                 .issuer("medcarehiv.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(7, ChronoUnit.DAYS).toEpochMilli()))
+                .expirationTime(Date.from(Instant.now().plus(7, ChronoUnit.DAYS)))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", "REFRESH_TOKEN")
                 .build();

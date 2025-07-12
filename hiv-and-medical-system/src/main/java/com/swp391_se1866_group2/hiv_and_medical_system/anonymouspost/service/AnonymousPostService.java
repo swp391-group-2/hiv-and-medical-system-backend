@@ -7,6 +7,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.anonymouspost.repository.
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.AnonymousPostMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorService;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
@@ -15,6 +16,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientSe
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,11 +50,19 @@ public class AnonymousPostService {
     public List<AnonymousPostResponse> getAllAnonymousPosts(Pageable pageable, String title) {
         title = '%' + title.trim() + '%';
         List<AnonymousPostResponse> anonymousPostResponseList = new ArrayList<>();
-        anonymousPostRepository.getAll(pageable, title).forEach(anonymousPost -> {
+        Page<AnonymousPost> anonymousPosts = anonymousPostRepository.getAll(pageable, title);
+        if( anonymousPosts == null){
+            return anonymousPostResponseList;
+        }
+        anonymousPosts.forEach(anonymousPost -> {
 
             AnonymousPostResponse anonymousPostResponse = anonymousPostMapper.toAnonymousPostResponse(anonymousPost);
             anonymousPostResponse.getComments().forEach(commentResponse -> {
-                commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
+                if (commentResponse.getDoctorId() != null){
+                    DoctorResponse doctorResponse = doctorService.getDoctorResponseById(commentResponse.getDoctorId());
+                    commentResponse.setDoctorName(doctorResponse.getFullName());
+                    commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
+                }
             });
 
             anonymousPostResponseList.add(anonymousPostResponse);

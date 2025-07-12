@@ -64,7 +64,7 @@ public class CommentService {
 
         CommentResponse commentResponse = commentMapper.toCommentResponse(commentRepository.save(comment));
 
-        if (commentResponse.getDoctorId() !=null){
+        if (commentResponse.getDoctorId() != null){
             DoctorResponse doctorResponse = doctorService.getDoctorResponseById(commentResponse.getDoctorId());
             commentResponse.setDoctorName(doctorResponse.getFullName());
             commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));

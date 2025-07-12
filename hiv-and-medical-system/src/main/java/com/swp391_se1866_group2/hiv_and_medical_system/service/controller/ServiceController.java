@@ -1,5 +1,8 @@
 package com.swp391_se1866_group2.hiv_and_medical_system.service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swp391_se1866_group2.hiv_and_medical_system.blogpost.dto.request.BlogPostUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.request.ServiceCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.request.ServiceUpdateRequest;
@@ -11,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -20,6 +25,7 @@ import java.util.List;
 @Tag(name = "Service API", description = "Quản lý thông tin dịch vụ")
 public class ServiceController {
     ServiceService serviceService;
+    ObjectMapper objectMapper;
 
     @PostMapping
     @Operation(summary = "Tạo dịch vụ mới")
@@ -33,9 +39,10 @@ public class ServiceController {
     @PutMapping("/{serviceId}")
     @Operation(summary = "Cập nhật dịch vụ theo ID")
     public ApiResponse<ServiceResponse> updateService (@PathVariable("serviceId") int serviceId ,
-                                                       @RequestBody ServiceUpdateRequest request){
+                                                       @RequestParam("data") String jsonData, @RequestParam(value = "file",  required = false) MultipartFile file) throws JsonProcessingException {
+        ServiceUpdateRequest request = objectMapper.readValue(jsonData, ServiceUpdateRequest.class);
         return ApiResponse.<ServiceResponse>builder()
-                .data(serviceService.updateService(serviceId, request))
+                .data(serviceService.updateService(serviceId, request, file))
                 .success(true)
                 .build();
     }

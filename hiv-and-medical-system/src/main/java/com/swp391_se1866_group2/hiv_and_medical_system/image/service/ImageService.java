@@ -12,6 +12,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.doctor.service.DoctorServ
 import com.swp391_se1866_group2.hiv_and_medical_system.image.dto.response.ImageResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.entity.Image;
 import com.swp391_se1866_group2.hiv_and_medical_system.image.repository.ImageRepository;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,33 @@ public class ImageService {
                 blogPost.getImage().add(image);
             }
             return blogPost;
+        } catch (IOException exception){
+            log.error(exception.getMessage());
+            throw new AppException(ErrorCode.UPLOAD_FAILED);
+        }
+    }
+
+    public ServiceEntity saveServiceEntityImage(MultipartFile file, ServiceEntity serviceEntity) {
+        try {
+            if(file.isEmpty()){
+                throw new AppException(ErrorCode.IMAGE_WRONG_TYPE);
+            }
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("folder", "avatar"));
+            String imageUrl = uploadResult.get("secure_url").toString();
+            Image image = new Image();
+            image.setUrl(imageUrl);
+            image.setActive(true);
+            if(serviceEntity != null && serviceEntity.getImage() != null){
+                serviceEntity.getImage().forEach(img -> img.setActive(false));
+                image.setServiceEntity(serviceEntity);
+                serviceEntity.getImage().add(image);
+            }else{
+                image.setServiceEntity(serviceEntity);
+                List<Image> images = new ArrayList<>();
+                serviceEntity.setImage(images);
+                serviceEntity.getImage().add(image);
+            }
+            return serviceEntity;
         } catch (IOException exception){
             log.error(exception.getMessage());
             throw new AppException(ErrorCode.UPLOAD_FAILED);
