@@ -51,13 +51,29 @@ public class AnonymousPostService {
 
     public List<AnonymousPostResponse> getAllMyAnonymousPosts(String title, Pageable pageable) {
         String patientId = patientService.getPatientResponseByToken().getId();
-        Slice<AnonymousPostResponse> slice = anonymousPostRepository.getAllMyAnonymousPosts(patientId, title, pageable)
-                .orElseThrow(() -> new AppException(ErrorCode.ANONYMOUS_POST_NOT_EXISTED));
-        return slice.getContent();
+        List<AnonymousPostResponse> anonymousPostResponseList = new ArrayList<>();
+        Page<AnonymousPost> anonymousPosts = anonymousPostRepository.getAllByPatientId(patientId, title, pageable);
+        if( anonymousPosts == null){
+            return anonymousPostResponseList;
+        }
+        anonymousPosts.forEach(anonymousPost -> {
+
+            AnonymousPostResponse anonymousPostResponse = anonymousPostMapper.toAnonymousPostResponse(anonymousPost);
+            anonymousPostResponse.getComments().forEach(commentResponse -> {
+                if (commentResponse.getDoctorId() != null){
+                    DoctorResponse doctorResponse = doctorService.getDoctorResponseById(commentResponse.getDoctorId());
+                    commentResponse.setDoctorName(doctorResponse.getFullName());
+                    commentResponse.setDoctorImageUrl(doctorService.getDoctorImageUrl(commentResponse.getDoctorId()));
+                }
+            });
+
+            anonymousPostResponseList.add(anonymousPostResponse);
+        });
+
+        return anonymousPostResponseList;
     }
 
     public List<AnonymousPostResponse> getAllAnonymousPosts(Pageable pageable, String title) {
-        title = '%' + title.trim() + '%';
         List<AnonymousPostResponse> anonymousPostResponseList = new ArrayList<>();
         Page<AnonymousPost> anonymousPosts = anonymousPostRepository.getAll(pageable, title);
         if( anonymousPosts == null){

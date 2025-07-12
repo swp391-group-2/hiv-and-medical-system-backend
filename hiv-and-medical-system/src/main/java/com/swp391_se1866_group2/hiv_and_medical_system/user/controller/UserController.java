@@ -2,6 +2,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.user.controller;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UpdateStatusRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UpdateUserRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.service.UserService;
@@ -134,4 +135,15 @@ public class UserController {
                 .data(userService.getAllUser())
                 .build();
     }
+
+    @PutMapping("/users/{userId}")
+    @Operation(summary = "Cập nhật status của User = deleted")
+    public ApiResponse<Boolean> updateUser(@PathVariable("userId") String userId , @RequestBody UpdateUserRequest request) {
+        return ApiResponse.<Boolean>builder()
+                .data(userService.updateUser(userId, request))
+                .success(true)
+                .build();
+    }
+
+
 }

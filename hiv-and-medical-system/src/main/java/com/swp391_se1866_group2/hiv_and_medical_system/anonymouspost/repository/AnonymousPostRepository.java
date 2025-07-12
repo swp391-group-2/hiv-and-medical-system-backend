@@ -20,6 +20,7 @@ public interface AnonymousPostRepository extends JpaRepository<AnonymousPost, In
     @Query(value = "SELECT * FROM anonymous_post a WHERE LOWER(a.title) COLLATE utf8mb4_unicode_ci LIKE LOWER(:title) ", nativeQuery = true)
     Page<AnonymousPost> getAll (Pageable pageable, @Param("title") String title);
 
-    @Query("SELECT a FROM AnonymousPost a WHERE a.patient.id = :patientId AND (:title IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :title, '%')))")
-    Optional<Slice<AnonymousPostResponse>> getAllMyAnonymousPosts(@Param("patientId") String patientId, @Param("title") String title, Pageable pageable);
+    @Query(value = "SELECT a.* FROM anonymous_post a JOIN patient p ON a.patient_id = p.id WHERE LOWER(a.title) COLLATE utf8mb4_unicode_ci LIKE LOWER(:title) AND p.id = :patientId", nativeQuery = true)
+    Page<AnonymousPost> getAllByPatientId (@Param("patientId") String patientId ,@Param("title") String title, Pageable pageable);
+
 }

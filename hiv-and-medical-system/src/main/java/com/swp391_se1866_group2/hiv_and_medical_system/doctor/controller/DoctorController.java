@@ -38,9 +38,9 @@ public class DoctorController {
                 .build();
     }
 
-    @GetMapping()
+    @GetMapping
     @Operation(summary = "Lấy danh sách bác sĩ và tổng lịch hẹn")
-    public ApiResponse<List<DoctorAppointmentResponse>> getDoctorsAppointment(@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "13") int size){
+    public ApiResponse<List<DoctorAppointmentResponse>> getDoctorsAppointment(@RequestParam(name = "name", defaultValue = "") String name, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "13") int size){
         Pageable pageable = PageRequest.of(page, size);
         return ApiResponse.<List<DoctorAppointmentResponse>>builder()
                 .success(true)
@@ -122,7 +122,7 @@ public class DoctorController {
 
     @GetMapping("/top-appointmentCount")
     @Operation(summary = "Lấy các bác sĩ có nhiều người đăng kí khám cao nhất")
-    public ApiResponse<List<DoctorAppointmentResponse>> getTopDoctorsAppointment(@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "13") int size){
+    public ApiResponse<List<DoctorAppointmentResponse>> getTopDoctorsAppointment(@RequestParam(name = "name", defaultValue = "") String name, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "13") int size){
         Pageable pageable = PageRequest.of(page, size);
         return ApiResponse.<List<DoctorAppointmentResponse>>builder()
                 .success(true)
