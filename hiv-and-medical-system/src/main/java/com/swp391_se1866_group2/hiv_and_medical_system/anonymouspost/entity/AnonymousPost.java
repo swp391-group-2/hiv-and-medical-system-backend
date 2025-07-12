@@ -25,15 +25,6 @@ public class AnonymousPost {
     int id;
 
     @Column(nullable = false)
-    String nickName;
-
-    @Column(nullable = false)
-    int age;
-
-    @Column(nullable = false)
-    String gender;
-
-    @Column(nullable = false)
     String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
