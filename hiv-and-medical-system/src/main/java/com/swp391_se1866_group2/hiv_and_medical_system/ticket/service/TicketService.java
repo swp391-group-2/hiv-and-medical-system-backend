@@ -5,6 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.TicketType;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.entity.Patient;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.repository.PatientRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.service.PatientService;
+import com.swp391_se1866_group2.hiv_and_medical_system.service.dto.response.ServiceResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.entity.ServiceEntity;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.repository.ServiceRepository;
 import com.swp391_se1866_group2.hiv_and_medical_system.service.service.ServiceService;
@@ -31,7 +32,7 @@ public class TicketService {
     ServiceRepository serviceRepository;
 
     public TicketResponse createTicket(String patientId, TicketType ticketType) {
-        ServiceEntity serviceEntity = serviceRepository.findByServiceType(ServiceType.valueOf(String.valueOf(ticketType))).get();
+        ServiceResponse service = serviceRepository.getServiceByServiceType(ServiceType.valueOf(String.valueOf(ticketType)));
         Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
         if (ticket == null) {
             ticket = Ticket.builder()
@@ -48,12 +49,14 @@ public class TicketService {
                 .count(ticket.getCount())
                 .ticketType(ticketType)
                 .patientId(ticket.getPatient().getId())
-                .serviceName(serviceEntity.getName())
+                .serviceName(service.getName())
+                .price(service.getPrice())
+                .imageUrl(service.getImageUrl())
                 .build();
     }
 
     public TicketResponse getTicketResponseByTypeAndPatientId(String patientId, TicketType ticketType) {
-        ServiceEntity serviceEntity = serviceRepository.findByServiceType(ServiceType.valueOf(String.valueOf(ticketType))).get();
+        ServiceResponse service = serviceRepository.getServiceByServiceType(ServiceType.valueOf(String.valueOf(ticketType)));
         Ticket ticket = ticketRepository.findTicketByPatientIdAndTicketType(patientId, ticketType);
         if(ticket == null){
             ticket = Ticket.builder()
@@ -69,7 +72,9 @@ public class TicketService {
                 .count(ticket.getCount())
                 .ticketType(ticketType)
                 .patientId(ticket.getPatient().getId())
-                .serviceName(serviceEntity.getName())
+                .serviceName(service.getName())
+                .price(service.getPrice())
+                .imageUrl(service.getImageUrl())
                 .build();
     }
 

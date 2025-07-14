@@ -6,6 +6,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppExcep
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.ErrorCode;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.mapper.UserMapper;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UpdateStatusRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UpdateUserRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.request.UserCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.dto.response.UserResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.user.entity.User;
@@ -96,6 +97,15 @@ public class UserService {
         return users.stream()
                 .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
+    }
+
+    public boolean updateUser(String userId, UpdateUserRequest request){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setFullName(request.getFullName());
+
+        userRepository.save(user);
+        return true;
     }
 
 }

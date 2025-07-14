@@ -148,6 +148,9 @@ public class DoctorWorkScheduleService {
             throw new AppException(ErrorCode.DATE_INPUT_INVALID);
         }
         List<DoctorWorkSchedule> listDWSchedule = doctorWorkScheduleRepository.findAllByWorkDateBetweenAndDoctorId(startTime, endTime, doctor.getDoctorId());
+        if(listDWSchedule == null ){
+            return new ArrayList<ScheduleResponse>();
+        }
         return listDWSchedule.stream().map(scheduleMapper::toScheduleResponse).collect(Collectors.toList());
     }
 

@@ -15,6 +15,6 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment , Integer> {
 
-    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.comment.dto.response.CommentResponse(c.id, c.anonymousPost.id, c.doctor.id, c.doctor.user.fullName , c.patient.id, c.content, c.createdAt, (SELECT i.url FROM Image i WHERE i.doctor.id = c.doctor.id AND i.isActive = true)) FROM Comment c WHERE c.anonymousPost.id = :anonymousPostId")
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.comment.dto.response.CommentResponse(c.id, c.anonymousPost.id, c.doctor.id, c.doctor.user.fullName , p.patient.id, c.content, c.createdAt, (SELECT i.url FROM Image i WHERE i.doctor.id = c.doctor.id AND i.isActive = true)) FROM Comment c JOIN c.anonymousPost p WHERE c.anonymousPost.id = :anonymousPostId")
     Optional<Slice<CommentResponse>> getAllComments(@Param("anonymousPostId") int anonymousPostId, Pageable pageable);
 }

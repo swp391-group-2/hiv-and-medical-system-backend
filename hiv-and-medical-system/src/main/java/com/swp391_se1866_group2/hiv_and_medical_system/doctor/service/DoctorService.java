@@ -130,24 +130,40 @@ public class DoctorService {
         return doctorRepository.countAllByUserStatus(UserStatus.ACTIVE.name());
     }
 
-    public List<DoctorAppointmentResponse> getTopDoctorsAppointment(Pageable pageable){
-        Slice<DoctorAppointment> doctors = scheduleSlotRepository.getTopDoctorByAppointmentCount(pageable);
+    public List<DoctorAppointmentResponse> getTopDoctorsAppointment(String name, Pageable pageable){
 
-        List<DoctorAppointmentResponse> doctorAppointmentResponses = new ArrayList<>();
+        name = "%" + name.trim() + "%";
 
-        doctors.forEach(doctorAppointment -> {
-            DoctorAppointmentResponse doctorAppointmentResponse = new DoctorAppointmentResponse();
-            doctorAppointmentResponse.setDoctor(doctorMapper.toDoctorResponse(doctorAppointment.getDoctor()));
-            doctorAppointmentResponse.setTotalAppointment(doctorAppointment.getTotalAppointment());
-            doctorAppointmentResponses.add(doctorAppointmentResponse);
-        });
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCountV1(name, pageable);
 
-        return doctorAppointmentResponses;
+        if(doctors == null){
+            return new ArrayList<>();
+        }
+
+        return doctors.getContent();
+    }
+
+    public List<DoctorAppointmentResponse> getDoctorsAppointment(String name, Pageable pageable){
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCountV1(name, pageable);
+
+        if(doctors == null){
+            return new ArrayList<>();
+        }
+
+        return doctors.getContent();
 
     }
 
     public String getDoctorImageUrl (String doctorId){
         return doctorRepository.getDocImageUrlByDoctorId(doctorId);
+    }
+
+    public List<DoctorResponse> getDoctorByName(String name) {
+        List<DoctorResponse> listDoctor = doctorRepository.findDoctorByName(name);
+        if (listDoctor.isEmpty()) {
+            throw new AppException(ErrorCode.DOCTOR_NOT_EXISTED);
+        }
+        return listDoctor;
     }
 
 }

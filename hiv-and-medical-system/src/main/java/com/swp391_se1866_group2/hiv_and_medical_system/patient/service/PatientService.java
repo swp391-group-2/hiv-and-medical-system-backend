@@ -41,7 +41,7 @@ public class PatientService {
 
 //    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')" )
     public PatientResponse getPatient(String patientId){
-        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
         return patientMapper.toPatientResponse(patient);
     }
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF') or hasRole('DOCTOR')")
@@ -55,7 +55,7 @@ public class PatientService {
         Patient patient = new Patient();
         User user = userMapper.toUser(request);
         if(userService.isEmailExisted(user.getEmail())) {
-            throw new RuntimeException(ErrorCode.EMAIL_EXISTED.getMessage());
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
         user.setRole(role);
         user.setStatus(UserStatus.ACTIVE.name());
@@ -65,7 +65,7 @@ public class PatientService {
     }
 //    @PreAuthorize("hasRole('PATIENT') or hasRole('ADMIN')")
     public PatientResponse updatePatientProfile(String patientId , PatientUpdateRequest request) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
 //        if(patient.getUser().getCode() == null || patient.getUser().getCode().isEmpty()) {
 //            User user = userRepository.findById(patient.getUser().getId())
 //                    .orElseThrow(() -> new RuntimeException(ErrorCode.USER_NOT_EXISTED.getMessage()));
@@ -102,7 +102,7 @@ public class PatientService {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
         PatientResponse patientResponse = patientRepository.findPatientByUserEmail(email).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
-        return patientRepository.findById(patientResponse.getPatientId()).orElseThrow(() -> new RuntimeException(ErrorCode.PATIENT_NOT_EXISTED.getMessage()));
+        return patientRepository.findById(patientResponse.getPatientId()).orElseThrow(() -> new AppException(ErrorCode.PATIENT_NOT_EXISTED));
     }
 
     public boolean changePatientPassword(PatientUpdatePassword request){

@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     Ticket findTicketByPatientIdAndTicketType(String id, TicketType type);
-
 }

@@ -31,16 +31,33 @@ public class AnonymousPostController {
     }
 
     @GetMapping
-    public ApiResponse<List<AnonymousPostResponse>> getAllAnonymousPosts(@RequestParam(name = "title", defaultValue = "") String title, @RequestParam(defaultValue = "desc") String sortOrder, @RequestParam(name = "sortBy", defaultValue = "created_at") String sortBy , @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ApiResponse<List<AnonymousPostResponse>> getAllAnonymousPosts(@RequestParam(name = "title", defaultValue = "") String title, @RequestParam(defaultValue = "desc") String sortOrder, @RequestParam(name = "sortBy", defaultValue = "created_at") String sortBy , @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "isPatient", defaultValue = "false") boolean isPatient ) {
         Pageable pageable;
+        title = '%' + title.trim() + '%';
         if(sortOrder.equalsIgnoreCase("desc")){
             pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         }else{
             pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         }
+        if(isPatient){
+            return ApiResponse.<List<AnonymousPostResponse>>builder()
+                    .success(true)
+                    .data(anonymousPostService.getAllMyAnonymousPosts(title, pageable))
+                    .build();
+        }
         return ApiResponse.<List<AnonymousPostResponse>>builder()
                 .success(true)
                 .data(anonymousPostService.getAllAnonymousPosts(pageable, title))
+                .build();
+    }
+
+    @GetMapping("/my")
+    public ApiResponse<List<AnonymousPostResponse>> getAllMyAnonymousPosts(@RequestParam(name = "title", defaultValue = "") String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        title = '%' + title.trim() + '%';
+        return ApiResponse.<List<AnonymousPostResponse>>builder()
+                .success(true)
+                .data(anonymousPostService.getAllMyAnonymousPosts(title, pageable))
                 .build();
     }
 
