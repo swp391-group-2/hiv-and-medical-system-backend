@@ -134,7 +134,7 @@ public class DoctorService {
 
         name = "%" + name.trim() + "%";
 
-        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCount(name, pageable);
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCountV1(name, pageable);
 
         if(doctors == null){
             return new ArrayList<>();
@@ -144,7 +144,7 @@ public class DoctorService {
     }
 
     public List<DoctorAppointmentResponse> getDoctorsAppointment(String name, Pageable pageable){
-        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCount(name, pageable);
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCountV1(name, pageable);
 
         if(doctors == null){
             return new ArrayList<>();

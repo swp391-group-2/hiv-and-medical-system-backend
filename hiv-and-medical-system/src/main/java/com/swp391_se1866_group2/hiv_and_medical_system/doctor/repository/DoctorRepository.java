@@ -73,8 +73,11 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
 """)
     String getDocImageUrlByDoctorId(@Param("doctorId") String doctorId);
 
-    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointmentResponse(d.id, u.id, u.email, u.fullName, u.status, u.code, d.licenseNumber, d.specialization, (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true), SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END)) FROM ScheduleSlot ss RIGHT JOIN ss.schedule sch JOIN sch.doctor d JOIN d.user u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%')) GROUP BY d.id ORDER BY SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END) DESC ")
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointmentResponse(d.id, u.id, u.email, u.fullName, u.status, u.code, d.licenseNumber, d.specialization, (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true), SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END)) FROM ScheduleSlot ss LEFT JOIN ss.schedule sch FULL OUTER JOIN sch.doctor d  JOIN d.user u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%')) GROUP BY d.id ORDER BY SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END) DESC ")
     Slice<DoctorAppointmentResponse> getTopDoctorByAppointmentCount(@Param("name") String name, Pageable pageable);
+
+    @Query("SELECT new com.swp391_se1866_group2.hiv_and_medical_system.doctor.dto.response.DoctorAppointmentResponse(d.id, u.id, u.email, u.fullName, u.status, u.code, d.licenseNumber, d.specialization, (SELECT i.url FROM Image i WHERE i.doctor.id = d.id AND i.isActive = true), SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END)) FROM Doctor d JOIN d.user u LEFT JOIN d.doctorWorkSchedules sch LEFT JOIN sch.scheduleSlots ss WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%')) GROUP BY d.id ORDER BY SUM(CASE WHEN ss.status = 'CHECKED_IN' THEN 1 ELSE 0 END) DESC ")
+    Slice<DoctorAppointmentResponse> getTopDoctorByAppointmentCountV1(@Param("name") String name, Pageable pageable);
 
 
 }

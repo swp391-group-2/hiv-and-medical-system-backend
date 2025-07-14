@@ -62,6 +62,7 @@ public enum ErrorCode {
     COMMENT_NOT_EXISTED(1100, "Comment not existed. ", HttpStatus.NOT_FOUND),
     TICKET_TYPE_NOT_EXISTED(1101, "Ticket type not existed", HttpStatus.NOT_FOUND),
     TICKET_EXISTED(1102, "Ticket already existed", HttpStatus.CONFLICT),
+    TICKET_LACKED(1103, "Ticket lacked", HttpStatus.CONFLICT),
 
     ;
 

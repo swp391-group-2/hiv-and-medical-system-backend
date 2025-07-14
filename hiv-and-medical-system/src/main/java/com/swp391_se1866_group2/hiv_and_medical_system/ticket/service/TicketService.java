@@ -50,6 +50,7 @@ public class TicketService {
                 .ticketType(ticketType)
                 .patientId(ticket.getPatient().getId())
                 .serviceName(service.getName())
+                .price(service.getPrice())
                 .imageUrl(service.getImageUrl())
                 .build();
     }
@@ -72,6 +73,7 @@ public class TicketService {
                 .ticketType(ticketType)
                 .patientId(ticket.getPatient().getId())
                 .serviceName(service.getName())
+                .price(service.getPrice())
                 .imageUrl(service.getImageUrl())
                 .build();
     }

@@ -97,7 +97,7 @@ public class AppointmentService {
                 .build();
         if(service.getServiceType().equals(ServiceType.CONSULTATION)){
             ScheduleSlot scheduleSlot = scheduleSlotService.getScheduleSlotById(request.getScheduleSlotId());
-            if(scheduleSlot.getStatus().equals(ScheduleSlotStatus.UNAVAILABLE)){
+            if(!scheduleSlot.getStatus().equals(ScheduleSlotStatus.AVAILABLE)){
                 throw new AppException(ErrorCode.SCHEDULE_SLOT_NOT_AVAILABLE);
             }
             scheduleSlot.setStatus(ScheduleSlotStatus.UNAVAILABLE);
@@ -381,12 +381,13 @@ public class AppointmentService {
         String ticketType = String.valueOf(service.getServiceType());
         Ticket ticket = ticketService.getTicketByTypeAndPatientId(patient.getId(), TicketType.valueOf(ticketType));
         if(ticket.getCount() > 0) {
-            ticket.setCount(ticket.getCount() - 1);
-            ticketRepository.save(ticket);
+            int count = ticket.getCount() - 1;
+            ticket.setCount(count);
             createAppointment(request);
+            ticketRepository.save(ticket);
             return true;
         }else{
-            return false;
+            throw new AppException(ErrorCode.TICKET_LACKED);
         }
     }
 
