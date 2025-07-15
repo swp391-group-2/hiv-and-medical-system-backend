@@ -35,6 +35,16 @@ public class ApplicationInitConfig {
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it");
             }
+            if(userRepository.findByEmail("manager@gmail.com").isEmpty()){
+                User user = User
+                        .builder()
+                        .email("manager@gmail.com")
+                        .password(passwordEncoder.encode("12345678"))
+                        .role(Role.MANAGER.name())
+                        .build();
+                userRepository.save(user);
+                log.warn("manager user has been created with default password: manager, please change it");
+            }
         };
     }
 }
