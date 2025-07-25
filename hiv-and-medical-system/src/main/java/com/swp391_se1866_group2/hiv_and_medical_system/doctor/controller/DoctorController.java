@@ -139,4 +139,15 @@ public class DoctorController {
                 .build();
     }
 
+
+    @GetMapping("/active")
+    @Operation(summary = "Lấy danh sách bác sĩ và tổng lịch hẹn")
+    public ApiResponse<List<DoctorAppointmentResponse>> getDoctorsAppointmentActive(@RequestParam(name = "name", defaultValue = "") String name, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "13") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<List<DoctorAppointmentResponse>>builder()
+                .success(true)
+                .data(doctorService.getDoctorsAppointmentActive(name, pageable))
+                .build();
+    }
+
 }
