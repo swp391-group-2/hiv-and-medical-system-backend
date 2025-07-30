@@ -63,7 +63,7 @@ public enum ErrorCode {
     TICKET_TYPE_NOT_EXISTED(1101, "Ticket type not existed", HttpStatus.NOT_FOUND),
     TICKET_EXISTED(1102, "Ticket already existed", HttpStatus.CONFLICT),
     TICKET_LACKED(1103, "Ticket lacked", HttpStatus.CONFLICT),
-
+    OTP_NOT_VALID(1104, "OTP not valid", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatus statusCode) {
