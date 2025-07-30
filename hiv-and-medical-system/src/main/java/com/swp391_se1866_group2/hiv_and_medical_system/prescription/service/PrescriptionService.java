@@ -17,6 +17,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.P
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -85,7 +87,6 @@ public class PrescriptionService {
 
 //    @PreAuthorize("hasRole('DOCTOR')")
     public PrescriptionResponse updatePrescription(int prescriptionId, PrescriptionUpdateRequest request) {
-
         Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
         prescriptionMapper.updatePrescription(request, prescription);
         List<PrescriptionItem> prescriptionItems = new ArrayList<>();
@@ -109,7 +110,6 @@ public class PrescriptionService {
             }
         }
         prescriptionItemRepository.saveAll(prescriptionItems);
-
         prescription.setPrescriptionItems(prescriptionItems);
         return prescriptionMapper.toPrescriptionResponse(prescriptionRepository.save(prescription));
     }

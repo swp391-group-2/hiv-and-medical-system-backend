@@ -30,7 +30,7 @@ public interface PrescriptionMapper {
     PrescriptionItemResponse toPrescriptionItemResponse(PrescriptionItem prescriptionItem);
 
     Prescription toPrescription(PrescriptionCreationRequest request);
-
+    @Mapping(target = "prescriptionItems", ignore = true)
     void updatePrescription(PrescriptionUpdateRequest request, @MappingTarget Prescription prescription);
 
     Prescription toPrescriptionByPUpdate(PrescriptionUpdateRequest request);

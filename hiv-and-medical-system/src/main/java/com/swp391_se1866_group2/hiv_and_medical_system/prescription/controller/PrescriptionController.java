@@ -53,7 +53,7 @@ public class PrescriptionController {
 
     @PutMapping("/{prescriptionId}")
     @Operation(summary = "Cập nhật thông tin phác đồ")
-    public ApiResponse<PrescriptionResponse> updatePrescription(@PathVariable int prescriptionId, PrescriptionUpdateRequest request) {
+    public ApiResponse<PrescriptionResponse> updatePrescription(@PathVariable int prescriptionId,@RequestBody PrescriptionUpdateRequest request) {
         return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
                 .data(prescriptionService.updatePrescription(prescriptionId, request))
