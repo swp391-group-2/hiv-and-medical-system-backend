@@ -3,6 +3,7 @@ package com.swp391_se1866_group2.hiv_and_medical_system.prescription.controller;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionItemResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.service.PrescriptionService;
@@ -50,12 +51,12 @@ public class PrescriptionController {
                 .build();
     }
 
-    @PutMapping("/{prescriptionId}/{prescriptionItemId}")
+    @PutMapping("/{prescriptionId}")
     @Operation(summary = "Cập nhật thông tin phác đồ")
-    public ApiResponse<PrescriptionItemResponse> updatePrescription(@PathVariable int prescriptionId, @PathVariable int prescriptionItemId, @RequestBody @Valid PrescriptionItemUpdateRequest request) {
-        return ApiResponse.<PrescriptionItemResponse>builder()
+    public ApiResponse<PrescriptionResponse> updatePrescription(@PathVariable int prescriptionId, PrescriptionUpdateRequest request) {
+        return ApiResponse.<PrescriptionResponse>builder()
                 .success(true)
-                .data(prescriptionService.updatePrescription(prescriptionId, prescriptionItemId, request))
+                .data(prescriptionService.updatePrescription(prescriptionId, request))
                 .build();
     }
 

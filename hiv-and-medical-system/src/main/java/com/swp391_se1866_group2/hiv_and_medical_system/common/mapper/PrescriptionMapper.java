@@ -4,6 +4,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.dto.response.M
 import com.swp391_se1866_group2.hiv_and_medical_system.medication.entity.Medication;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionItemResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
@@ -30,8 +31,7 @@ public interface PrescriptionMapper {
 
     Prescription toPrescription(PrescriptionCreationRequest request);
 
-    @Mapping(source = "dosage", target = "dosage")
-    @Mapping(source = "frequency", target = "frequency")
-    @Mapping(source = "duration", target = "duration")
-    void updatePrescription(@MappingTarget PrescriptionItem prescriptionItem, PrescriptionItemUpdateRequest request);
+    void updatePrescription(PrescriptionUpdateRequest request, @MappingTarget Prescription prescription);
+
+    Prescription toPrescriptionByPUpdate(PrescriptionUpdateRequest request);
 }
