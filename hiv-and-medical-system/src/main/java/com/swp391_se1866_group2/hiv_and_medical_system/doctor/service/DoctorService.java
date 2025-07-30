@@ -166,4 +166,15 @@ public class DoctorService {
         return listDoctor;
     }
 
+    public List<DoctorAppointmentResponse> getDoctorsAppointmentActive(String name, Pageable pageable){
+        Slice<DoctorAppointmentResponse> doctors = doctorRepository.getTopDoctorByAppointmentCountActive(name, pageable);
+
+        if(doctors == null){
+            return new ArrayList<>();
+        }
+
+        return doctors.getContent();
+
+    }
+
 }

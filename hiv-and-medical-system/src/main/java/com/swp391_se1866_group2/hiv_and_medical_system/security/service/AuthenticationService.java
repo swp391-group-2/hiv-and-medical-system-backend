@@ -261,4 +261,13 @@ public class AuthenticationService {
         return RefreshResponse.builder().accessToken(accessToken).build();
     }
 
+    public void resetPassword (String email, String newPassword, boolean valid){
+        if(!valid){
+            throw new AppException(ErrorCode.OTP_NOT_VALID);
+        }
+        User user = userService.findUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
 }
