@@ -8,6 +8,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.medication.repository.Med
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemCreationRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionItemUpdateRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.request.PrescriptionUpdateRequest;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionItemResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.dto.response.PrescriptionResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.entity.Prescription;
@@ -16,6 +17,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.P
 import com.swp391_se1866_group2.hiv_and_medical_system.prescription.repository.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -83,18 +86,32 @@ public class PrescriptionService {
     }
 
 //    @PreAuthorize("hasRole('DOCTOR')")
-    public PrescriptionItemResponse updatePrescription(int prescriptionId, int prescriptionItemId, PrescriptionItemUpdateRequest request) {
-        Prescription prescription = prescriptionRepository.findById(prescriptionId)
-                .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
+    public PrescriptionResponse updatePrescription(int prescriptionId, PrescriptionUpdateRequest request) {
+        Prescription prescription = prescriptionRepository.findById(prescriptionId).orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_EXISTED));
+        prescriptionMapper.updatePrescription(request, prescription);
+        List<PrescriptionItem> prescriptionItems = new ArrayList<>();
+        if(request.getPrescriptionItems() != null){
+            List<PrescriptionItem> oldItems = prescription.getPrescriptionItems();
+            if (!oldItems.isEmpty()) {
+                prescriptionItemRepository.deleteAll(oldItems);
+                prescription.getPrescriptionItems().clear();
+            }
+            for (PrescriptionItemCreationRequest itemRequest : request.getPrescriptionItems()) {
+                Medication medication = medicationRepository.findById(itemRequest.getMedicationId())
+                        .orElseThrow(() -> new AppException(ErrorCode.MEDICATION_NOT_EXISTED));
+                PrescriptionItem item = new PrescriptionItem();
+                item.setPrescription(prescription);
+                item.setDosage(itemRequest.getDosage());
+                item.setFrequency(itemRequest.getFrequency());
+                item.setDuration(itemRequest.getDuration());
+                item.setMedication(medication);
+                prescriptionItems.add(item);
 
-        PrescriptionItem prescriptionItem = prescription.getPrescriptionItems().stream()
-                .filter(item -> item.getId() == prescriptionItemId)
-                .findFirst()
-                .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_ITEM_NOT_EXISTED));
-
-        prescriptionMapper.updatePrescription(prescriptionItem, request);
-        prescriptionRepository.save(prescription);
-        return prescriptionMapper.toPrescriptionItemResponse(prescriptionItem);
+            }
+        }
+        prescriptionItemRepository.saveAll(prescriptionItems);
+        prescription.setPrescriptionItems(prescriptionItems);
+        return prescriptionMapper.toPrescriptionResponse(prescriptionRepository.save(prescription));
     }
 
     public PrescriptionResponse getPrescriptionById(int prescriptionId) {
