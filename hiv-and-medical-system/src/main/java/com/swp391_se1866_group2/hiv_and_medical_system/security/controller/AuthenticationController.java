@@ -5,10 +5,7 @@ import com.swp391_se1866_group2.hiv_and_medical_system.common.dto.ApiResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.enums.Role;
 import com.swp391_se1866_group2.hiv_and_medical_system.common.exception.AppException;
 import com.swp391_se1866_group2.hiv_and_medical_system.patient.dto.response.PatientResponse;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.AuthenticationRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.GoogleCodeRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.IntrospectRequest;
-import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.RefreshRequest;
+import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.request.*;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.AuthenticationResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.IntrospectResponse;
 import com.swp391_se1866_group2.hiv_and_medical_system.security.dto.response.RefreshResponse;
@@ -108,10 +105,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password")
-    public ApiResponse<String> resetPassword(@RequestParam String email, @RequestParam String otp, @RequestParam String newPassword) {
+    public ApiResponse<String> resetPassword(@RequestBody ResetPasswordRequest request) {
 
-        boolean valid = otpService.validateOtp(email, otp);
-        authenticationService.resetPassword(email, newPassword, valid);
+        boolean valid = otpService.validateOtp(request.getEmail(), request.getOtp());
+        authenticationService.resetPassword(request.getEmail(), request.getNewPassword() , valid);
         return ApiResponse.<String>builder()
                 .success(true)
                 .data("Reset password successful")
